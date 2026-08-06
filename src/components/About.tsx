@@ -27,7 +27,7 @@ function FadeIn({
 export function About() {
   return (
     <section id="about" className="mx-auto max-w-6xl px-6 pb-24 md:px-10">
-      <h2 className="font-heading text-3xl font-normal tracking-tight text-tertiary md:text-4xl">
+      <h2 className="font-heading text-[21px] font-normal tracking-tight text-tertiary">
         A Little About Me…
       </h2>
 

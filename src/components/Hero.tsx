@@ -72,7 +72,7 @@ export function Hero() {
 
       <motion.h1
         variants={wordContainer}
-        className="font-heading text-4xl leading-[1.15] font-normal tracking-tight text-secondary md:text-6xl"
+        className="font-heading text-4xl leading-[1.15] font-normal tracking-tight text-secondary md:text-[45px]"
       >
         {headlineWords.map((w, i) => (
           <span key={i}>
