@@ -2,7 +2,19 @@ import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { categories, projects, type Category, type Project } from '../data/projects'
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({
+  project,
+  isHovered,
+  isDimmed,
+  onHover,
+  onHoverEnd,
+}: {
+  project: Project
+  isHovered: boolean
+  isDimmed: boolean
+  onHover: () => void
+  onHoverEnd: () => void
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -11,7 +23,7 @@ function ProjectCard({ project }: { project: Project }) {
   const y = useTransform(scrollYProgress, [0, 1], ['-8%', '8%'])
 
   return (
-    <article>
+    <article onMouseEnter={onHover} onMouseLeave={onHoverEnd}>
       <div
         ref={ref}
         className="relative aspect-[4/3] overflow-hidden rounded-xl border border-tertiary/20 bg-tertiary/10"
@@ -25,25 +37,39 @@ function ProjectCard({ project }: { project: Project }) {
           transition={{ duration: 0.5, ease: 'easeOut' }}
           className="absolute inset-0 h-[130%] w-full object-cover"
         />
+        <motion.div
+          className="absolute inset-0 bg-secondary"
+          initial={false}
+          animate={{ opacity: isDimmed ? 0.8 : 0 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          style={{ pointerEvents: 'none' }}
+        />
       </div>
-      <div className="mt-4 flex items-start justify-between gap-4">
-        <h3 className="font-heading text-lg font-normal text-secondary">
-          {project.title}
-        </h3>
-        <span className="font-alt shrink-0 text-sm text-tertiary">
-          {project.year}
-        </span>
-      </div>
-      <p className="mt-1 text-sm text-tertiary">{project.client}</p>
-      <p className="font-heading mt-2 text-xs font-bold lowercase text-accent">
-        {project.services}
-      </p>
+      <motion.div
+        initial={false}
+        animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 6 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+      >
+        <div className="mt-4 flex items-start justify-between gap-4">
+          <h3 className="font-heading text-lg font-normal text-secondary">
+            {project.title}
+          </h3>
+          <span className="font-alt shrink-0 text-sm text-tertiary">
+            {project.year}
+          </span>
+        </div>
+        <p className="mt-1 text-sm text-tertiary">{project.client}</p>
+        <p className="font-heading mt-2 text-xs font-bold lowercase text-accent">
+          {project.services}
+        </p>
+      </motion.div>
     </article>
   )
 }
 
 export function Projects() {
   const [active, setActive] = useState<Category>('All Work')
+  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null)
 
   const visible =
     active === 'All Work'
@@ -77,7 +103,14 @@ export function Projects() {
 
       <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((project) => (
-          <ProjectCard key={project.slug} project={project} />
+          <ProjectCard
+            key={project.slug}
+            project={project}
+            isHovered={hoveredSlug === project.slug}
+            isDimmed={hoveredSlug !== null && hoveredSlug !== project.slug}
+            onHover={() => setHoveredSlug(project.slug)}
+            onHoverEnd={() => setHoveredSlug(null)}
+          />
         ))}
       </div>
     </section>
