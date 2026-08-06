@@ -53,7 +53,7 @@ export function Projects() {
   return (
     <section id="work" className="mx-auto max-w-6xl px-6 pb-24 md:px-10">
       <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <h2 className="font-heading text-sm font-normal text-tertiary">
+        <h2 className="font-heading text-3xl font-normal tracking-tight text-tertiary md:text-4xl">
           Selected Work
         </h2>
         <ul className="flex flex-wrap gap-2">

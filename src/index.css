@@ -46,8 +46,8 @@
   --font-alt: 'Neue Haas Grotesk Thin', system-ui, sans-serif;
   --font-wordmark: 'Neue Haas Grotesk Medium', system-ui, sans-serif;
 
-  --color-primary: #171a1c;
-  --color-secondary: #d8d8d8;
+  --color-primary: #d8d8d8;
+  --color-secondary: #171a1c;
   --color-tertiary: #525266;
   --color-accent: #4d5c60;
 }

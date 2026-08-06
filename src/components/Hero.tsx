@@ -90,7 +90,7 @@ export function Hero() {
         {EXPERTISE.map((item) => (
           <li
             key={item}
-            className="rounded-full bg-accent px-2.5 py-1 font-heading text-xs font-bold lowercase text-secondary"
+            className="rounded-full bg-accent px-2.5 py-1 font-heading text-xs font-bold lowercase text-primary"
           >
             {item}
           </li>
