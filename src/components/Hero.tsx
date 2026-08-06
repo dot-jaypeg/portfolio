@@ -18,9 +18,9 @@ export function Hero() {
 
       <h1 className="font-heading text-4xl leading-[1.15] font-normal tracking-tight text-ink md:text-6xl">
         Multidisciplinary Designer{' '}
-        <span className="text-ink-soft">|</span> Branding, Visual
-        Storytelling, &amp;{' '}
-        <span className="font-alt italic">
+        <span className="text-ink-soft">|</span> Branding, User Interface,
+        Visual Storytelling, &amp;{' '}
+        <span className="font-bold text-[#4D5C60]">
           Friendly Neighborhood Spider-Man Fanatic.
         </span>
       </h1>
