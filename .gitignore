@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Raw creative source assets (videos, full-res references) — stays in iCloud, not git
+PORTFOLIO/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
