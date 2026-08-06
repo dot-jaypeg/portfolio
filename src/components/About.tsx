@@ -2,6 +2,7 @@ import { useRef, type ReactNode } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import mePhoto from '../assets/images/about/me.gif'
 import { BlockLink } from './BlockLink'
+import { EXPERTISE } from '../data/expertise'
 
 function FadeIn({
   children,
@@ -33,7 +34,7 @@ export function About() {
 
       <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[220px_1fr] md:gap-16">
         <div className="flex flex-col gap-4">
-          <div className="aspect-square w-full max-w-[220px] overflow-hidden rounded-xl border border-tertiary/20">
+          <div className="aspect-[4/5] w-full max-w-[220px] overflow-hidden rounded-xl border border-tertiary/20">
             <img
               src={mePhoto}
               alt="Jayden Ramirez"
@@ -89,6 +90,17 @@ export function About() {
           </FadeIn>
         </div>
       </div>
+
+      <ul className="mt-10 flex flex-wrap gap-1.5">
+        {EXPERTISE.map((item) => (
+          <li
+            key={item}
+            className="rounded-full bg-accent px-2.5 py-1 font-heading text-xs font-bold lowercase text-primary"
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }

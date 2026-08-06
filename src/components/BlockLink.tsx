@@ -6,6 +6,7 @@ interface BlockLinkProps {
   className?: string
   target?: string
   rel?: string
+  invert?: boolean
 }
 
 export function BlockLink({
@@ -14,6 +15,7 @@ export function BlockLink({
   className = '',
   target,
   rel,
+  invert = false,
 }: BlockLinkProps) {
   return (
     <a
@@ -22,8 +24,16 @@ export function BlockLink({
       rel={rel}
       className={`group relative -mx-1.5 inline-block overflow-hidden px-1.5 py-0.5 ${className}`}
     >
-      <span className="absolute inset-0 origin-left scale-x-0 bg-secondary transition-transform duration-300 ease-[cubic-bezier(0.65,0,0.35,1)] group-hover:scale-x-100" />
-      <span className="relative z-10 transition-colors duration-300 group-hover:text-primary">
+      <span
+        className={`absolute inset-0 origin-left scale-x-0 transition-transform duration-300 ease-[cubic-bezier(0.65,0,0.35,1)] group-hover:scale-x-100 ${
+          invert ? 'bg-primary' : 'bg-secondary'
+        }`}
+      />
+      <span
+        className={`relative z-10 transition-colors duration-300 ${
+          invert ? 'group-hover:text-secondary' : 'group-hover:text-primary'
+        }`}
+      >
         {children}
       </span>
     </a>

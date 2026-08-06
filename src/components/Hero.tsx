@@ -1,17 +1,5 @@
 import { motion, type Variants } from 'framer-motion'
 
-const EXPERTISE = [
-  'branding',
-  'digital marketing',
-  'visual storytelling',
-  'photography & video',
-  '3d & motion',
-  'visual design',
-  'ui design',
-  'user research',
-  'vfx',
-]
-
 const HEADLINE_PARTS: { text: string; className?: string }[] = [
   { text: 'Multidisciplinary Designer' },
   { text: '|', className: 'text-tertiary' },
@@ -25,15 +13,6 @@ const HEADLINE_PARTS: { text: string; className?: string }[] = [
 const headlineWords = HEADLINE_PARTS.flatMap((part) =>
   part.text.split(' ').map((text) => ({ text, className: part.className })),
 )
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-  },
-}
 
 const blockContainer: Variants = {
   hidden: {},
@@ -67,7 +46,7 @@ export function Hero() {
   return (
     <motion.section
       id="top"
-      className="mx-auto flex max-w-6xl flex-col gap-8 px-6 pt-24 pb-24 md:px-10 md:pt-32 md:pb-32"
+      className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-6 pt-24 pb-24 md:px-10 md:pt-32 md:pb-32"
       variants={blockContainer}
       initial="hidden"
       animate="visible"
@@ -96,20 +75,6 @@ export function Hero() {
           </span>
         ))}
       </motion.p>
-
-      <motion.ul
-        variants={fadeUp}
-        className="flex flex-wrap justify-center gap-1.5 pt-2"
-      >
-        {EXPERTISE.map((item) => (
-          <li
-            key={item}
-            className="rounded-full bg-accent px-2.5 py-1 font-heading text-xs font-bold lowercase text-primary"
-          >
-            {item}
-          </li>
-        ))}
-      </motion.ul>
     </motion.section>
   )
 }

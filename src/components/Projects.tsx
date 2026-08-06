@@ -1,77 +1,6 @@
-import { useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { categories, projects, type Category, type Project } from '../data/projects'
-
-function ProjectCard({
-  project,
-  tall,
-  isHovered,
-  isDimmed,
-  onHover,
-  onHoverEnd,
-}: {
-  project: Project
-  tall: boolean
-  isHovered: boolean
-  isDimmed: boolean
-  onHover: () => void
-  onHoverEnd: () => void
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  })
-  const y = useTransform(scrollYProgress, [0, 1], ['-8%', '8%'])
-
-  return (
-    <article
-      onMouseEnter={onHover}
-      onMouseLeave={onHoverEnd}
-      className={`flex h-full flex-col ${tall ? 'row-span-2' : ''}`}
-    >
-      <div
-        ref={ref}
-        className="relative flex-1 overflow-hidden rounded-xl border border-tertiary/20 bg-tertiary/10"
-      >
-        <motion.img
-          src={project.cover}
-          alt={project.title}
-          loading="lazy"
-          style={{ y }}
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="absolute inset-0 h-[130%] w-full object-cover"
-        />
-        <motion.div
-          className="absolute inset-0 bg-secondary"
-          initial={false}
-          animate={{ opacity: isDimmed ? 0.8 : 0 }}
-          transition={{ duration: 0.35, ease: 'easeOut' }}
-          style={{ pointerEvents: 'none' }}
-        />
-      </div>
-      <motion.div
-        initial={false}
-        animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 6 }}
-        transition={{ duration: 0.3, ease: 'easeOut' }}
-      >
-        <div className="mt-3 flex items-start justify-between gap-4">
-          <h3 className="font-heading text-lg font-normal text-secondary">
-            {project.title}
-          </h3>
-          <span className="font-alt shrink-0 text-sm text-tertiary">
-            {project.year}
-          </span>
-        </div>
-        <p className="mt-0.5 text-sm text-tertiary">{project.client}</p>
-        <p className="font-heading mt-0.5 text-xs font-bold lowercase text-tertiary">
-          {project.services}
-        </p>
-      </motion.div>
-    </article>
-  )
-}
+import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { categories, projects, type Category } from '../data/projects'
 
 export function Projects() {
   const [active, setActive] = useState<Category>('All Work')
@@ -81,6 +10,8 @@ export function Projects() {
     active === 'All Work'
       ? projects
       : projects.filter((project) => project.category === active)
+
+  const hovered = projects.find((project) => project.slug === hoveredSlug)
 
   return (
     <section id="work" className="mx-auto max-w-6xl px-6 pb-24 md:px-10">
@@ -107,19 +38,59 @@ export function Projects() {
         </ul>
       </div>
 
-      <div className="grid grid-flow-row-dense grid-cols-1 auto-rows-[300px] gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="border-t border-tertiary/20">
         {visible.map((project, i) => (
-          <ProjectCard
-            key={project.slug}
-            project={project}
-            tall={i % 4 === 0}
-            isHovered={hoveredSlug === project.slug}
-            isDimmed={hoveredSlug !== null && hoveredSlug !== project.slug}
-            onHover={() => setHoveredSlug(project.slug)}
-            onHoverEnd={() => setHoveredSlug(null)}
-          />
+          <li key={project.slug} className="border-b border-tertiary/20">
+            <button
+              type="button"
+              onMouseEnter={() => setHoveredSlug(project.slug)}
+              onMouseLeave={() => setHoveredSlug(null)}
+              className="flex w-full items-baseline justify-between gap-6 py-6 text-left"
+            >
+              <span className="font-alt text-sm text-tertiary">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span className="font-heading flex-1 text-2xl font-normal text-secondary transition-colors md:text-4xl">
+                {project.title}
+              </span>
+              <span className="hidden shrink-0 text-sm text-tertiary md:inline">
+                {project.client}
+              </span>
+              <span className="font-alt shrink-0 text-sm text-tertiary">
+                {project.year}
+              </span>
+            </button>
+          </li>
         ))}
-      </div>
+      </ul>
+
+      <AnimatePresence>
+        {hovered && (
+          <motion.div
+            key={hovered.slug}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="pointer-events-none fixed inset-0 z-40"
+          >
+            <img
+              src={hovered.cover}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-secondary/10 to-secondary/40" />
+            <div className="absolute bottom-16 left-6 right-6 md:bottom-20 md:left-10 md:right-10">
+              <p className="font-heading text-4xl font-normal text-primary md:text-6xl">
+                {hovered.title}
+              </p>
+              <p className="font-heading mt-2 text-sm font-bold lowercase text-primary/80">
+                {hovered.services}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
