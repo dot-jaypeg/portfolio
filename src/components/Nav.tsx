@@ -33,10 +33,8 @@ export function Nav() {
   return (
     <header
       ref={headerRef}
-      className={`sticky top-0 z-50 border-b backdrop-blur-sm transition-colors duration-300 ${
-        inverted
-          ? 'border-primary/20 bg-secondary/85 text-primary'
-          : 'border-tertiary/30 bg-primary/85 text-secondary'
+      className={`sticky top-0 z-50 backdrop-blur-sm transition-colors duration-300 ${
+        inverted ? 'bg-secondary/85 text-primary' : 'bg-primary/85 text-secondary'
       }`}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:px-10">

@@ -68,7 +68,7 @@ export function About() {
         </div>
 
         <div className="flex flex-col gap-8">
-          <FadeIn className="font-heading text-3xl leading-snug font-normal tracking-tight text-secondary md:text-4xl">
+          <FadeIn className="max-w-2xl font-heading text-3xl leading-snug font-normal tracking-tight text-secondary md:text-4xl">
             I'm an experienced multidisciplinary designer who loves working
             right at the intersection of branding, digital marketing, and
             visual storytelling.
@@ -91,11 +91,11 @@ export function About() {
         </div>
       </div>
 
-      <ul className="mt-10 flex flex-wrap gap-1.5">
+      <ul className="mt-10 flex flex-wrap justify-center gap-2">
         {EXPERTISE.map((item) => (
           <li
             key={item}
-            className="rounded-full bg-accent px-2.5 py-1 font-heading text-xs font-bold lowercase text-primary"
+            className="rounded-full bg-accent px-3 py-1.5 font-heading text-sm font-bold lowercase text-primary"
           >
             {item}
           </li>

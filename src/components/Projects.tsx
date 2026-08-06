@@ -77,14 +77,13 @@ export function Projects() {
             <img
               src={hovered.cover}
               alt=""
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover opacity-30"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-secondary/10 to-secondary/40" />
             <div className="absolute bottom-16 left-6 right-6 md:bottom-20 md:left-10 md:right-10">
-              <p className="font-heading text-4xl font-normal text-primary md:text-6xl">
+              <p className="font-heading inline-block rounded-lg bg-primary/70 px-4 py-3 text-4xl font-normal text-secondary backdrop-blur-sm md:text-6xl">
                 {hovered.title}
               </p>
-              <p className="font-heading mt-2 text-sm font-bold lowercase text-primary/80">
+              <p className="font-heading mt-2 inline-block rounded-lg bg-primary/70 px-4 py-2 text-sm font-bold lowercase text-tertiary backdrop-blur-sm">
                 {hovered.services}
               </p>
             </div>

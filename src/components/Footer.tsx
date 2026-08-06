@@ -10,7 +10,7 @@ export function Footer() {
         Let's capture the narrative.
       </h2>
 
-      <div className="flex flex-col gap-3 font-heading text-sm font-bold lowercase">
+      <div className="flex flex-col items-end gap-3 self-end font-heading text-sm font-bold lowercase">
         <BlockLink href="mailto:design.jaypeg@gmail.com" invert>
           design.jaypeg@gmail.com
         </BlockLink>
