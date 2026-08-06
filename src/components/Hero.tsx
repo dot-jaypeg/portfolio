@@ -83,7 +83,7 @@ export function Hero() {
 
       <motion.p
         variants={wordContainer}
-        className="font-heading text-xl leading-snug font-normal tracking-tight text-secondary md:text-2xl"
+        className="font-heading text-center text-sm leading-snug font-normal tracking-tight text-secondary md:text-base"
       >
         {headlineWords.map((w, i) => (
           <span key={i}>
@@ -97,7 +97,10 @@ export function Hero() {
         ))}
       </motion.p>
 
-      <motion.ul variants={fadeUp} className="flex flex-wrap gap-1.5 pt-2">
+      <motion.ul
+        variants={fadeUp}
+        className="flex flex-wrap justify-center gap-1.5 pt-2"
+      >
         {EXPERTISE.map((item) => (
           <li
             key={item}
