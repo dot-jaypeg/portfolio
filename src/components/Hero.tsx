@@ -72,7 +72,7 @@ export function Hero() {
 
       <motion.h1
         variants={wordContainer}
-        className="font-heading text-4xl leading-snug font-normal text-ink md:text-6xl"
+        className="font-heading text-4xl leading-[1.15] font-normal tracking-tight text-ink md:text-6xl"
       >
         {headlineWords.map((w, i) => (
           <span key={i}>
@@ -98,11 +98,11 @@ export function Hero() {
         driving my pursuit of purposeful and original digital experiences.
       </motion.p>
 
-      <motion.ul variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
+      <motion.ul variants={fadeUp} className="flex flex-wrap gap-1.5 pt-2">
         {EXPERTISE.map((item) => (
           <li
             key={item}
-            className="rounded-full border border-line bg-cream-soft px-4 py-1.5 font-heading text-sm font-bold lowercase text-ink"
+            className="rounded-full bg-[#4D5C60] px-2.5 py-1 font-heading text-xs font-bold lowercase text-[#D8D8D8]"
           >
             {item}
           </li>

@@ -32,10 +32,19 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Neue Haas Grotesk Black';
+  src: url('/fonts/NeueHaasDisplayBlack.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-heading: 'Alte Haas Grotesk', system-ui, sans-serif;
   --font-body: 'Alte Haas Grotesk', system-ui, sans-serif;
   --font-alt: 'Neue Haas Grotesk Thin', system-ui, sans-serif;
+  --font-wordmark: 'Neue Haas Grotesk Black', system-ui, sans-serif;
 
   --color-cream: #f4efe4;
   --color-cream-soft: #ece4d3;

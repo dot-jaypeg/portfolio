@@ -10,7 +10,7 @@ export function Nav() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:px-10">
         <a
           href="#top"
-          className="font-heading text-xl font-bold lowercase text-ink"
+          className="font-wordmark text-xl font-black tracking-tighter text-ink italic"
         >
           .jaypeg
         </a>

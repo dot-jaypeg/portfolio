@@ -5,7 +5,7 @@ export function Footer() {
       className="border-t border-line bg-ink px-6 py-20 text-cream md:px-10"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-end md:justify-between">
-        <h2 className="font-heading max-w-xl text-4xl font-normal leading-snug md:text-5xl">
+        <h2 className="font-heading max-w-xl text-4xl font-normal tracking-tight leading-snug md:text-5xl">
           Let's make something{' '}
           <span className="font-alt italic">worth remembering.</span>
         </h2>
