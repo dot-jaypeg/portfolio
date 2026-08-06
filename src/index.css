@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url('/fonts/AlteHaasGroteskRegular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url('/fonts/AlteHaasGroteskBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Grotesk Thin';
+  src: url('/fonts/NeueHaasDisplayThin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Grotesk Thin';
+  src: url('/fonts/NeueHaasDisplayThinItalic.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@theme {
+  --font-heading: 'Alte Haas Grotesk', system-ui, sans-serif;
+  --font-body: 'Alte Haas Grotesk', system-ui, sans-serif;
+  --font-alt: 'Neue Haas Grotesk Thin', system-ui, sans-serif;
+
+  --color-cream: #f4efe4;
+  --color-cream-soft: #ece4d3;
+  --color-ink: #211d18;
+  --color-ink-soft: #6f6a5f;
+  --color-line: #dcd2ba;
+  --color-accent: #4453c9;
+  --color-accent-soft: #4453c91a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
