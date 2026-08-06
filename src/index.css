@@ -33,10 +33,10 @@
 }
 
 @font-face {
-  font-family: 'Neue Haas Grotesk Black';
-  src: url('/fonts/NeueHaasDisplayBlack.ttf') format('truetype');
-  font-weight: 900;
-  font-style: normal;
+  font-family: 'Neue Haas Grotesk Medium';
+  src: url('/fonts/NeueHaasDisplayMediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -44,15 +44,12 @@
   --font-heading: 'Alte Haas Grotesk', system-ui, sans-serif;
   --font-body: 'Alte Haas Grotesk', system-ui, sans-serif;
   --font-alt: 'Neue Haas Grotesk Thin', system-ui, sans-serif;
-  --font-wordmark: 'Neue Haas Grotesk Black', system-ui, sans-serif;
+  --font-wordmark: 'Neue Haas Grotesk Medium', system-ui, sans-serif;
 
-  --color-cream: #f4efe4;
-  --color-cream-soft: #ece4d3;
-  --color-ink: #211d18;
-  --color-ink-soft: #6f6a5f;
-  --color-line: #dcd2ba;
-  --color-accent: #4453c9;
-  --color-accent-soft: #4453c91a;
+  --color-primary: #171a1c;
+  --color-secondary: #d8d8d8;
+  --color-tertiary: #525266;
+  --color-accent: #4d5c60;
 }
 
 html {
@@ -61,6 +58,6 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--color-cream);
-  color: var(--color-ink);
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
 }

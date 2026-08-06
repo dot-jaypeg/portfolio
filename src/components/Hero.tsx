@@ -14,11 +14,11 @@ const EXPERTISE = [
 
 const HEADLINE_PARTS: { text: string; className?: string }[] = [
   { text: 'Multidisciplinary Designer' },
-  { text: '|', className: 'text-ink-soft' },
+  { text: '|', className: 'text-tertiary' },
   { text: 'Branding, User Interface, Visual Storytelling, &' },
   {
     text: 'Friendly Neighborhood Spider-Man Fanatic.',
-    className: 'font-bold text-[#4D5C60]',
+    className: 'font-bold text-accent',
   },
 ]
 
@@ -65,14 +65,14 @@ export function Hero() {
     >
       <motion.p
         variants={fadeUp}
-        className="font-alt text-lg italic text-ink-soft md:text-xl"
+        className="font-heading text-lg font-bold text-tertiary md:text-xl"
       >
         jayden ramirez, founder of .jaypeg studios
       </motion.p>
 
       <motion.h1
         variants={wordContainer}
-        className="font-heading text-4xl leading-[1.15] font-normal tracking-tight text-ink md:text-6xl"
+        className="font-heading text-4xl leading-[1.15] font-normal tracking-tight text-secondary md:text-6xl"
       >
         {headlineWords.map((w, i) => (
           <span key={i}>
@@ -86,23 +86,11 @@ export function Hero() {
         ))}
       </motion.h1>
 
-      <motion.p
-        variants={fadeUp}
-        className="max-w-2xl text-lg leading-relaxed text-ink-soft"
-      >
-        Backed by a foundation from Chapman and eight years navigating
-        everything from corporate branding to my own freelance studio, I
-        design with a focus on unconventional storytelling. My creative eye
-        is constantly shaped by photography and the aesthetics of games like{' '}
-        <span className="font-alt italic">Final Fantasy VII Remake</span>,
-        driving my pursuit of purposeful and original digital experiences.
-      </motion.p>
-
       <motion.ul variants={fadeUp} className="flex flex-wrap gap-1.5 pt-2">
         {EXPERTISE.map((item) => (
           <li
             key={item}
-            className="rounded-full bg-[#4D5C60] px-2.5 py-1 font-heading text-xs font-bold lowercase text-[#D8D8D8]"
+            className="rounded-full bg-accent px-2.5 py-1 font-heading text-xs font-bold lowercase text-secondary"
           >
             {item}
           </li>

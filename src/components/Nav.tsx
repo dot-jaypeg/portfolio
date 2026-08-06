@@ -1,3 +1,5 @@
+import { BlockLink } from './BlockLink'
+
 const LINKS = [
   { label: 'work', href: '#work' },
   { label: 'about', href: '#about' },
@@ -6,23 +8,23 @@ const LINKS = [
 
 export function Nav() {
   return (
-    <header className="sticky top-0 z-50 border-b border-line/70 bg-cream/85 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b border-tertiary/30 bg-primary/85 backdrop-blur-sm">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:px-10">
         <a
           href="#top"
-          className="font-wordmark text-xl font-black tracking-tighter text-ink italic"
+          className="font-wordmark text-xl font-medium tracking-tighter text-secondary italic transition-colors hover:text-accent"
         >
           .jaypeg
         </a>
-        <ul className="flex items-center gap-6 md:gap-8">
+        <ul className="flex items-center gap-2 md:gap-4">
           {LINKS.map((link) => (
             <li key={link.href}>
-              <a
+              <BlockLink
                 href={link.href}
-                className="font-heading text-sm font-bold lowercase text-ink-soft transition-colors hover:text-accent"
+                className="font-heading text-sm font-bold lowercase text-tertiary"
               >
                 {link.label}
-              </a>
+              </BlockLink>
             </li>
           ))}
         </ul>
