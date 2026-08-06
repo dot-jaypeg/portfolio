@@ -16,9 +16,14 @@ export function Hero() {
         multidisciplinary designer, running .jaypeg studios
       </p>
 
-      <h1 className="font-heading text-5xl leading-[1.05] font-normal tracking-tight text-ink md:text-7xl">
-        Hi, I'm Jayden — I design at the intersection of branding, digital
-        marketing, and visual storytelling.
+      <h1 className="font-heading text-4xl leading-[1.15] font-normal tracking-tight text-ink md:text-6xl">
+        Jayden Ramirez{' '}
+        <span className="text-ink-soft">|</span> Multidisciplinary Designer{' '}
+        <span className="text-ink-soft">|</span> Branding, Visual
+        Storytelling, &amp;{' '}
+        <span className="font-alt italic">
+          Friendly Neighborhood Spider-Man Fanatic.
+        </span>
       </h1>
 
       <p className="max-w-2xl text-lg leading-relaxed text-ink-soft">
