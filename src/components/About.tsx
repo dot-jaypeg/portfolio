@@ -56,6 +56,13 @@ export function About() {
             >
               spotify ↗
             </BlockLink>
+            <BlockLink
+              href="https://drive.google.com/file/d/1Ahew8Y5ZVXMA8cAMo7_uslweZygII046/view"
+              target="_blank"
+              rel="noreferrer"
+            >
+              resume ↗
+            </BlockLink>
           </div>
         </div>
 

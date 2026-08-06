@@ -40,6 +40,15 @@ const blockContainer: Variants = {
   visible: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
 }
 
+const nameReveal: Variants = {
+  hidden: { opacity: 0, y: 48 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+  },
+}
+
 const wordContainer: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.045 } },
@@ -58,21 +67,23 @@ export function Hero() {
   return (
     <motion.section
       id="top"
-      className="mx-auto flex max-w-6xl flex-col gap-8 px-6 pt-20 pb-24 md:px-10 md:pt-28 md:pb-32"
+      className="mx-auto flex max-w-6xl flex-col gap-8 px-6 pt-24 pb-24 md:px-10 md:pt-32 md:pb-32"
       variants={blockContainer}
       initial="hidden"
       animate="visible"
     >
-      <motion.p
-        variants={fadeUp}
-        className="font-heading text-lg font-bold text-tertiary md:text-xl"
-      >
-        jayden ramirez, founder of .jaypeg studios
-      </motion.p>
+      <div className="overflow-hidden">
+        <motion.h1
+          variants={nameReveal}
+          className="font-heading text-center text-6xl font-bold uppercase tracking-tighter text-secondary sm:text-7xl md:text-8xl"
+        >
+          Jayden Ramirez
+        </motion.h1>
+      </div>
 
-      <motion.h1
+      <motion.p
         variants={wordContainer}
-        className="font-heading text-4xl leading-[1.15] font-normal tracking-tight text-secondary md:text-[45px]"
+        className="font-heading text-xl leading-snug font-normal tracking-tight text-secondary md:text-2xl"
       >
         {headlineWords.map((w, i) => (
           <span key={i}>
@@ -84,7 +95,7 @@ export function Hero() {
             </motion.span>{' '}
           </span>
         ))}
-      </motion.h1>
+      </motion.p>
 
       <motion.ul variants={fadeUp} className="flex flex-wrap gap-1.5 pt-2">
         {EXPERTISE.map((item) => (
