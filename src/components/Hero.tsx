@@ -1,49 +1,113 @@
+import { motion, type Variants } from 'framer-motion'
+
 const EXPERTISE = [
   'branding',
   'digital marketing',
   'visual storytelling',
   'photography & video',
   '3d & motion',
+  'visual design',
+  'ui design',
+  'user research',
+  'vfx',
 ]
+
+const HEADLINE_PARTS: { text: string; className?: string }[] = [
+  { text: 'Multidisciplinary Designer' },
+  { text: '|', className: 'text-ink-soft' },
+  { text: 'Branding, User Interface, Visual Storytelling, &' },
+  {
+    text: 'Friendly Neighborhood Spider-Man Fanatic.',
+    className: 'font-bold text-[#4D5C60]',
+  },
+]
+
+const headlineWords = HEADLINE_PARTS.flatMap((part) =>
+  part.text.split(' ').map((text) => ({ text, className: part.className })),
+)
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  },
+}
+
+const blockContainer: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
+}
+
+const wordContainer: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.045 } },
+}
+
+const word: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: 'easeOut' },
+  },
+}
 
 export function Hero() {
   return (
-    <section
+    <motion.section
       id="top"
       className="mx-auto flex max-w-6xl flex-col gap-8 px-6 pt-20 pb-24 md:px-10 md:pt-28 md:pb-32"
+      variants={blockContainer}
+      initial="hidden"
+      animate="visible"
     >
-      <p className="font-alt text-lg italic text-ink-soft md:text-xl">
+      <motion.p
+        variants={fadeUp}
+        className="font-alt text-lg italic text-ink-soft md:text-xl"
+      >
         jayden ramirez, founder of .jaypeg studios
-      </p>
+      </motion.p>
 
-      <h1 className="font-heading text-4xl leading-[1.15] font-normal tracking-tight text-ink md:text-6xl">
-        Multidisciplinary Designer{' '}
-        <span className="text-ink-soft">|</span> Branding, User Interface,
-        Visual Storytelling, &amp;{' '}
-        <span className="font-bold text-[#4D5C60]">
-          Friendly Neighborhood Spider-Man Fanatic.
-        </span>
-      </h1>
+      <motion.h1
+        variants={wordContainer}
+        className="font-heading text-4xl leading-snug font-normal text-ink md:text-6xl"
+      >
+        {headlineWords.map((w, i) => (
+          <span key={i}>
+            <motion.span
+              variants={word}
+              className={`inline-block ${w.className ?? ''}`}
+            >
+              {w.text}
+            </motion.span>{' '}
+          </span>
+        ))}
+      </motion.h1>
 
-      <p className="max-w-2xl text-lg leading-relaxed text-ink-soft">
+      <motion.p
+        variants={fadeUp}
+        className="max-w-2xl text-lg leading-relaxed text-ink-soft"
+      >
         Backed by a foundation from Chapman and eight years navigating
         everything from corporate branding to my own freelance studio, I
         design with a focus on unconventional storytelling. My creative eye
         is constantly shaped by photography and the aesthetics of games like{' '}
         <span className="font-alt italic">Final Fantasy VII Remake</span>,
         driving my pursuit of purposeful and original digital experiences.
-      </p>
+      </motion.p>
 
-      <ul className="flex flex-wrap gap-3 pt-2">
+      <motion.ul variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
         {EXPERTISE.map((item) => (
           <li
             key={item}
-            className="rounded-full border border-line bg-cream-soft px-4 py-1.5 font-heading text-sm font-bold lowercase tracking-wide text-ink"
+            className="rounded-full border border-line bg-cream-soft px-4 py-1.5 font-heading text-sm font-bold lowercase text-ink"
           >
             {item}
           </li>
         ))}
-      </ul>
-    </section>
+      </motion.ul>
+    </motion.section>
   )
 }

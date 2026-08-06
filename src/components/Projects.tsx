@@ -12,7 +12,7 @@ export function Projects() {
   return (
     <section id="work" className="mx-auto max-w-6xl px-6 pb-24 md:px-10">
       <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <h2 className="font-heading text-sm font-bold lowercase tracking-widest text-ink-soft">
+        <h2 className="font-heading text-sm font-bold lowercase text-ink-soft">
           selected work
         </h2>
         <ul className="flex flex-wrap gap-2">
@@ -21,7 +21,7 @@ export function Projects() {
               <button
                 type="button"
                 onClick={() => setActive(category)}
-                className={`rounded-full px-4 py-1.5 font-heading text-sm font-bold lowercase tracking-wide transition-colors ${
+                className={`rounded-full px-4 py-1.5 font-heading text-sm font-bold lowercase transition-colors ${
                   active === category
                     ? 'bg-ink text-cream'
                     : 'border border-line text-ink-soft hover:border-ink hover:text-ink'
@@ -54,7 +54,7 @@ export function Projects() {
               </span>
             </div>
             <p className="mt-1 text-sm text-ink-soft">{project.client}</p>
-            <p className="font-heading mt-2 text-xs font-bold lowercase tracking-wide text-accent">
+            <p className="font-heading mt-2 text-xs font-bold lowercase text-accent">
               {project.services}
             </p>
           </article>

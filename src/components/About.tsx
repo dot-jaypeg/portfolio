@@ -16,7 +16,7 @@ export function About() {
       </div>
 
       <div className="flex flex-col justify-center gap-5">
-        <h2 className="font-heading text-sm font-bold lowercase tracking-widest text-ink-soft">
+        <h2 className="font-heading text-sm font-bold lowercase text-ink-soft">
           a little about me
         </h2>
         <p className="text-lg leading-relaxed text-ink">
