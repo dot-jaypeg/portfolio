@@ -4,6 +4,43 @@ import mePhoto from '../assets/images/about/me.gif'
 import { BlockLink } from './BlockLink'
 import { EXPERTISE } from '../data/expertise'
 
+const STACK = [
+  'Photoshop',
+  'Illustrator',
+  'InDesign',
+  'Unreal',
+  'Figma',
+  'After Effects',
+  'Lightroom Classic',
+  'Premiere Pro',
+  'CapCut',
+  'Canva',
+  'Visual Studio Code',
+]
+
+const CREDENTIALS = [
+  {
+    title: 'Creative Technologist',
+    company: 'Advanced Marketers',
+    dates: '2026 — Present',
+  },
+  {
+    title: 'Marketing Operations',
+    company: 'Brand Innovators Strategy Group',
+    dates: '2026',
+  },
+  {
+    title: 'Digital Marketing & Music Management',
+    company: 'Velvet Hammer Music & Management Group',
+    dates: '2025',
+  },
+  {
+    title: 'Junior UX/UI & Graphic Designer',
+    company: 'MARQUI Labs',
+    dates: '2023 — 2024',
+  },
+]
+
 function FadeIn({
   children,
   className = '',
@@ -101,6 +138,35 @@ export function About() {
           </li>
         ))}
       </ul>
+
+      <div className="mt-20 grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr] md:gap-16">
+        <h3 className="font-heading text-sm font-bold lowercase text-tertiary">
+          the stack
+        </h3>
+        <ul className="grid grid-cols-2 gap-y-3 text-lg text-secondary sm:grid-cols-3">
+          {STACK.map((tool) => (
+            <li key={tool}>{tool}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr] md:gap-16">
+        <h3 className="font-heading text-sm font-bold lowercase text-tertiary">
+          my credentials
+        </h3>
+        <ul className="flex flex-col gap-6">
+          {CREDENTIALS.map((role) => (
+            <li key={role.title}>
+              <p className="font-heading text-lg font-bold text-secondary">
+                {role.title}
+              </p>
+              <p className="mt-0.5 text-sm text-tertiary">
+                {role.company} | {role.dates}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   )
 }
