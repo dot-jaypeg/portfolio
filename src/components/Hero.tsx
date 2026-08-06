@@ -13,12 +13,11 @@ export function Hero() {
       className="mx-auto flex max-w-6xl flex-col gap-8 px-6 pt-20 pb-24 md:px-10 md:pt-28 md:pb-32"
     >
       <p className="font-alt text-lg italic text-ink-soft md:text-xl">
-        multidisciplinary designer, running .jaypeg studios
+        jayden ramirez, founder of .jaypeg studios
       </p>
 
       <h1 className="font-heading text-4xl leading-[1.15] font-normal tracking-tight text-ink md:text-6xl">
-        Jayden Ramirez{' '}
-        <span className="text-ink-soft">|</span> Multidisciplinary Designer{' '}
+        Multidisciplinary Designer{' '}
         <span className="text-ink-soft">|</span> Branding, Visual
         Storytelling, &amp;{' '}
         <span className="font-alt italic">
@@ -27,13 +26,12 @@ export function Hero() {
       </h1>
 
       <p className="max-w-2xl text-lg leading-relaxed text-ink-soft">
-        Eight years of design knowledge, from marketing operations to
-        corporate brand design, sharpened running my own freelance studio and
-        built on the foundation Chapman gave me. My creative eye is shaped by
-        video games — I'm always studying how favorites like{' '}
-        <span className="font-alt italic">Final Fantasy VII Remake</span> and{' '}
-        <span className="font-alt italic">Spider-Man</span> use visual
-        communication to spark emotion.
+        Backed by a foundation from Chapman and eight years navigating
+        everything from corporate branding to my own freelance studio, I
+        design with a focus on unconventional storytelling. My creative eye
+        is constantly shaped by photography and the aesthetics of games like{' '}
+        <span className="font-alt italic">Final Fantasy VII Remake</span>,
+        driving my pursuit of purposeful and original digital experiences.
       </p>
 
       <ul className="flex flex-wrap gap-3 pt-2">
