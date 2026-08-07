@@ -139,29 +139,31 @@ export function About() {
         ))}
       </ul>
 
-      <div className="mt-20 grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr] md:gap-16">
-        <h3 className="font-heading text-sm font-bold lowercase text-tertiary">
-          the stack
+      <div className="mt-24 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <h3 className="font-heading text-sm font-normal tracking-wide text-tertiary uppercase">
+          The Stack
         </h3>
-        <ul className="grid grid-cols-2 gap-y-3 text-lg text-secondary sm:grid-cols-3">
+        <ul className="flex flex-col gap-4 text-sm text-secondary">
           {STACK.map((tool) => (
             <li key={tool}>{tool}</li>
           ))}
         </ul>
       </div>
 
-      <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr] md:gap-16">
-        <h3 className="font-heading text-sm font-bold lowercase text-tertiary">
-          my credentials
+      <div className="mt-20 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <h3 className="font-heading text-sm font-normal tracking-wide text-tertiary uppercase">
+          My Credentials
         </h3>
-        <ul className="flex flex-col gap-6">
+        <ul className="flex flex-col gap-8">
           {CREDENTIALS.map((role) => (
             <li key={role.title}>
-              <p className="font-heading text-lg font-bold text-secondary">
+              <p className="font-heading text-sm font-bold tracking-wide text-secondary uppercase">
                 {role.title}
               </p>
-              <p className="mt-0.5 text-sm text-tertiary">
-                {role.company} | {role.dates}
+              <p className="mt-1.5 flex items-center gap-2 text-sm tracking-wide text-tertiary uppercase">
+                <span>{role.company}</span>
+                <span className="inline-block h-1.5 w-1.5 shrink-0 bg-tertiary" />
+                <span>{role.dates}</span>
               </p>
             </li>
           ))}
