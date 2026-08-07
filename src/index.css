@@ -52,10 +52,6 @@
   --color-accent: #4d5c60;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   font-family: var(--font-body);
   background-color: var(--color-primary);

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { categories, projects, type Category } from '../data/projects'
+import { FadeIn } from './FadeIn'
 
 export function Projects() {
   const [active, setActive] = useState<Category>('All Work')
@@ -46,31 +47,33 @@ export function Projects() {
           const isHovered = hoveredSlug === project.slug
           return (
             <li key={project.slug}>
-              <button
-                type="button"
-                onMouseEnter={() => setHoveredSlug(project.slug)}
-                onMouseLeave={() => setHoveredSlug(null)}
-                className="flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 py-3 text-left"
-              >
-                <span className="font-alt text-base text-tertiary">
-                  {String(i + 1).padStart(2, '0')}.
-                </span>
-                <span
-                  className={`font-heading text-xl font-normal transition-colors duration-300 md:text-2xl ${
-                    isHovered ? 'text-secondary' : 'text-secondary/90'
-                  }`}
+              <FadeIn>
+                <button
+                  type="button"
+                  onMouseEnter={() => setHoveredSlug(project.slug)}
+                  onMouseLeave={() => setHoveredSlug(null)}
+                  className="flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 py-3 text-left"
                 >
-                  {project.title}
-                </span>
-                <motion.span
-                  initial={false}
-                  animate={{ opacity: isHovered ? 1 : 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="font-alt text-sm text-tertiary"
-                >
-                  {project.client} — {project.year} — {project.services}
-                </motion.span>
-              </button>
+                  <span className="font-alt text-base text-tertiary">
+                    {String(i + 1).padStart(2, '0')}.
+                  </span>
+                  <span
+                    className={`font-heading text-xl font-normal transition-colors duration-300 md:text-2xl ${
+                      isHovered ? 'text-secondary' : 'text-secondary/90'
+                    }`}
+                  >
+                    {project.title}
+                  </span>
+                  <motion.span
+                    initial={false}
+                    animate={{ opacity: isHovered ? 1 : 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="font-alt text-sm text-tertiary"
+                  >
+                    {project.client} — {project.year} — {project.services}
+                  </motion.span>
+                </button>
+              </FadeIn>
             </li>
           )
         })}

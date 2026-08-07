@@ -1,7 +1,6 @@
-import { useRef, type ReactNode } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
 import mePhoto from '../assets/images/about/me.gif'
 import { BlockLink } from './BlockLink'
+import { FadeIn } from './FadeIn'
 import { EXPERTISE } from '../data/expertise'
 
 const STACK = [
@@ -40,27 +39,6 @@ const CREDENTIALS = [
     dates: '2023 — 2024',
   },
 ]
-
-function FadeIn({
-  children,
-  className = '',
-}: {
-  children: ReactNode
-  className?: string
-}) {
-  const ref = useRef<HTMLParagraphElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  })
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.25, 1, 0.25])
-
-  return (
-    <motion.p ref={ref} style={{ opacity }} className={className}>
-      {children}
-    </motion.p>
-  )
-}
 
 export function About() {
   return (
@@ -140,31 +118,35 @@ export function About() {
       </ul>
 
       <div className="mt-24 grid grid-cols-1 gap-6 md:grid-cols-2">
-        <h3 className="font-heading text-sm font-normal tracking-wide text-tertiary uppercase">
+        <h3 className="font-heading text-sm font-normal tracking-wide text-secondary uppercase">
           The Stack
         </h3>
-        <ul className="flex flex-col gap-4 text-sm text-secondary">
+        <ul className="flex flex-col gap-4 text-sm font-bold tracking-tight text-secondary uppercase">
           {STACK.map((tool) => (
-            <li key={tool}>{tool}</li>
+            <li key={tool}>
+              <FadeIn className="inline-block">{tool}</FadeIn>
+            </li>
           ))}
         </ul>
       </div>
 
       <div className="mt-20 grid grid-cols-1 gap-6 md:grid-cols-2">
-        <h3 className="font-heading text-sm font-normal tracking-wide text-tertiary uppercase">
+        <h3 className="font-heading text-sm font-normal tracking-wide text-secondary uppercase">
           My Credentials
         </h3>
         <ul className="flex flex-col gap-8">
           {CREDENTIALS.map((role) => (
             <li key={role.title}>
-              <p className="font-heading text-sm font-bold tracking-wide text-secondary uppercase">
-                {role.title}
-              </p>
-              <p className="mt-1.5 flex items-center gap-2 text-sm tracking-wide text-tertiary uppercase">
-                <span>{role.company}</span>
-                <span className="inline-block h-1.5 w-1.5 shrink-0 bg-tertiary" />
-                <span>{role.dates}</span>
-              </p>
+              <FadeIn>
+                <p className="font-heading text-sm font-bold tracking-wide text-secondary uppercase">
+                  {role.title}
+                </p>
+                <p className="mt-1.5 flex items-center gap-2 text-sm tracking-wide text-tertiary uppercase">
+                  <span>{role.company}</span>
+                  <span className="inline-block h-1.5 w-1.5 shrink-0 bg-tertiary" />
+                  <span>{role.dates}</span>
+                </p>
+              </FadeIn>
             </li>
           ))}
         </ul>
