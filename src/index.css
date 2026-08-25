@@ -16,12 +16,22 @@
   font-display: swap;
 }
 
+:root {
+  /* Mutable theme roles -- GSAP animates these two directly (see
+     useSectionColors) to crossfade the whole page between sections.
+     Every component keeps using the ink/cream utility classes below;
+     because those resolve through this indirection, they all shift
+     together automatically without per-component changes. */
+  --bg: #161616;
+  --fg: #fffcef;
+}
+
 @theme {
   --font-display: 'Alte Haas Grotesk', system-ui, sans-serif;
   --font-body: 'Alte Haas Grotesk', system-ui, sans-serif;
 
-  --color-ink: #161616;
-  --color-cream: #fffcef;
+  --color-ink: var(--bg);
+  --color-cream: var(--fg);
   --color-teal: #618c82;
   --color-red: #dd5547;
 }

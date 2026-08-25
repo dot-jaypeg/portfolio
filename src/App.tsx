@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSmoothScroll } from './hooks/useSmoothScroll'
+import { useSectionColors } from './hooks/useSectionColors'
 import { Preloader } from './components/Preloader'
 import { Cursor } from './components/Cursor'
 import { Grain } from './components/Grain'
@@ -12,6 +13,7 @@ import { Contact } from './components/Contact'
 function App() {
   const [loading, setLoading] = useState(true)
   useSmoothScroll()
+  useSectionColors()
 
   useEffect(() => {
     document.body.style.overflow = loading ? 'hidden' : ''
