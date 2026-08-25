@@ -22,11 +22,9 @@ interface YTNamespace {
       playerVars: Record<string, string | number>
       events: {
         onReady: (e: YTPlayerEvent) => void
-        onStateChange: (e: YTPlayerEvent) => void
       }
     },
   ) => YTPlayer
-  PlayerState: { ENDED: number }
 }
 
 declare global {
@@ -39,10 +37,12 @@ declare global {
 // YouTube plays the actual full video, not a truncated preview -- unlike
 // Spotify's anonymous embed, so there's no forced 30s cutoff and no need
 // to fake a loop by re-triggering playback (which is what caused the
-// audible re-buffer blip in the Spotify version). `loop: 1` + a playlist
-// context asks YouTube to replay from the top on its own; the
-// onStateChange/ENDED check is just a safety net in case that native
-// loop doesn't fire in some browser.
+// audible re-buffer blip in the Spotify version). `loop: 1` combined with
+// a playlist context is natively, indefinitely looping -- YouTube
+// restarts the playlist from the top every time it reaches the end, not
+// just once -- so there's no need to detect "ended" and replay it
+// ourselves (and doing so per-video would risk racing the playlist's own
+// advance to the next track).
 //
 // Always starts "Off", never restored from a previous visit -- same
 // reasoning as before: browsers block audio autoplay without a fresh
@@ -76,11 +76,6 @@ export function SoundToggle() {
             playerRef.current = player
             if (pendingRef.current != null) {
               player[pendingRef.current ? 'playVideo' : 'pauseVideo']()
-            }
-          },
-          onStateChange: (e) => {
-            if (window.YT && e.data === window.YT.PlayerState.ENDED) {
-              player.playVideo()
             }
           },
         },
