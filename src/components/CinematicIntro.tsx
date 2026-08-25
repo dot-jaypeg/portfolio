@@ -11,14 +11,14 @@ const SCENES = [
   {
     eyebrow: '02 — Craft',
     headline: 'Branding & Identity',
-    bg: '#618c82',
-    fg: '#fffcef',
+    bg: '#fffcef',
+    fg: '#161616',
   },
   {
     eyebrow: '03 — Craft',
     headline: 'Digital & Motion',
-    bg: '#618c82',
-    fg: '#fffcef',
+    bg: '#fffcef',
+    fg: '#161616',
   },
   {
     eyebrow: '04 — Who',
@@ -148,7 +148,7 @@ export function CinematicIntro() {
             <p className="font-body text-xs tracking-[0.3em] text-cream uppercase">
               {scene.eyebrow}
             </p>
-            <h2 className="scene-headline font-display mt-4 text-[13vw] leading-[0.8] font-bold tracking-tight text-cream uppercase">
+            <h2 className="scene-headline font-display mt-4 text-[13vw] leading-[0.8] font-bold tracking-tighter text-cream uppercase">
               {scene.headline}
             </h2>
           </div>

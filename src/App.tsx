@@ -9,6 +9,7 @@ import { CinematicIntro } from './components/CinematicIntro'
 import { WorkCarousel } from './components/WorkCarousel'
 import { Capabilities } from './components/Capabilities'
 import { Contact } from './components/Contact'
+import { Divider } from './components/Divider'
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -29,7 +30,9 @@ function App() {
         <main>
           <CinematicIntro />
           <WorkCarousel />
+          <Divider />
           <Capabilities />
+          <Divider />
         </main>
         <Contact />
       </div>

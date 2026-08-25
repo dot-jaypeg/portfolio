@@ -93,5 +93,5 @@ body {
 }
 
 .grain-layer {
-  animation: grain-shift 1.2s steps(6) infinite;
+  animation: grain-shift 0.4s steps(8) infinite;
 }

@@ -1,7 +1,44 @@
+import { useEffect, useRef } from 'react'
+import { gsap, SplitText } from '../lib/gsap'
 import { EXPERTISE } from '../data/expertise'
 import { STACK } from '../data/stack'
 import { CREDENTIALS } from '../data/credentials'
 import { Reveal } from './Reveal'
+
+function StatementReveal() {
+  const ref = useRef<HTMLParagraphElement>(null)
+
+  useEffect(() => {
+    const el = ref.current!
+    const ctx = gsap.context(() => {
+      const split = new SplitText(el, { type: 'words' })
+      gsap.from(split.words, {
+        opacity: 0,
+        y: 28,
+        stagger: 0.025,
+        duration: 0.7,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse',
+        },
+      })
+      return () => split.revert()
+    })
+    return () => ctx.revert()
+  }, [])
+
+  return (
+    <p
+      ref={ref}
+      className="font-display mt-8 max-w-3xl text-3xl leading-snug font-bold tracking-tighter text-cream uppercase md:text-5xl"
+    >
+      Multidisciplinary designer working across branding, digital marketing,
+      and visual storytelling.
+    </p>
+  )
+}
 
 export function Capabilities() {
   return (
@@ -12,12 +49,7 @@ export function Capabilities() {
         </p>
       </Reveal>
 
-      <Reveal delay={0.05} className="mt-8 max-w-3xl">
-        <p className="font-display text-3xl leading-snug font-bold text-cream uppercase md:text-5xl">
-          Multidisciplinary designer working across branding, digital
-          marketing, and visual storytelling.
-        </p>
-      </Reveal>
+      <StatementReveal />
 
       <Reveal delay={0.1} className="mt-10 max-w-2xl">
         <p className="font-body text-base leading-relaxed text-cream/70">
