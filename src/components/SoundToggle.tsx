@@ -1,81 +1,96 @@
 import { useEffect, useRef, useState } from 'react'
 
-const SPOTIFY_TRACK_URI = 'spotify:track:3EeD6nR6WDj5kI54SvR9Ph'
-const API_SCRIPT_ID = 'spotify-iframe-api'
+const YOUTUBE_PLAYLIST_ID = 'PLvMJYw4TOmGWeB4-cWu85DgJ0YQKDgusC'
+const API_SCRIPT_ID = 'youtube-iframe-api'
 
-interface PlaybackUpdate {
-  data: { isBuffering: boolean; isPaused: boolean; duration: number; position: number }
+interface YTPlayer {
+  playVideo: () => void
+  pauseVideo: () => void
 }
 
-interface SpotifyEmbedController {
-  play: () => void
-  pause: () => void
-  addListener: (event: 'playback_update', cb: (e: PlaybackUpdate) => void) => void
+interface YTPlayerEvent {
+  target: YTPlayer
+  data: number
+}
+
+interface YTNamespace {
+  Player: new (
+    element: HTMLElement,
+    options: {
+      height: string
+      width: string
+      playerVars: Record<string, string | number>
+      events: {
+        onReady: (e: YTPlayerEvent) => void
+        onStateChange: (e: YTPlayerEvent) => void
+      }
+    },
+  ) => YTPlayer
+  PlayerState: { ENDED: number }
 }
 
 declare global {
   interface Window {
-    onSpotifyIframeApiReady?: (IFrameAPI: {
-      createController: (
-        element: HTMLElement,
-        options: { uri: string; width: string; height: string },
-        callback: (controller: SpotifyEmbedController) => void,
-      ) => void
-    }) => void
+    YT?: YTNamespace
+    onYouTubeIframeAPIReady?: () => void
   }
 }
 
-// Always starts "Off", never restored from a previous visit -- browsers
-// block audio autoplay without a fresh gesture, so pre-setting this to
-// "On" from a remembered preference produced a real bug: the label said
-// On while nothing was actually playing, since the page-load attempt to
-// resume was silently blocked. Only a genuine click can start playback,
-// so the label only ever flips once that click has actually happened.
+// YouTube plays the actual full video, not a truncated preview -- unlike
+// Spotify's anonymous embed, so there's no forced 30s cutoff and no need
+// to fake a loop by re-triggering playback (which is what caused the
+// audible re-buffer blip in the Spotify version). `loop: 1` + a playlist
+// context asks YouTube to replay from the top on its own; the
+// onStateChange/ENDED check is just a safety net in case that native
+// loop doesn't fire in some browser.
 //
-// Anonymous/non-Premium Spotify sessions only get a 30-second preview of
-// a track, then the embed just pauses -- there's no official "loop"
-// param. `playback_update` fires continuously while attached; whenever
-// it reports paused while we still want sound on, calling play() again
-// restarts the preview from the top. Note this restart is NOT gapless --
-// every restart re-buffers the preview from Spotify's servers, so there's
-// an audible blip each time it loops. That's an inherent limit of trying
-// to loop a preview-only embed, not something fixable from this side.
+// Always starts "Off", never restored from a previous visit -- same
+// reasoning as before: browsers block audio autoplay without a fresh
+// gesture, so pretending it's already on before a real click produced a
+// label that lied about whether anything was actually playing.
 export function SoundToggle() {
   const [on, setOn] = useState(false)
-  const onRef = useRef(on)
-  onRef.current = on
   const containerRef = useRef<HTMLDivElement>(null)
-  const controllerRef = useRef<SpotifyEmbedController | null>(null)
+  const playerRef = useRef<YTPlayer | null>(null)
   // Covers the narrow window where someone clicks the toggle before the
-  // Spotify API script has finished loading and handed back a
-  // controller -- a real (if rare) race, distinct from the reload case
-  // above since this one DOES follow a genuine click.
+  // YouTube API script has finished loading and handed back a player --
+  // a real (if rare) race, distinct from the reload case above since
+  // this one DOES follow a genuine click.
   const pendingRef = useRef<boolean | null>(null)
 
   useEffect(() => {
-    window.onSpotifyIframeApiReady = (IFrameAPI) => {
-      if (!containerRef.current) return
-      IFrameAPI.createController(
-        containerRef.current,
-        { uri: SPOTIFY_TRACK_URI, width: '1', height: '1' },
-        (controller) => {
-          controllerRef.current = controller
-          controller.addListener('playback_update', (e) => {
-            if (onRef.current && e.data.isPaused && !e.data.isBuffering) {
-              controller.play()
-            }
-          })
-          if (pendingRef.current != null) {
-            controller[pendingRef.current ? 'play' : 'pause']()
-          }
+    window.onYouTubeIframeAPIReady = () => {
+      if (!containerRef.current || !window.YT) return
+      const player = new window.YT.Player(containerRef.current, {
+        height: '1',
+        width: '1',
+        playerVars: {
+          listType: 'playlist',
+          list: YOUTUBE_PLAYLIST_ID,
+          loop: 1,
+          controls: 0,
+          disablekb: 1,
         },
-      )
+        events: {
+          onReady: () => {
+            playerRef.current = player
+            if (pendingRef.current != null) {
+              player[pendingRef.current ? 'playVideo' : 'pauseVideo']()
+            }
+          },
+          onStateChange: (e) => {
+            if (window.YT && e.data === window.YT.PlayerState.ENDED) {
+              player.playVideo()
+            }
+          },
+        },
+      })
     }
 
     if (!document.getElementById(API_SCRIPT_ID)) {
       const script = document.createElement('script')
       script.id = API_SCRIPT_ID
-      script.src = 'https://open.spotify.com/embed/iframe-api/v1'
+      script.src = 'https://www.youtube.com/iframe_api'
       script.async = true
       document.body.appendChild(script)
     }
@@ -84,7 +99,7 @@ export function SoundToggle() {
   const toggle = () => {
     setOn((prev) => {
       const next = !prev
-      if (controllerRef.current) controllerRef.current[next ? 'play' : 'pause']()
+      if (playerRef.current) playerRef.current[next ? 'playVideo' : 'pauseVideo']()
       else pendingRef.current = next
       return next
     })
