@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
 const SPOTIFY_TRACK_URI = 'spotify:track:3EeD6nR6WDj5kI54SvR9Ph'
-const STORAGE_KEY = 'jaypeg-sound-on'
 const API_SCRIPT_ID = 'spotify-iframe-api'
 
 interface PlaybackUpdate {
@@ -26,26 +25,32 @@ declare global {
   }
 }
 
+// Always starts "Off", never restored from a previous visit -- browsers
+// block audio autoplay without a fresh gesture, so pre-setting this to
+// "On" from a remembered preference produced a real bug: the label said
+// On while nothing was actually playing, since the page-load attempt to
+// resume was silently blocked. Only a genuine click can start playback,
+// so the label only ever flips once that click has actually happened.
+//
 // Anonymous/non-Premium Spotify sessions only get a 30-second preview of
 // a track, then the embed just pauses -- there's no official "loop"
 // param. `playback_update` fires continuously while attached; whenever
 // it reports paused while we still want sound on, calling play() again
-// restarts the preview from the top, which is what makes the 30s clip
-// read as looping instead of just stopping once. `isBuffering` guards
-// against re-triggering play() during the embed's own loading state.
+// restarts the preview from the top. Note this restart is NOT gapless --
+// every restart re-buffers the preview from Spotify's servers, so there's
+// an audible blip each time it loops. That's an inherent limit of trying
+// to loop a preview-only embed, not something fixable from this side.
 export function SoundToggle() {
-  const [on, setOn] = useState(
-    () => typeof window !== 'undefined' && window.localStorage.getItem(STORAGE_KEY) === '1',
-  )
+  const [on, setOn] = useState(false)
   const onRef = useRef(on)
   onRef.current = on
   const containerRef = useRef<HTMLDivElement>(null)
   const controllerRef = useRef<SpotifyEmbedController | null>(null)
-  const pendingPlayRef = useRef(false)
-
-  useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, on ? '1' : '0')
-  }, [on])
+  // Covers the narrow window where someone clicks the toggle before the
+  // Spotify API script has finished loading and handed back a
+  // controller -- a real (if rare) race, distinct from the reload case
+  // above since this one DOES follow a genuine click.
+  const pendingRef = useRef<boolean | null>(null)
 
   useEffect(() => {
     window.onSpotifyIframeApiReady = (IFrameAPI) => {
@@ -60,11 +65,9 @@ export function SoundToggle() {
               controller.play()
             }
           })
-          // Remembered "on" from a previous visit -- browsers block audio
-          // autoplay without a fresh gesture, so this only succeeds if the
-          // browser's own autoplay heuristics allow it; otherwise it's a
-          // no-op until the toggle is clicked again.
-          if (pendingPlayRef.current) controller.play()
+          if (pendingRef.current != null) {
+            controller[pendingRef.current ? 'play' : 'pause']()
+          }
         },
       )
     }
@@ -76,17 +79,13 @@ export function SoundToggle() {
       script.async = true
       document.body.appendChild(script)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const toggle = () => {
     setOn((prev) => {
       const next = !prev
-      if (controllerRef.current) {
-        next ? controllerRef.current.play() : controllerRef.current.pause()
-      } else {
-        pendingPlayRef.current = next
-      }
+      if (controllerRef.current) controllerRef.current[next ? 'play' : 'pause']()
+      else pendingRef.current = next
       return next
     })
   }
