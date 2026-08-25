@@ -80,7 +80,7 @@ function AboutStatementPanel({
           {eyebrow}
         </p>
         <h2 className="chapter-headline font-display mt-4 text-[9vw] leading-[0.9] font-bold tracking-tighter text-cream uppercase md:text-[6vw]">
-          Multidisciplinary.
+          Multidisciplinary Designer.
         </h2>
         <p className="font-body mt-8 max-w-xl text-base leading-relaxed text-cream/70">
           A designer working across branding, digital marketing, and visual

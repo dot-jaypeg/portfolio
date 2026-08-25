@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef } from 'react'
 import { gsap, SplitText } from '../lib/gsap'
-import { JOURNEY_CHAPTERS, TOTAL_CHAPTERS } from '../data/journeyChapters'
+import { JOURNEY_CHAPTERS, TOTAL_CHAPTERS, WORK_COUNT } from '../data/journeyChapters'
 
 const pad = (num: number) => String(num).padStart(2, '0')
 
@@ -22,6 +22,47 @@ export function JourneyDesktop() {
         }),
       )
 
+      // `unit`, not `1/n` -- the track travels (n-1) panel-widths total, so
+      // panel i is exactly centered in the viewport at progress i/(n-1),
+      // not i/n. Getting this denominator wrong is what caused a real bug
+      // during development: word reveals/colors were scheduled against
+      // the wrong panel's on-screen window, visibly desynced from what
+      // was actually in view. Each panel's "dominant on screen" window
+      // spans from the boundary with its previous neighbor to the
+      // boundary with its next one -- exactly one `unit` wide, half a
+      // unit on either side of its own center (clamped at the ends).
+      const unit = 1 / (n - 1)
+
+      // Colors are computed and applied here in onUpdate rather than as
+      // tweens living inside the pinned timeline below -- a real bug
+      // during development: a pinned ScrollTrigger keeps getting told to
+      // re-render on every scroll tick indefinitely, long after scrolling
+      // past its own end (confirmed empirically: it kept firing 100+
+      // times while sitting still at the bottom of the page, vs. a
+      // plain non-pinned trigger which correctly goes quiet once past
+      // its end). With color tweens living inside that timeline, every
+      // one of those redundant re-renders re-wrote --bg/--fg, which
+      // could stomp Contact's own independent, already-correct crossfade
+      // right after it finished, purely because Journey's stale
+      // re-assertion happened to land on a later tick. Computing the
+      // color here and skipping the write whenever it hasn't actually
+      // changed means Journey stops touching these properties at all
+      // once truly settled, leaving Contact's own trigger uncontested.
+      let lastColorKey = ''
+      const colorAtProgress = (progress: number) => {
+        const i = Math.round(progress * (n - 1))
+        if (i === 0) return JOURNEY_CHAPTERS[0]
+        const center = i * unit
+        const winStart = center - unit * 0.5
+        const t = gsap.utils.clamp(0, 1, (progress - winStart) / (unit * 0.5))
+        const prev = JOURNEY_CHAPTERS[i - 1]
+        const curr = JOURNEY_CHAPTERS[i]
+        return {
+          bg: gsap.utils.interpolate(prev.bg, curr.bg, t),
+          fg: gsap.utils.interpolate(prev.fg, curr.fg, t),
+        }
+      }
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
@@ -42,6 +83,12 @@ export function JourneyDesktop() {
               const index = Math.round(self.progress * (n - 1))
               counterRef.current.textContent = `${pad(index + 1)}/${pad(n)}`
             }
+            const { bg, fg } = colorAtProgress(self.progress)
+            const key = bg + fg
+            if (key !== lastColorKey) {
+              lastColorKey = key
+              gsap.set(document.documentElement, { '--bg': bg, '--fg': fg })
+            }
           },
         },
       })
@@ -51,17 +98,6 @@ export function JourneyDesktop() {
       gsap.set(panels, { clipPath: 'inset(0% 0% 0% 0%)', scale: 1 })
 
       tl.to(track, { x: `-${(n - 1) * 100}vw`, ease: 'none', duration: 1 }, 0)
-
-      // `unit`, not `1/n` -- the track travels (n-1) panel-widths total, so
-      // panel i is exactly centered in the viewport at progress i/(n-1),
-      // not i/n. Getting this denominator wrong is what caused a real bug
-      // during development: word reveals/colors were scheduled against
-      // the wrong panel's on-screen window, visibly desynced from what
-      // was actually in view. Each panel's "dominant on screen" window
-      // spans from the boundary with its previous neighbor to the
-      // boundary with its next one -- exactly one `unit` wide, half a
-      // unit on either side of its own center (clamped at the ends).
-      const unit = 1 / (n - 1)
 
       panels.forEach((panel, i) => {
         const center = i * unit
@@ -117,23 +153,6 @@ export function JourneyDesktop() {
           )
         }
 
-        // Tint the page to this chapter's theme as its panel becomes
-        // dominant, same scrubbed timeline as everything else -- chapter
-        // 0 needs no tween since it's already the document's resting
-        // default.
-        if (i > 0) {
-          tl.to(
-            document.documentElement,
-            {
-              '--bg': JOURNEY_CHAPTERS[i].bg,
-              '--fg': JOURNEY_CHAPTERS[i].fg,
-              ease: 'none',
-              duration: winWidth * 0.5,
-            },
-            winStart,
-          )
-        }
-
         // Clip-mask + scale crossover exactly at the boundary shared by
         // this panel's window end and the next panel's window start --
         // the track is split evenly between the two there, so a wipe
@@ -158,19 +177,71 @@ export function JourneyDesktop() {
         }
       })
 
-      // Same freeze-leak fix as CinematicIntro: a scrubbed timeline's
-      // tweened --bg/--fg values freeze at whatever they were when the
-      // timeline reaches progress 1, and that frozen state otherwise
-      // leaks into Contact's own crossfade further down the page.
-      const last = JOURNEY_CHAPTERS[n - 1]
-      tl.to(
-        document.documentElement,
-        { '--bg': last.bg, '--fg': last.fg, ease: 'none', duration: 0.03 },
-        0.97,
-      )
+      // Slow auto-advance through the Work chapters only, with manual
+      // scroll always taking priority: any real scroll/touch/keyboard
+      // input pauses it, and it resumes on its own after a quiet moment.
+      // Listening for raw input events (not Lenis's own 'scroll' event)
+      // is what lets this tell "the user just did something" apart from
+      // "this auto-advance loop just moved the page itself" -- the
+      // latter would otherwise immediately re-pause itself every tick.
+      const AUTO_SPEED = 45 // px/s, slow and readable
+      const RESUME_DELAY = 1800 // ms of quiet before auto-advance resumes
+      const workEndOffset = () => {
+        const st = tl.scrollTrigger
+        if (!st) return null
+        return st.start + ((WORK_COUNT - 1) / (n - 1)) * (st.end - st.start)
+      }
+      let lastInputTime = 0
+      let lastTickTime: number | null = null
+      const markManualInput = () => {
+        lastInputTime = performance.now()
+      }
+      window.addEventListener('wheel', markManualInput, { passive: true })
+      window.addEventListener('touchstart', markManualInput, { passive: true })
+      window.addEventListener('touchmove', markManualInput, { passive: true })
+      window.addEventListener('keydown', markManualInput)
+
+      // Tracked as our own float, not read back from window.scrollY --
+      // a real bug: each tick's nudge is sub-pixel (a few tenths of a
+      // pixel at 45px/s and a ~60fps tick rate), and window.scrollY is
+      // always a rounded integer, so re-deriving the next target from
+      // it every tick rounded the fractional progress away before it
+      // could accumulate -- the loop looked like it was running (all
+      // its guards passed) but the page never actually moved. Keeping
+      // our own precise running position and only syncing it forward
+      // when the real scroll position gets ahead of it (first
+      // activation, or the user manually scrolled further) fixes that.
+      let virtualScrollY: number | null = null
+      const autoAdvanceTick = () => {
+        const now = performance.now()
+        const dt = lastTickTime == null ? 0 : (now - lastTickTime) / 1000
+        lastTickTime = now
+        if (dt <= 0 || dt > 0.5) return
+        if (window.__chaptersMenuOpen) return
+        if (now - lastInputTime < RESUME_DELAY) return
+        const st = tl.scrollTrigger
+        const endOffset = workEndOffset()
+        if (!st || endOffset == null) return
+        const scrollY = window.scrollY
+        if (scrollY < st.start || scrollY >= endOffset) {
+          virtualScrollY = null
+          return
+        }
+        if (virtualScrollY == null || virtualScrollY < scrollY) {
+          virtualScrollY = scrollY
+        }
+        virtualScrollY = Math.min(endOffset, virtualScrollY + AUTO_SPEED * dt)
+        window.__lenis?.scrollTo(virtualScrollY, { immediate: true })
+      }
+      gsap.ticker.add(autoAdvanceTick)
 
       return () => {
         splits.forEach((split) => split.revert())
+        gsap.ticker.remove(autoAdvanceTick)
+        window.removeEventListener('wheel', markManualInput)
+        window.removeEventListener('touchstart', markManualInput)
+        window.removeEventListener('touchmove', markManualInput)
+        window.removeEventListener('keydown', markManualInput)
       }
     }, containerRef)
 

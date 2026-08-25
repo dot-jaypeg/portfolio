@@ -47,6 +47,41 @@ export function CinematicIntro() {
         return new SplitText(headline, { type: 'words' })
       })
 
+      // `unit`, not `1/n` -- see the positioning comment below. Declared
+      // early since colorAtProgress needs it too.
+      const unit = 1 / (n - 1)
+
+      // Colors are computed and applied here in onUpdate rather than as
+      // tweens living inside the pinned timeline below -- a real bug
+      // found this session (originally fixed in Journey, then found to
+      // also affect this component): a pinned ScrollTrigger keeps
+      // getting told to re-render on every scroll tick indefinitely,
+      // long after scrolling past its own end. With color tweens living
+      // inside the timeline, every one of those redundant re-renders
+      // re-wrote --bg/--fg -- confirmed here directly: even after
+      // Journey's own onUpdate correctly set About's cream, this
+      // component's leftover reset tween (ink/cream, targeting Work's
+      // colors) kept firing afterward and silently overwrote it, purely
+      // because it happened to render on a later tick. Computing the
+      // color here and skipping the write whenever it hasn't actually
+      // changed means this component stops touching these properties at
+      // all once truly settled, leaving whatever comes after it
+      // uncontested.
+      let lastColorKey = ''
+      const colorAtProgress = (progress: number) => {
+        const i = Math.round(progress * (n - 1))
+        if (i === 0) return SCENES[0]
+        const center = i * unit
+        const winStart = center - unit * 0.5
+        const t = gsap.utils.clamp(0, 1, (progress - winStart) / (unit * 0.5))
+        const prev = SCENES[i - 1]
+        const curr = SCENES[i]
+        return {
+          bg: gsap.utils.interpolate(prev.bg, curr.bg, t),
+          fg: gsap.utils.interpolate(prev.fg, curr.fg, t),
+        }
+      }
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
@@ -64,8 +99,18 @@ export function CinematicIntro() {
               progressRef.current.style.transform = `scaleX(${self.progress})`
             }
             if (counterRef.current) {
-              const index = Math.min(n - 1, Math.floor(self.progress * n))
+              // Scene i is centered at progress i/(n-1), not i/n -- the
+              // track travels (n-1) panel-widths total, so rounding to
+              // the nearest i/(n-1) gives whichever scene is actually
+              // dominant on screen right now.
+              const index = Math.round(self.progress * (n - 1))
               counterRef.current.textContent = `${pad(index + 1)}/${pad(n)}`
+            }
+            const { bg, fg } = colorAtProgress(self.progress)
+            const key = bg + fg
+            if (key !== lastColorKey) {
+              lastColorKey = key
+              gsap.set(document.documentElement, { '--bg': bg, '--fg': fg })
             }
           },
         },
@@ -86,69 +131,65 @@ export function CinematicIntro() {
       )
 
       splits.forEach((split, i) => {
-        const segment = 1 / n
-        const start = i * segment
+        const center = i * unit
+        const winStart = i === 0 ? 0 : center - unit * 0.5
+        const winEnd = i === n - 1 ? 1 : center + unit * 0.5
+        const winWidth = winEnd - winStart
+
         // Scene 0 is visible at rest (scroll position 0) -- only scenes
         // reached by scrolling need an entrance fade-in.
+        //
+        // Budget (stagger tail + duration) as a fraction of this scene's
+        // own window instead of fixed absolute numbers -- a real bug:
+        // with a fixed stagger of 0.05 and duration of 0.12, a 3-word
+        // headline's last word didn't finish fading in (entrance starts
+        // staggered at +0.10 into its own 0.12-long tween, so it doesn't
+        // complete until +0.22) until AFTER the exit fade had already
+        // started pulling it back out again -- the last word of every
+        // multi-word "craft" scene never fully appeared before fading
+        // back out, reading as the headline being cut off mid-reveal.
+        // Sizing both budgets off the window, regardless of word count,
+        // guarantees entrance always finishes well before exit begins.
         if (i > 0) {
+          const entryBudget = winWidth * 0.25
+          const entryDuration = entryBudget * 0.6
+          const entryStagger =
+            split.words.length > 1
+              ? (entryBudget - entryDuration) / (split.words.length - 1)
+              : 0
           tl.from(
             split.words,
             {
               opacity: 0,
               y: 40,
-              stagger: 0.05,
-              duration: 0.12,
+              stagger: entryStagger,
+              duration: entryDuration,
               ease: 'power2.out',
             },
-            start + segment * 0.15,
+            winStart + winWidth * 0.1,
           )
         }
         if (i < n - 1) {
+          const exitBudget = winWidth * 0.25
+          const exitDuration = exitBudget * 0.6
+          const exitStagger =
+            split.words.length > 1
+              ? (exitBudget - exitDuration) / (split.words.length - 1)
+              : 0
           tl.to(
             split.words,
             {
               opacity: 0,
               y: -40,
-              stagger: 0.03,
-              duration: 0.12,
+              stagger: exitStagger,
+              duration: exitDuration,
               ease: 'power2.in',
             },
-            start + segment * 0.78,
+            winStart + winWidth * 0.65,
           )
         }
 
-        // Tint the page's --bg/--fg to this scene's theme as its panel
-        // slides into place, in the same scrubbed timeline as the
-        // horizontal track and word reveals -- scene 0 needs no tween
-        // since it's already the document's resting default.
-        if (i > 0) {
-          tl.to(
-            document.documentElement,
-            {
-              '--bg': SCENES[i].bg,
-              '--fg': SCENES[i].fg,
-              ease: 'none',
-              duration: segment * 0.5,
-            },
-            start,
-          )
-        }
       })
-
-      // This scrubbed timeline's tweened --bg/--fg values freeze at
-      // whatever they were once the timeline reaches its end -- and that
-      // frozen state keeps getting reasserted on scroll ticks long after
-      // the pin releases, fighting with Work/About/Contact's own color
-      // triggers further down the page (confirmed: without this, scene 4's
-      // red was still bleeding through hundreds of pixels past the intro).
-      // Explicitly handing back to Work's ink/cream right before the end
-      // means the frozen resting state always matches what Work wants
-      // anyway, so there's nothing left to conflict with downstream.
-      tl.to(
-        document.documentElement,
-        { '--bg': '#161616', '--fg': '#fffcef', ease: 'none', duration: 0.03 },
-        0.97,
-      )
 
       return () => {
         splits.forEach((split) => split.revert())

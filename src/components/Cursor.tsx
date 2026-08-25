@@ -57,14 +57,25 @@ export function Cursor() {
       className="pointer-events-none fixed top-0 left-0 z-[99] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center mix-blend-difference"
     >
       <div
-        className="flex items-center justify-center rounded-full bg-cream transition-[width,height] duration-200"
+        // Fixed white/black, not bg-cream/text-ink -- those resolve
+        // through the site's crossfading --bg/--fg variables, so the
+        // dot's own fill was flipping to match whatever the current
+        // section's foreground color was. Since a section's foreground
+        // and background are always exact complements by design,
+        // difference-blending the dot against its own backdrop produced
+        // the same washed-out constant color everywhere, regardless of
+        // section -- it happened to read fine against near-black
+        // sections but lost almost all contrast against near-white
+        // ("craft") ones. A fixed white fill differences cleanly
+        // against any backdrop instead.
+        className="flex items-center justify-center rounded-full bg-white transition-[width,height] duration-200"
         style={{
           width: label ? 72 : 14,
           height: label ? 72 : 14,
         }}
       >
         {label && (
-          <span className="font-body text-[10px] tracking-widest text-ink uppercase">
+          <span className="font-body text-[10px] tracking-widest text-black uppercase">
             {label}
           </span>
         )}

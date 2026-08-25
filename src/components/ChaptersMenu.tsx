@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { JOURNEY_CHAPTERS, TOTAL_CHAPTERS } from '../data/journeyChapters'
 import { getChapterScrollOffset } from '../lib/journeyScroll'
 
@@ -11,12 +11,46 @@ export function ChaptersMenu() {
   const [isDesktop] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches,
   )
+  // The trigger has nothing to do until there's an actual chapter to
+  // jump to, so gate on Journey's own section entering view rather than
+  // on the intro leaving it -- #top settles into normal document flow
+  // once its pin releases (matching the frozen last-pin position, per
+  // the same mechanics Nav's #top special-case already accounts for),
+  // so it keeps reporting "intersecting" for a full extra viewport
+  // height after the intro is visually done, which left a dead zone
+  // where you'd already be looking at Work but the button hadn't
+  // appeared yet.
+  const [journeyInView, setJourneyInView] = useState(false)
 
-  if (!isDesktop) return null
+  useEffect(() => {
+    if (!isDesktop) return
+    const journey = document.getElementById('journey')
+    if (!journey) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setJourneyInView(entry.isIntersecting),
+      { threshold: 0 },
+    )
+    observer.observe(journey)
+    return () => observer.disconnect()
+  }, [isDesktop])
+
+  if (!isDesktop || !journeyInView) return null
 
   const handleJump = (index: number) => {
     const offset = getChapterScrollOffset(index)
     if (offset != null) window.__lenis?.scrollTo(offset)
+    closeMenu()
+  }
+
+  // Flagged globally so Journey's own auto-advance loop can pause while
+  // this overlay is open -- otherwise the page could keep scrolling
+  // underneath while the user is looking at the chapter grid instead.
+  const openMenu = () => {
+    window.__chaptersMenuOpen = true
+    setOpen(true)
+  }
+  const closeMenu = () => {
+    window.__chaptersMenuOpen = false
     setOpen(false)
   }
 
@@ -24,7 +58,7 @@ export function ChaptersMenu() {
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={openMenu}
         className="font-body fixed bottom-8 left-8 z-40 text-xs tracking-[0.3em] text-cream/60 uppercase transition-colors hover:text-cream md:bottom-16 md:left-16"
       >
         (Chapters)
@@ -34,7 +68,7 @@ export function ChaptersMenu() {
         <div className="fixed inset-0 z-[70] flex flex-col overflow-y-auto bg-ink/95 px-6 py-24 md:px-16">
           <button
             type="button"
-            onClick={() => setOpen(false)}
+            onClick={closeMenu}
             className="font-body fixed top-6 right-6 text-xs tracking-[0.3em] text-cream/60 uppercase transition-colors hover:text-cream md:top-10 md:right-10"
           >
             (Close)
