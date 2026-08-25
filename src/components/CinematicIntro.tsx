@@ -23,7 +23,7 @@ const SCENES = [
   {
     eyebrow: '04 — Who',
     headline: 'Jayden Ramirez',
-    bg: '#161616',
+    bg: '#dd5547',
     fg: '#fffcef',
   },
 ]
@@ -117,6 +117,21 @@ export function CinematicIntro() {
           )
         }
       })
+
+      // This scrubbed timeline's tweened --bg/--fg values freeze at
+      // whatever they were once the timeline reaches its end -- and that
+      // frozen state keeps getting reasserted on scroll ticks long after
+      // the pin releases, fighting with Work/About/Contact's own color
+      // triggers further down the page (confirmed: without this, scene 4's
+      // red was still bleeding through hundreds of pixels past the intro).
+      // Explicitly handing back to Work's ink/cream right before the end
+      // means the frozen resting state always matches what Work wants
+      // anyway, so there's nothing left to conflict with downstream.
+      tl.to(
+        document.documentElement,
+        { '--bg': '#161616', '--fg': '#fffcef', ease: 'none', duration: 0.03 },
+        0.97,
+      )
 
       return () => {
         splits.forEach((split) => split.revert())

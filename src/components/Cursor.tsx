@@ -46,16 +46,21 @@ export function Cursor() {
   if (!enabled) return null
 
   return (
+    // mix-blend-mode has to live on THIS element, not a nested child --
+    // position:fixed + z-index already put this div in its own stacking
+    // context, so a blend-mode on a descendant only blends within that
+    // isolated context (i.e. against nothing) instead of the real page
+    // content behind it. That was the previous bug: the dot rendered as
+    // plain cream, never actually inverting.
     <div
       ref={dotRef}
-      className="pointer-events-none fixed top-0 left-0 z-[99] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+      className="pointer-events-none fixed top-0 left-0 z-[99] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center mix-blend-difference"
     >
       <div
         className="flex items-center justify-center rounded-full bg-cream transition-[width,height] duration-200"
         style={{
           width: label ? 72 : 14,
           height: label ? 72 : 14,
-          mixBlendMode: 'difference',
         }}
       >
         {label && (

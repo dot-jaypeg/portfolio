@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { gsap, SplitText } from '../lib/gsap'
-import { EXPERTISE } from '../data/expertise'
 import { STACK } from '../data/stack'
 import { CREDENTIALS } from '../data/credentials'
 import { Reveal } from './Reveal'
+import { ExpertisePills } from './ExpertisePills'
 
 function StatementReveal() {
   const ref = useRef<HTMLParagraphElement>(null)
@@ -61,15 +61,8 @@ export function Capabilities() {
         </p>
       </Reveal>
 
-      <Reveal delay={0.15} className="mt-10 flex flex-wrap gap-2">
-        {EXPERTISE.map((item) => (
-          <span
-            key={item}
-            className="font-body rounded-full border border-cream/20 px-3 py-1.5 text-xs tracking-widest text-cream/70 uppercase"
-          >
-            {item}
-          </span>
-        ))}
+      <Reveal delay={0.15} className="mt-10">
+        <ExpertisePills />
       </Reveal>
 
       <div className="mt-24 grid grid-cols-1 gap-6 md:grid-cols-2">
