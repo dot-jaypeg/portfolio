@@ -24,7 +24,7 @@ export function Grain() {
     // way on ink as it does on cream/orange-red instead of one blend
     // mode favoring one side.
     <div
-      className="grain-layer pointer-events-none fixed inset-[-10%] z-[80] opacity-[0.45]"
+      className="grain-layer pointer-events-none fixed inset-[-10%] z-[80] opacity-[0.4]"
       style={{
         backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(NOISE_SVG)}")`,
         backgroundSize: '70px 70px',
