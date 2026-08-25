@@ -28,9 +28,13 @@ const SCENES = [
   },
 ]
 
+const pad = (num: number) => String(num).padStart(2, '0')
+
 export function CinematicIntro() {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
+  const progressRef = useRef<HTMLDivElement>(null)
+  const counterRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -51,6 +55,19 @@ export function CinematicIntro() {
           scrub: 1,
           pin: true,
           anticipatePin: 1,
+          onUpdate: (self) => {
+            // Driven straight off ScrollTrigger's own progress rather than
+            // React state -- this fires every scroll tick, so a re-render
+            // per frame would be wasteful; direct DOM writes match the
+            // quickTo pattern already used for the cursor elsewhere.
+            if (progressRef.current) {
+              progressRef.current.style.transform = `scaleX(${self.progress})`
+            }
+            if (counterRef.current) {
+              const index = Math.min(n - 1, Math.floor(self.progress * n))
+              counterRef.current.textContent = `${pad(index + 1)}/${pad(n)}`
+            }
+          },
         },
       })
 
@@ -168,6 +185,22 @@ export function CinematicIntro() {
             </h2>
           </div>
         ))}
+      </div>
+
+      <div className="pointer-events-none absolute right-8 bottom-8 z-10 md:right-16 md:bottom-16">
+        <span
+          ref={counterRef}
+          className="font-body text-xs tracking-[0.3em] text-cream/60 tabular-nums"
+        >
+          01/{pad(SCENES.length)}
+        </span>
+      </div>
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-px bg-cream/15">
+        <div
+          ref={progressRef}
+          className="h-full w-full origin-left bg-cream"
+          style={{ transform: 'scaleX(0)' }}
+        />
       </div>
     </section>
   )
