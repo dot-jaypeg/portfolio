@@ -1,59 +1,40 @@
-import { useEffect, useRef, useState } from 'react'
-import { BlockLink } from './BlockLink'
+import type { MouseEvent } from 'react'
 
 const LINKS = [
-  { label: 'work', href: '#work' },
-  { label: 'about', href: '#about' },
-  { label: 'contact', href: '#contact' },
+  { label: 'Work', href: '#work' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
 ]
 
 export function Nav() {
-  const [inverted, setInverted] = useState(false)
-  const headerRef = useRef<HTMLHeadElement>(null)
-
-  useEffect(() => {
-    const footer = document.getElementById('contact')
-    if (!footer) return
-
-    const handleScroll = () => {
-      const navHeight = headerRef.current?.getBoundingClientRect().height ?? 0
-      const footerTop = footer.getBoundingClientRect().top
-      setInverted(footerTop <= navHeight)
+  const handleClick =
+    (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+      const target = document.querySelector(href)
+      if (!target) return
+      e.preventDefault()
+      window.__lenis?.scrollTo(target as HTMLElement)
     }
-
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', handleScroll)
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleScroll)
-    }
-  }, [])
 
   return (
-    <header
-      ref={headerRef}
-      className={`sticky top-0 z-50 backdrop-blur-sm transition-colors duration-300 ${
-        inverted ? 'bg-secondary/85 text-primary' : 'bg-primary/85 text-secondary'
-      }`}
-    >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:px-10">
-        <a
-          href="#top"
-          className="font-wordmark text-xl font-medium tracking-tighter italic transition-colors hover:text-accent"
-        >
-          .jaypeg
-        </a>
-        <ul className="flex items-center gap-2 md:gap-4">
+    <header className="fixed top-0 z-50 flex w-full items-center justify-between px-6 py-6 md:px-10">
+      <a
+        href="#top"
+        data-cursor="Home"
+        className="font-display text-lg font-bold tracking-tighter text-cream italic"
+      >
+        .jaypeg
+      </a>
+      <nav>
+        <ul className="flex items-center gap-6 md:gap-8">
           {LINKS.map((link) => (
             <li key={link.href}>
-              <BlockLink
+              <a
                 href={link.href}
-                invert={inverted}
-                className="font-heading text-sm font-bold lowercase opacity-80"
+                onClick={handleClick(link.href)}
+                className="font-body text-xs tracking-[0.2em] text-cream/70 uppercase transition-colors hover:text-teal"
               >
                 {link.label}
-              </BlockLink>
+              </a>
             </li>
           ))}
         </ul>

@@ -1,23 +1,37 @@
-import { Nav } from './components/Nav'
-import { Hero } from './components/Hero'
-import { Projects } from './components/Projects'
-import { About } from './components/About'
-import { Footer } from './components/Footer'
+import { useEffect, useState } from 'react'
 import { useSmoothScroll } from './hooks/useSmoothScroll'
+import { Preloader } from './components/Preloader'
+import { Cursor } from './components/Cursor'
+import { Grain } from './components/Grain'
+import { Nav } from './components/Nav'
+import { CinematicIntro } from './components/CinematicIntro'
+import { WorkCarousel } from './components/WorkCarousel'
+import { Capabilities } from './components/Capabilities'
+import { Contact } from './components/Contact'
 
 function App() {
+  const [loading, setLoading] = useState(true)
   useSmoothScroll()
 
+  useEffect(() => {
+    document.body.style.overflow = loading ? 'hidden' : ''
+  }, [loading])
+
   return (
-    <div className="min-h-screen bg-primary">
-      <Nav />
-      <main>
-        <Hero />
-        <Projects />
-        <About />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <Preloader onComplete={() => setLoading(false)} />
+      <Cursor />
+      <Grain />
+      <div style={{ visibility: loading ? 'hidden' : 'visible' }}>
+        <Nav />
+        <main>
+          <CinematicIntro />
+          <WorkCarousel />
+          <Capabilities />
+        </main>
+        <Contact />
+      </div>
+    </>
   )
 }
 

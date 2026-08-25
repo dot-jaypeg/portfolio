@@ -16,44 +16,72 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Neue Haas Grotesk Thin';
-  src: url('/fonts/NeueHaasDisplayThin.ttf') format('truetype');
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Neue Haas Grotesk Thin';
-  src: url('/fonts/NeueHaasDisplayThinItalic.ttf') format('truetype');
-  font-weight: 100;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Neue Haas Grotesk Medium';
-  src: url('/fonts/NeueHaasDisplayMediumItalic.ttf') format('truetype');
-  font-weight: 500;
-  font-style: italic;
-  font-display: swap;
-}
-
 @theme {
-  --font-heading: 'Alte Haas Grotesk', system-ui, sans-serif;
+  --font-display: 'Alte Haas Grotesk', system-ui, sans-serif;
   --font-body: 'Alte Haas Grotesk', system-ui, sans-serif;
-  --font-alt: 'Neue Haas Grotesk Thin', system-ui, sans-serif;
-  --font-wordmark: 'Neue Haas Grotesk Medium', system-ui, sans-serif;
 
-  --color-primary: #d8d8d8;
-  --color-secondary: #171a1c;
-  --color-tertiary: #525266;
-  --color-accent: #4d5c60;
+  --color-ink: #161616;
+  --color-cream: #fffcef;
+  --color-teal: #618c82;
+  --color-red: #dd5547;
+}
+
+html,
+body {
+  background-color: var(--color-ink);
 }
 
 body {
   font-family: var(--font-body);
-  background-color: var(--color-primary);
-  color: var(--color-secondary);
+  color: var(--color-cream);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-red);
+  color: var(--color-cream);
+}
+
+.custom-cursor-active,
+.custom-cursor-active a,
+.custom-cursor-active button {
+  cursor: none;
+}
+
+@keyframes grain-shift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-2%, -4%);
+  }
+  20% {
+    transform: translate(-6%, 2%);
+  }
+  30% {
+    transform: translate(2%, -6%);
+  }
+  40% {
+    transform: translate(-3%, 5%);
+  }
+  50% {
+    transform: translate(-6%, -3%);
+  }
+  60% {
+    transform: translate(6%, 2%);
+  }
+  70% {
+    transform: translate(0, 6%);
+  }
+  80% {
+    transform: translate(-4%, 0);
+  }
+  90% {
+    transform: translate(3%, 4%);
+  }
+}
+
+.grain-layer {
+  animation: grain-shift 1.2s steps(6) infinite;
 }
