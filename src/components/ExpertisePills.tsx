@@ -21,7 +21,7 @@ export function ExpertisePills() {
     const idleTweens = pills.map((pill) =>
       gsap.to(pill, {
         rotation: gsap.utils.random(-4, 4),
-        duration: gsap.utils.random(2, 3.5),
+        duration: gsap.utils.random(0.7, 1.3),
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut',
@@ -71,7 +71,7 @@ export function ExpertisePills() {
           ref={(el) => {
             pillRefs.current[i] = el
           }}
-          className="font-body inline-block rounded-full border border-cream/20 px-3 py-1.5 text-xs tracking-widest text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
+          className="font-body inline-block rounded-full border border-cream/20 px-3 py-1.5 text-xs tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
         >
           {item}
         </span>

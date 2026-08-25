@@ -24,6 +24,12 @@ export function Nav() {
   const handleClick =
     (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault()
+      // Without this, Journey's auto-advance loop (if it happened to be
+      // running) kept calling its own immediate scrollTo every tick and
+      // completely overrode this click's jump -- confirmed directly:
+      // clicking About while auto-advance was active didn't navigate
+      // anywhere, it just kept crawling through Work instead.
+      window.__markAutoAdvanceInput?.()
       // #top is GSAP-pinned for its scroll-jacked scene sequence, so once
       // you've scrolled past it, its own element settles at the frozen
       // end-of-pin position in the doc flow (the last scene), not y=0 --
@@ -52,7 +58,7 @@ export function Nav() {
         href="#top"
         onClick={handleClick('#top')}
         data-cursor="Home"
-        className="font-display text-2xl font-bold tracking-tighter text-cream italic md:text-3xl"
+        className="font-display text-2xl font-bold tracking-[-0.06em] text-cream italic md:text-3xl"
       >
         .jaypeg
       </a>
@@ -63,7 +69,7 @@ export function Nav() {
               <a
                 href={link.href}
                 onClick={handleClick(link.href)}
-                className="font-body text-xs tracking-[0.2em] text-cream/70 uppercase transition-colors hover:text-teal"
+                className="font-body text-xs tracking-[0.14em] text-cream/70 uppercase transition-colors hover:text-teal"
               >
                 {link.label}
               </a>

@@ -75,7 +75,7 @@ export function Cursor() {
         }}
       >
         {label && (
-          <span className="font-body text-[10px] tracking-widest text-black uppercase">
+          <span className="font-body text-[10px] tracking-wider text-black uppercase">
             {label}
           </span>
         )}

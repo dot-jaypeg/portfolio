@@ -37,6 +37,7 @@ export function ChaptersMenu() {
   if (!isDesktop || !journeyInView) return null
 
   const handleJump = (index: number) => {
+    window.__markAutoAdvanceInput?.()
     const offset = getChapterScrollOffset(index)
     if (offset != null) window.__lenis?.scrollTo(offset)
     closeMenu()
@@ -59,9 +60,13 @@ export function ChaptersMenu() {
       <button
         type="button"
         onClick={openMenu}
-        className="font-body fixed bottom-8 left-8 z-40 text-xs tracking-[0.3em] text-cream/60 uppercase transition-colors hover:text-cream md:bottom-16 md:left-16"
+        aria-label="Chapters"
+        className="fixed bottom-8 left-8 z-40 grid grid-cols-2 gap-1 text-cream/60 transition-colors hover:text-cream md:bottom-16 md:left-16"
       >
-        (Chapters)
+        <span className="h-1.5 w-1.5 border border-current" />
+        <span className="h-1.5 w-1.5 border border-current" />
+        <span className="h-1.5 w-1.5 border border-current" />
+        <span className="h-1.5 w-1.5 border border-current" />
       </button>
 
       {open && (
@@ -69,7 +74,7 @@ export function ChaptersMenu() {
           <button
             type="button"
             onClick={closeMenu}
-            className="font-body fixed top-6 right-6 text-xs tracking-[0.3em] text-cream/60 uppercase transition-colors hover:text-cream md:top-10 md:right-10"
+            className="font-body fixed top-6 right-6 text-xs tracking-[0.22em] text-cream/60 uppercase transition-colors hover:text-cream md:top-10 md:right-10"
           >
             (Close)
           </button>
@@ -82,10 +87,10 @@ export function ChaptersMenu() {
                 onClick={() => handleJump(i)}
                 className="group flex flex-col gap-4 text-left"
               >
-                <span className="font-body flex aspect-[4/5] items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.3em] text-cream/30 uppercase transition-colors group-hover:border-cream/50">
+                <span className="font-body flex aspect-[4/5] items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase transition-colors group-hover:border-cream/50">
                   {pad(i + 1)}/{pad(TOTAL_CHAPTERS)}
                 </span>
-                <span className="font-display text-lg font-bold tracking-tight text-cream uppercase transition-colors group-hover:text-teal">
+                <span className="font-display text-lg font-bold tracking-[-0.06em] text-cream uppercase transition-colors group-hover:text-teal">
                   {chapter.eyebrow}
                 </span>
               </button>

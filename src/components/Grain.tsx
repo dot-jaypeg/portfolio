@@ -27,10 +27,10 @@ export function Grain() {
     // both extremes: light flecks show against the dark sections, dark
     // flecks show against the light ones.
     <div
-      className="grain-layer pointer-events-none fixed inset-[-10%] z-[80] opacity-[0.18]"
+      className="grain-layer pointer-events-none fixed inset-[-10%] z-[80] opacity-[0.32]"
       style={{
         backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(NOISE_SVG)}")`,
-        backgroundSize: '90px 90px',
+        backgroundSize: '70px 70px',
       }}
     />
   )

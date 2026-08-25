@@ -2,13 +2,10 @@ import { Fragment, useEffect, useRef } from 'react'
 import { gsap, SplitText } from '../lib/gsap'
 import { JOURNEY_CHAPTERS, TOTAL_CHAPTERS, WORK_COUNT } from '../data/journeyChapters'
 
-const pad = (num: number) => String(num).padStart(2, '0')
-
 export function JourneyDesktop() {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
-  const counterRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -74,14 +71,6 @@ export function JourneyDesktop() {
           onUpdate: (self) => {
             if (progressRef.current) {
               progressRef.current.style.transform = `scaleX(${self.progress})`
-            }
-            if (counterRef.current) {
-              // Panel i is centered at progress i/(n-1), not i/n -- the
-              // track travels (n-1) panel-widths total, so rounding to
-              // the nearest i/(n-1) gives whichever chapter is actually
-              // dominant on screen right now.
-              const index = Math.round(self.progress * (n - 1))
-              counterRef.current.textContent = `${pad(index + 1)}/${pad(n)}`
             }
             const { bg, fg } = colorAtProgress(self.progress)
             const key = bg + fg
@@ -184,7 +173,7 @@ export function JourneyDesktop() {
       // is what lets this tell "the user just did something" apart from
       // "this auto-advance loop just moved the page itself" -- the
       // latter would otherwise immediately re-pause itself every tick.
-      const AUTO_SPEED = 45 // px/s, slow and readable
+      const AUTO_SPEED = 75 // px/s, slow and readable
       const RESUME_DELAY = 1800 // ms of quiet before auto-advance resumes
       const workEndOffset = () => {
         const st = tl.scrollTrigger
@@ -200,6 +189,16 @@ export function JourneyDesktop() {
       window.addEventListener('touchstart', markManualInput, { passive: true })
       window.addEventListener('touchmove', markManualInput, { passive: true })
       window.addEventListener('keydown', markManualInput)
+      // Nav and ChaptersMenu both jump via an EASED (non-immediate)
+      // lenis.scrollTo -- a real bug: raw wheel/touch/keydown listeners
+      // can't see those, so auto-advance had no idea a real navigation
+      // was in flight and kept calling its own immediate scrollTo every
+      // tick, which stomped the eased jump before it could finish.
+      // Clicking "About" while auto-advance was running didn't actually
+      // navigate anywhere -- confirmed directly, the click landed you
+      // right back in a slow crawl through Work instead. Exposing this
+      // so those components can pause it too.
+      window.__markAutoAdvanceInput = markManualInput
 
       // Tracked as our own float, not read back from window.scrollY --
       // a real bug: each tick's nudge is sub-pixel (a few tenths of a
@@ -242,6 +241,7 @@ export function JourneyDesktop() {
         window.removeEventListener('touchstart', markManualInput)
         window.removeEventListener('touchmove', markManualInput)
         window.removeEventListener('keydown', markManualInput)
+        window.__markAutoAdvanceInput = undefined
       }
     }, containerRef)
 
@@ -267,14 +267,6 @@ export function JourneyDesktop() {
         ))}
       </div>
 
-      <div className="pointer-events-none absolute right-8 bottom-8 z-10 md:right-16 md:bottom-16">
-        <span
-          ref={counterRef}
-          className="font-body text-xs tracking-[0.3em] text-cream/60 tabular-nums"
-        >
-          01/{pad(TOTAL_CHAPTERS)}
-        </span>
-      </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-px bg-cream/15">
         <div
           ref={progressRef}

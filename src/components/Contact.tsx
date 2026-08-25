@@ -29,7 +29,7 @@ function TaglineReveal() {
   return (
     <h2
       ref={ref}
-      className="font-display max-w-2xl text-4xl leading-snug font-bold tracking-tighter text-cream uppercase md:text-6xl"
+      className="font-display max-w-2xl text-4xl leading-snug font-bold tracking-[-0.06em] text-cream uppercase md:text-6xl"
     >
       Let's capture the narrative.
     </h2>
@@ -49,7 +49,7 @@ export function Contact() {
           <a
             href="mailto:design.jaypeg@gmail.com"
             data-cursor="Email"
-            className="font-body text-sm tracking-[0.2em] text-cream uppercase transition-colors hover:text-teal"
+            className="font-body text-sm tracking-[0.14em] text-cream uppercase transition-colors hover:text-teal"
           >
             design.jaypeg@gmail.com
           </a>
@@ -57,11 +57,11 @@ export function Contact() {
             href="https://instagram.com/design.jaypeg"
             target="_blank"
             rel="noreferrer"
-            className="font-body text-sm tracking-[0.2em] text-cream uppercase transition-colors hover:text-teal"
+            className="font-body text-sm tracking-[0.14em] text-cream uppercase transition-colors hover:text-teal"
           >
             @design.jaypeg
           </a>
-          <p className="font-body text-sm tracking-[0.2em] text-cream/40 uppercase">
+          <p className="font-body text-sm tracking-[0.14em] text-cream/40 uppercase">
             Los Angeles // CA
           </p>
         </div>

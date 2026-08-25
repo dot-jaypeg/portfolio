@@ -41,21 +41,21 @@ function WorkPanel({
       className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 py-24 md:px-20"
     >
       <div className="relative aspect-[4/5] w-[38vw] max-w-xl shrink-0 overflow-hidden">
-        <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.3em] text-cream/30 uppercase select-none">
+        <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase select-none">
           [ placeholder image ]
         </div>
       </div>
       <div className="chapter-copy max-w-xl">
-        <p className="font-body text-xs tracking-[0.3em] text-teal uppercase">
+        <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
           {eyebrow}
         </p>
-        <h2 className="chapter-headline font-display mt-4 text-[7vw] leading-[0.9] font-bold tracking-tighter text-cream uppercase md:text-[5vw]">
+        <h2 className="chapter-headline font-display mt-4 text-[7vw] leading-[0.9] font-bold tracking-[-0.06em] text-cream uppercase md:text-[5vw]">
           {cs.title}
         </h2>
         <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-cream/60">
           {cs.description}
         </p>
-        <p className="font-body mt-4 text-xs tracking-widest text-teal uppercase">
+        <p className="font-body mt-4 text-xs tracking-wider text-teal uppercase">
           {cs.category}
         </p>
       </div>
@@ -73,13 +73,13 @@ function AboutStatementPanel({
   return (
     <div
       id={id}
-      className="chapter-panel relative flex min-h-screen w-screen shrink-0 flex-col justify-center gap-8 px-8 py-24 md:px-20"
+      className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 py-24 md:px-20"
     >
-      <div className="chapter-copy max-w-4xl">
-        <p className="font-body text-xs tracking-[0.3em] text-teal uppercase">
+      <div className="chapter-copy max-w-2xl">
+        <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
           {eyebrow}
         </p>
-        <h2 className="chapter-headline font-display mt-4 text-[9vw] leading-[0.9] font-bold tracking-tighter text-cream uppercase md:text-[6vw]">
+        <h2 className="chapter-headline font-display mt-4 text-[7vw] leading-[0.95] font-bold tracking-[-0.06em] text-cream uppercase md:text-[5vw]">
           Multidisciplinary Designer.
         </h2>
         <p className="font-body mt-8 max-w-xl text-base leading-relaxed text-cream/70">
@@ -94,6 +94,11 @@ function AboutStatementPanel({
           <ExpertisePills />
         </div>
       </div>
+      <div className="relative ml-auto hidden aspect-[4/5] w-[26vw] max-w-sm shrink-0 overflow-hidden md:block">
+        <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase select-none">
+          [ placeholder photo ]
+        </div>
+      </div>
     </div>
   )
 }
@@ -102,34 +107,34 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
   return (
     <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-16 px-8 py-24 md:px-20">
       <div className="chapter-copy max-w-4xl">
-        <p className="font-body text-xs tracking-[0.3em] text-teal uppercase">
+        <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
           {eyebrow}
         </p>
-        <h2 className="chapter-headline font-display mt-4 text-[6vw] leading-[0.9] font-bold tracking-tighter text-cream uppercase md:text-[4vw]">
+        <h2 className="chapter-headline font-display mt-4 text-[6vw] leading-[0.9] font-bold tracking-[-0.06em] text-cream uppercase md:text-[4vw]">
           Stack &amp; Credentials
         </h2>
         <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2">
           <div>
-            <h3 className="font-body text-xs tracking-[0.2em] text-cream/50 uppercase">
+            <h3 className="font-body text-xs tracking-[0.14em] text-cream/50 uppercase">
               The Stack
             </h3>
-            <ul className="font-display mt-4 flex flex-col gap-3 text-sm font-bold tracking-tight text-cream uppercase">
+            <ul className="font-display mt-4 flex flex-col gap-3 text-sm font-bold tracking-[-0.06em] text-cream uppercase">
               {STACK.map((tool) => (
                 <li key={tool}>{tool}</li>
               ))}
             </ul>
           </div>
           <div>
-            <h3 className="font-body text-xs tracking-[0.2em] text-cream/50 uppercase">
+            <h3 className="font-body text-xs tracking-[0.14em] text-cream/50 uppercase">
               Credentials
             </h3>
             <ul className="mt-4 flex flex-col gap-6">
               {CREDENTIALS.map((role) => (
                 <li key={role.title}>
-                  <p className="font-display text-sm font-bold tracking-wide text-cream uppercase">
+                  <p className="font-display text-sm font-bold tracking-normal text-cream uppercase">
                     {role.title}
                   </p>
-                  <p className="font-body mt-1.5 flex items-center gap-2 text-sm tracking-wide text-cream/50 uppercase">
+                  <p className="font-body mt-1.5 flex items-center gap-2 text-sm tracking-normal text-cream/50 uppercase">
                     <span>{role.company}</span>
                     <span className="inline-block h-1.5 w-1.5 shrink-0 bg-red" />
                     <span>{role.dates}</span>

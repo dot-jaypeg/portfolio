@@ -6,6 +6,7 @@ declare global {
     __lenis?: Lenis
     __journeyScrollTrigger?: ScrollTrigger | null
     __chaptersMenuOpen?: boolean
+    __markAutoAdvanceInput?: () => void
   }
 }
 

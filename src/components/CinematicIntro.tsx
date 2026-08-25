@@ -9,13 +9,13 @@ const SCENES = [
     fg: '#fffcef',
   },
   {
-    eyebrow: '02 — Craft',
+    eyebrow: '02 — Expertise',
     headline: 'Branding & Identity',
     bg: '#fffcef',
     fg: '#161616',
   },
   {
-    eyebrow: '03 — Craft',
+    eyebrow: '03 — Expertise',
     headline: 'Digital & Motion',
     bg: '#fffcef',
     fg: '#161616',
@@ -28,13 +28,10 @@ const SCENES = [
   },
 ]
 
-const pad = (num: number) => String(num).padStart(2, '0')
-
 export function CinematicIntro() {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
-  const counterRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -97,14 +94,6 @@ export function CinematicIntro() {
             // quickTo pattern already used for the cursor elsewhere.
             if (progressRef.current) {
               progressRef.current.style.transform = `scaleX(${self.progress})`
-            }
-            if (counterRef.current) {
-              // Scene i is centered at progress i/(n-1), not i/n -- the
-              // track travels (n-1) panel-widths total, so rounding to
-              // the nearest i/(n-1) gives whichever scene is actually
-              // dominant on screen right now.
-              const index = Math.round(self.progress * (n - 1))
-              counterRef.current.textContent = `${pad(index + 1)}/${pad(n)}`
             }
             const { bg, fg } = colorAtProgress(self.progress)
             const key = bg + fg
@@ -215,27 +204,19 @@ export function CinematicIntro() {
             key={scene.headline}
             className="scene-panel relative flex h-full w-screen shrink-0 flex-col justify-end p-8 md:p-16"
           >
-            <span className="font-body pointer-events-none absolute inset-8 flex items-center justify-center border border-dashed border-cream/15 text-xs tracking-[0.3em] text-cream/25 uppercase md:inset-16">
+            <span className="font-body pointer-events-none absolute inset-8 flex items-center justify-center border border-dashed border-cream/15 text-xs tracking-[0.22em] text-cream/25 uppercase md:inset-16">
               [ placeholder video ]
             </span>
-            <p className="font-body text-xs tracking-[0.3em] text-cream uppercase">
+            <p className="font-body text-xs tracking-[0.22em] text-cream uppercase">
               {scene.eyebrow}
             </p>
-            <h2 className="scene-headline font-display mt-4 text-[13vw] leading-[0.8] font-bold tracking-tighter text-cream uppercase">
+            <h2 className="scene-headline font-display mt-4 text-[13vw] leading-[0.8] font-bold tracking-[-0.06em] text-cream uppercase">
               {scene.headline}
             </h2>
           </div>
         ))}
       </div>
 
-      <div className="pointer-events-none absolute right-8 bottom-8 z-10 md:right-16 md:bottom-16">
-        <span
-          ref={counterRef}
-          className="font-body text-xs tracking-[0.3em] text-cream/60 tabular-nums"
-        >
-          01/{pad(SCENES.length)}
-        </span>
-      </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-px bg-cream/15">
         <div
           ref={progressRef}

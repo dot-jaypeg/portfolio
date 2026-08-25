@@ -84,14 +84,14 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
       >
         <p
           ref={wordmarkRef}
-          className="font-display text-[22vw] leading-none font-bold tracking-tighter text-cream italic md:text-[18vw]"
+          className="font-display text-[22vw] leading-none font-bold tracking-[-0.06em] text-cream italic md:text-[18vw]"
         >
           .jaypeg
         </p>
         <div ref={lineRef} className="h-px w-40 origin-left bg-cream/40 md:w-64" />
         <p
           ref={counterRef}
-          className="font-body text-xs tracking-[0.3em] text-cream/50"
+          className="font-body text-xs tracking-[0.22em] text-cream/50"
         >
           000
         </p>
