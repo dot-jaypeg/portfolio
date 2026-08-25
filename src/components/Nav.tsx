@@ -1,10 +1,24 @@
 import type { MouseEvent } from 'react'
+import { getChapterScrollOffset } from '../lib/journeyScroll'
+import { WORK_COUNT } from '../data/journeyChapters'
 
 const LINKS = [
   { label: 'Work', href: '#work' },
   { label: 'About', href: '#about' },
   { label: 'Contact', href: '#contact' },
 ]
+
+// Work/About now live inside Journey's pinned horizontal track on
+// desktop, so their DOM elements freeze at wherever the pin left them
+// once you've scrolled past -- same issue #top already has for
+// CinematicIntro. Route those two through the chapter-offset math
+// instead; on mobile (or before the ScrollTrigger initializes),
+// getChapterScrollOffset returns null and this falls back to the plain
+// element lookup, which is correct there since Journey never pins.
+const CHAPTER_INDEX: Record<string, number> = {
+  '#work': 0,
+  '#about': WORK_COUNT,
+}
 
 export function Nav() {
   const handleClick =
@@ -19,6 +33,13 @@ export function Nav() {
       if (href === '#top') {
         window.__lenis?.scrollTo(0)
         return
+      }
+      if (href in CHAPTER_INDEX) {
+        const offset = getChapterScrollOffset(CHAPTER_INDEX[href])
+        if (offset != null) {
+          window.__lenis?.scrollTo(offset)
+          return
+        }
       }
       const target = document.querySelector(href)
       if (!target) return

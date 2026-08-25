@@ -6,8 +6,8 @@ import { Cursor } from './components/Cursor'
 import { Grain } from './components/Grain'
 import { Nav } from './components/Nav'
 import { CinematicIntro } from './components/CinematicIntro'
-import { WorkCarousel } from './components/WorkCarousel'
-import { Capabilities } from './components/Capabilities'
+import { Journey } from './components/Journey'
+import { ChaptersMenu } from './components/ChaptersMenu'
 import { Contact } from './components/Contact'
 import { Divider } from './components/Divider'
 
@@ -27,11 +27,10 @@ function App() {
       <Grain />
       <div style={{ visibility: loading ? 'hidden' : 'visible' }}>
         <Nav />
+        <ChaptersMenu />
         <main>
           <CinematicIntro />
-          <WorkCarousel />
-          <Divider />
-          <Capabilities />
+          <Journey />
           <Divider />
         </main>
         <Contact />
