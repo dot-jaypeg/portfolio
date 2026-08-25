@@ -9,7 +9,6 @@ import { Nav } from './components/Nav'
 import { CinematicIntro } from './components/CinematicIntro'
 import { Journey } from './components/Journey'
 import { ChaptersMenu } from './components/ChaptersMenu'
-import { SpotifyPlayer } from './components/SpotifyPlayer'
 import { Contact } from './components/Contact'
 import { Divider } from './components/Divider'
 
@@ -31,7 +30,6 @@ function App() {
       <div style={{ visibility: loading ? 'hidden' : 'visible' }}>
         <Nav />
         <ChaptersMenu />
-        <SpotifyPlayer />
         <main>
           <CinematicIntro />
           <Journey />

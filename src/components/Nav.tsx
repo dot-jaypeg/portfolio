@@ -1,6 +1,7 @@
 import type { MouseEvent } from 'react'
 import { getChapterScrollOffset } from '../lib/journeyScroll'
 import { WORK_COUNT } from '../data/journeyChapters'
+import { SoundToggle } from './SoundToggle'
 
 const LINKS = [
   { label: 'Work', href: '#work' },
@@ -82,6 +83,9 @@ export function Nav() {
               </a>
             </li>
           ))}
+          <li>
+            <SoundToggle />
+          </li>
         </ul>
       </nav>
     </header>
