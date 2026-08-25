@@ -1,8 +1,6 @@
 import { useState } from 'react'
 
-// Swap in the real playlist ID from its share link
-// (open.spotify.com/playlist/<ID>) once it's available.
-const SPOTIFY_PLAYLIST_ID = 'YOUR_PLAYLIST_ID'
+const SPOTIFY_PLAYLIST_ID = '1FRkdpOy13rY5Pj4m4EjQf'
 
 export function SpotifyPlayer() {
   const [open, setOpen] = useState(false)

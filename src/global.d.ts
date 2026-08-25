@@ -7,6 +7,7 @@ declare global {
     __journeyScrollTrigger?: ScrollTrigger | null
     __chaptersMenuOpen?: boolean
     __markAutoAdvanceInput?: () => void
+    __maskTransition?: (jump: () => void) => void
   }
 }
 

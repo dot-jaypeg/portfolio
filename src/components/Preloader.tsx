@@ -88,10 +88,10 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         >
           .jaypeg
         </p>
-        <div ref={lineRef} className="h-px w-40 origin-left bg-cream/40 md:w-64" />
+        <div ref={lineRef} className="h-[1.5px] w-48 origin-left bg-cream/40 md:w-72" />
         <p
           ref={counterRef}
-          className="font-body text-xs tracking-[0.22em] text-cream/50"
+          className="font-body text-sm tracking-[0.22em] text-cream/50"
         >
           000
         </p>

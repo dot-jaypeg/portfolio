@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { gsap } from '../lib/gsap'
 import { JOURNEY_CHAPTERS, TOTAL_CHAPTERS } from '../data/journeyChapters'
 import { getChapterScrollOffset } from '../lib/journeyScroll'
 
@@ -6,6 +7,13 @@ const pad = (num: number) => String(num).padStart(2, '0')
 
 export function ChaptersMenu() {
   const [open, setOpen] = useState(false)
+  // Held mounted an extra beat past `open` so the close animation has
+  // something to animate before the overlay actually leaves the DOM --
+  // toggling display off immediately on `open === false` would cut the
+  // reverse tween off after one frame.
+  const [mounted, setMounted] = useState(false)
+  const iconRef = useRef<HTMLButtonElement>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
   // Desktop-only, same matchMedia gating precedent as Cursor.tsx --
   // there's no pinned Journey track to jump within on mobile.
   const [isDesktop] = useState(
@@ -34,6 +42,43 @@ export function ChaptersMenu() {
     return () => observer.disconnect()
   }, [isDesktop])
 
+  // Morphs the 2x2 dot grid into an X (the universal "close" shape) --
+  // each dot rotates in place and the pair on the leading diagonal
+  // slides slightly to meet its partner, so the icon itself communicates
+  // open/close state instead of just sitting there identically in both.
+  useEffect(() => {
+    const icon = iconRef.current
+    if (!icon) return
+    const dots = icon.querySelectorAll('span')
+    gsap.to(dots, {
+      rotate: open ? 45 : 0,
+      x: open ? (i: number) => (i % 2 === 0 ? 3 : -3) : 0,
+      y: open ? (i: number) => (i < 2 ? 3 : -3) : 0,
+      duration: 0.45,
+      stagger: 0.03,
+      ease: 'power3.inOut',
+    })
+  }, [open])
+
+  useEffect(() => {
+    if (!mounted || !overlayRef.current) return
+    if (open) {
+      gsap.fromTo(
+        overlayRef.current,
+        { autoAlpha: 0, y: 16 },
+        { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+      )
+    } else {
+      gsap.to(overlayRef.current, {
+        autoAlpha: 0,
+        y: 16,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => setMounted(false),
+      })
+    }
+  }, [open, mounted])
+
   if (!isDesktop || !journeyInView) return null
 
   const handleJump = (index: number) => {
@@ -48,6 +93,7 @@ export function ChaptersMenu() {
   // underneath while the user is looking at the chapter grid instead.
   const openMenu = () => {
     window.__chaptersMenuOpen = true
+    setMounted(true)
     setOpen(true)
   }
   const closeMenu = () => {
@@ -58,6 +104,7 @@ export function ChaptersMenu() {
   return (
     <>
       <button
+        ref={iconRef}
         type="button"
         onClick={openMenu}
         aria-label="Chapters"
@@ -69,8 +116,11 @@ export function ChaptersMenu() {
         <span className="h-1.5 w-1.5 border border-current" />
       </button>
 
-      {open && (
-        <div className="fixed inset-0 z-[70] flex flex-col overflow-y-auto bg-ink/95 px-6 py-24 md:px-16">
+      {mounted && (
+        <div
+          ref={overlayRef}
+          className="fixed inset-0 z-[70] flex flex-col overflow-y-auto bg-ink/95 px-6 py-24 md:px-16"
+        >
           <button
             type="button"
             onClick={closeMenu}

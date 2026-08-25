@@ -30,26 +30,33 @@ export function Nav() {
       // clicking About while auto-advance was active didn't navigate
       // anywhere, it just kept crawling through Work instead.
       window.__markAutoAdvanceInput?.()
-      // #top is GSAP-pinned for its scroll-jacked scene sequence, so once
-      // you've scrolled past it, its own element settles at the frozen
-      // end-of-pin position in the doc flow (the last scene), not y=0 --
-      // scrolling "to the element" would land on that last frame instead
-      // of back at "Hello.". Going straight to the top of the document
-      // sidesteps that entirely.
-      if (href === '#top') {
-        window.__lenis?.scrollTo(0)
-        return
-      }
-      if (href in CHAPTER_INDEX) {
-        const offset = getChapterScrollOffset(CHAPTER_INDEX[href])
-        if (offset != null) {
-          window.__lenis?.scrollTo(offset)
+      // Nav jumps cover the screen and jump instantly underneath rather
+      // than smooth-scrolling past everything in between -- scrolling
+      // "Home" from deep in the Journey track used to visibly crawl
+      // backwards through every chapter it had already shown.
+      const jump = () => {
+        // #top is GSAP-pinned for its scroll-jacked scene sequence, so
+        // once you've scrolled past it, its own element settles at the
+        // frozen end-of-pin position in the doc flow (the last scene),
+        // not y=0 -- scrolling "to the element" would land on that last
+        // frame instead of back at "Hello.". Going straight to the top
+        // of the document sidesteps that entirely.
+        if (href === '#top') {
+          window.__lenis?.scrollTo(0, { immediate: true })
           return
         }
+        if (href in CHAPTER_INDEX) {
+          const offset = getChapterScrollOffset(CHAPTER_INDEX[href])
+          if (offset != null) {
+            window.__lenis?.scrollTo(offset, { immediate: true })
+            return
+          }
+        }
+        const target = document.querySelector(href)
+        if (!target) return
+        window.__lenis?.scrollTo(target as HTMLElement, { immediate: true })
       }
-      const target = document.querySelector(href)
-      if (!target) return
-      window.__lenis?.scrollTo(target as HTMLElement)
+      window.__maskTransition ? window.__maskTransition(jump) : jump()
     }
 
   return (
@@ -69,7 +76,7 @@ export function Nav() {
               <a
                 href={link.href}
                 onClick={handleClick(link.href)}
-                className="font-body text-xs tracking-[0.14em] text-cream/70 uppercase transition-colors hover:text-teal"
+                className="font-body relative text-xs tracking-[0.14em] text-cream/70 uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-teal after:transition-transform after:duration-300 after:content-[''] hover:text-teal hover:after:scale-x-100"
               >
                 {link.label}
               </a>

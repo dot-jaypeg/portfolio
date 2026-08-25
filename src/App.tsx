@@ -4,6 +4,7 @@ import { useSectionColors } from './hooks/useSectionColors'
 import { Preloader } from './components/Preloader'
 import { Cursor } from './components/Cursor'
 import { Grain } from './components/Grain'
+import { PageMask } from './components/PageMask'
 import { Nav } from './components/Nav'
 import { CinematicIntro } from './components/CinematicIntro'
 import { Journey } from './components/Journey'
@@ -26,6 +27,7 @@ function App() {
       <Preloader onComplete={() => setLoading(false)} />
       <Cursor />
       <Grain />
+      <PageMask />
       <div style={{ visibility: loading ? 'hidden' : 'visible' }}>
         <Nav />
         <ChaptersMenu />
