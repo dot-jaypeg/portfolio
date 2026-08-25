@@ -90,7 +90,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         </p>
         <div
           ref={lineRef}
-          className="mt-6 h-[2px] w-56 origin-left bg-cream/40 md:w-80"
+          className="mt-14 h-[2px] w-56 origin-left bg-cream/40 md:w-80"
         />
         <p
           ref={counterRef}
