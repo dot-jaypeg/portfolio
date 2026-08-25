@@ -2,10 +2,30 @@ import { useEffect, useRef } from 'react'
 import { gsap, SplitText } from '../lib/gsap'
 
 const SCENES = [
-  { eyebrow: '01 — Intro', headline: 'Hello.' },
-  { eyebrow: '02 — Craft', headline: 'Branding & Identity' },
-  { eyebrow: '03 — Craft', headline: 'Digital & Motion' },
-  { eyebrow: '04 — Who', headline: 'Jayden Ramirez' },
+  {
+    eyebrow: '01 — Intro',
+    headline: 'Hello.',
+    bg: '#161616',
+    fg: '#fffcef',
+  },
+  {
+    eyebrow: '02 — Craft',
+    headline: 'Branding & Identity',
+    bg: '#182220',
+    fg: '#fffcef',
+  },
+  {
+    eyebrow: '03 — Craft',
+    headline: 'Digital & Motion',
+    bg: '#221615',
+    fg: '#fffcef',
+  },
+  {
+    eyebrow: '04 — Who',
+    headline: 'Jayden Ramirez',
+    bg: '#161616',
+    fg: '#fffcef',
+  },
 ]
 
 export function CinematicIntro() {
@@ -77,6 +97,23 @@ export function CinematicIntro() {
               ease: 'power2.in',
             },
             start + segment * 0.78,
+          )
+        }
+
+        // Tint the page's --bg/--fg to this scene's theme as its panel
+        // slides into place, in the same scrubbed timeline as the
+        // horizontal track and word reveals -- scene 0 needs no tween
+        // since it's already the document's resting default.
+        if (i > 0) {
+          tl.to(
+            document.documentElement,
+            {
+              '--bg': SCENES[i].bg,
+              '--fg': SCENES[i].fg,
+              ease: 'none',
+              duration: segment * 0.5,
+            },
+            start,
           )
         }
       })

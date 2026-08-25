@@ -2,15 +2,18 @@ import { useEffect } from 'react'
 import { gsap } from '../lib/gsap'
 
 // Each entry crossfades --bg/--fg (see index.css) as its section's top
-// edge crosses the trigger zone. Work and Contact share the dark ink/
-// cream pair; About inverts to a light section in between, so the page
-// reads dark -> light -> dark as you scroll -- CinematicIntro is left
-// out deliberately, it stays fixed ink/cream throughout its own pinned
-// scroll so it doesn't compete with the SplitText reveal timeline.
+// edge crosses the trigger zone. Work stays base ink/cream (continuity
+// with where CinematicIntro's own per-scene tinting settles), About
+// inverts to a light section, and Contact lands on its own red-tinted
+// dark (matching the intro's "Digital & Motion" scene) rather than
+// repeating Work's exact colors -- so this boundary reads as a fresh
+// shift too, not just "back to where we started." CinematicIntro's own
+// scene-to-scene tinting lives inside CinematicIntro.tsx, tied to its
+// pinned scrub timeline instead of a separate ScrollTrigger here.
 const SECTION_THEMES: Record<string, { bg: string; fg: string }> = {
   work: { bg: '#161616', fg: '#fffcef' },
   about: { bg: '#fffcef', fg: '#161616' },
-  contact: { bg: '#161616', fg: '#fffcef' },
+  contact: { bg: '#221615', fg: '#fffcef' },
 }
 
 export function useSectionColors() {
