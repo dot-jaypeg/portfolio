@@ -23,14 +23,14 @@
      because those resolve through this indirection, they all shift
      together automatically without per-component changes. */
   --bg: #161616;
-  --fg: #fffcef;
+  --fg: #fffff0;
   /* Nav/sound label color -- tracks --fg (same as body copy) almost
      everywhere, EXCEPT CinematicIntro pins this to a fixed red for its
      whole duration, since a busy photo background there made plain
      auto-inverting text hard to read. Everywhere past the intro
      (Journey, Contact) writes this to match --fg exactly, so nav just
      reads as body copy again once you're off the intro's photo. */
-  --nav-fg: #fffcef;
+  --nav-fg: #fffff0;
 }
 
 @theme {

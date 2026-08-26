@@ -220,7 +220,7 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
       key: cs.slug,
       eyebrow,
       bg: '#161616',
-      fg: '#fffcef',
+      fg: '#fffff0',
       render: () => (
         <WorkPanel cs={cs} eyebrow={eyebrow} id={i === 0 ? 'work' : undefined} />
       ),
@@ -229,7 +229,7 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
   {
     key: 'about-statement',
     eyebrow: `${pad(WORK_COUNT + 1)} — About`,
-    bg: '#fffcef',
+    bg: '#fffff0',
     fg: '#161616',
     render: () => (
       <AboutStatementPanel
@@ -241,7 +241,7 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
   {
     key: 'about-credentials',
     eyebrow: `${pad(WORK_COUNT + 2)} — About`,
-    bg: '#fffcef',
+    bg: '#fffff0',
     fg: '#161616',
     render: () => (
       <AboutCredentialsPanel eyebrow={`${pad(WORK_COUNT + 2)} — About`} />

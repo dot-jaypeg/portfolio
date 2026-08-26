@@ -7,25 +7,25 @@ export const SCENES = [
     eyebrow: '01 — Intro',
     headline: 'Hello.',
     bg: '#161616',
-    fg: '#fffcef',
+    fg: '#fffff0',
   },
   {
     eyebrow: '02 — Expertise',
     headline: 'Branding & Identity',
-    bg: '#fffcef',
+    bg: '#fffff0',
     fg: '#161616',
   },
   {
     eyebrow: '03 — Expertise',
     headline: 'Digital & Motion',
-    bg: '#fffcef',
+    bg: '#fffff0',
     fg: '#161616',
   },
   {
     eyebrow: '04 — Who',
     headline: 'Jayden Ramirez',
     bg: '#dd5547',
-    fg: '#fffcef',
+    fg: '#fffff0',
   },
 ]
 

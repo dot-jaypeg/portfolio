@@ -10,7 +10,7 @@ import { SCENES } from '../components/CinematicIntro'
 // tweens itself, tied to its scrub timeline instead of an independent
 // ScrollTrigger here, exactly like CinematicIntro does for its own
 // scenes -- EXCEPT for the specific gap the second effect below patches.
-const CONTACT_THEME = { bg: '#161616', fg: '#fffcef' }
+const CONTACT_THEME = { bg: '#161616', fg: '#fffff0' }
 
 export function useSectionColors() {
   useEffect(() => {
