@@ -41,4 +41,39 @@ export const CASE_STUDIES: CaseStudy[] = [
     description:
       'Original illustration work made to stand on its own and to slot cleanly into a larger visual system.',
   },
+  {
+    slug: 'case-06',
+    title: 'Case Study 06',
+    category: 'Editorial',
+    description:
+      'Layout and art direction for a print-first story, where the grid has to hold up as well on paper as it does on screen.',
+  },
+  {
+    slug: 'case-07',
+    title: 'Case Study 07',
+    category: 'Web',
+    description:
+      'A site built to make a small team feel like a studio, from first scroll to final contact form.',
+  },
+  {
+    slug: 'case-08',
+    title: 'Case Study 08',
+    category: 'Packaging',
+    description:
+      'Structural and surface design for a product line meant to be picked up, not just looked at.',
+  },
+  {
+    slug: 'case-09',
+    title: 'Case Study 09',
+    category: 'Photography',
+    description:
+      'A shoot built around one clear mood, carried consistently across every frame that made the final cut.',
+  },
+  {
+    slug: 'case-10',
+    title: 'Case Study 10',
+    category: 'Social',
+    description:
+      'A content system flexible enough to post daily without ever losing the brand\'s shape.',
+  },
 ]

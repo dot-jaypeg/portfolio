@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 
-const YOUTUBE_PLAYLIST_ID = 'PLvMJYw4TOmGWeB4-cWu85DgJ0YQKDgusC'
+const YOUTUBE_VIDEO_ID = 'yKYgCD3m9AU'
 const API_SCRIPT_ID = 'youtube-iframe-api'
+
+// YT.PlayerState values, per the IFrame Player API.
+const YT_STATE_PLAYING = 1
+const YT_STATE_PAUSED = 2
 
 interface YTPlayer {
   playVideo: () => void
@@ -19,9 +23,11 @@ interface YTNamespace {
     options: {
       height: string
       width: string
+      videoId: string
       playerVars: Record<string, string | number>
       events: {
         onReady: (e: YTPlayerEvent) => void
+        onStateChange: (e: YTPlayerEvent) => void
       }
     },
   ) => YTPlayer
@@ -34,28 +40,29 @@ declare global {
   }
 }
 
-// YouTube plays the actual full video, not a truncated preview -- unlike
-// Spotify's anonymous embed, so there's no forced 30s cutoff and no need
-// to fake a loop by re-triggering playback (which is what caused the
-// audible re-buffer blip in the Spotify version). `loop: 1` combined with
-// a playlist context is natively, indefinitely looping -- YouTube
-// restarts the playlist from the top every time it reaches the end, not
-// just once -- so there's no need to detect "ended" and replay it
-// ourselves (and doing so per-video would risk racing the playlist's own
-// advance to the next track).
+// `loop: 1` + `playlist` set to this same video's own ID is YouTube's
+// documented trick for looping a single video gaplessly (loop only
+// applies to playlist contexts, so a "playlist of one" is how a single
+// video gets to loop natively, same mechanism as the multi-track case).
 //
-// Always starts "Off", never restored from a previous visit -- same
-// reasoning as before: browsers block audio autoplay without a fresh
-// gesture, so pretending it's already on before a real click produced a
-// label that lied about whether anything was actually playing.
+// The label is driven by confirmed onStateChange events, not by what we
+// merely intended -- the site attempts autoplay on load per the design
+// brief ("start with sound on"), but browsers block unmuted audio
+// autoplay without a preceding user gesture, so that attempt is silently
+// blocked for most first-time visitors. If the label just mirrored intent
+// it would say "On" while nothing plays -- the exact bug fixed last
+// round. Sourcing it from real state means it stays honest either way:
+// it flips to On if the browser's autoplay heuristics happen to allow
+// it, otherwise it stays Off (accurately) until the first real click,
+// which always works since a click is a genuine gesture.
 export function SoundToggle() {
   const [on, setOn] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const playerRef = useRef<YTPlayer | null>(null)
   // Covers the narrow window where someone clicks the toggle before the
   // YouTube API script has finished loading and handed back a player --
-  // a real (if rare) race, distinct from the reload case above since
-  // this one DOES follow a genuine click.
+  // a real (if rare) race, distinct from the autoplay-on-load attempt
+  // above since this one DOES follow a genuine click.
   const pendingRef = useRef<boolean | null>(null)
 
   useEffect(() => {
@@ -64,10 +71,10 @@ export function SoundToggle() {
       const player = new window.YT.Player(containerRef.current, {
         height: '1',
         width: '1',
+        videoId: YOUTUBE_VIDEO_ID,
         playerVars: {
-          listType: 'playlist',
-          list: YOUTUBE_PLAYLIST_ID,
           loop: 1,
+          playlist: YOUTUBE_VIDEO_ID,
           controls: 0,
           disablekb: 1,
         },
@@ -76,7 +83,13 @@ export function SoundToggle() {
             playerRef.current = player
             if (pendingRef.current != null) {
               player[pendingRef.current ? 'playVideo' : 'pauseVideo']()
+            } else {
+              player.playVideo()
             }
+          },
+          onStateChange: (e) => {
+            if (e.data === YT_STATE_PLAYING) setOn(true)
+            else if (e.data === YT_STATE_PAUSED) setOn(false)
           },
         },
       })
@@ -92,12 +105,9 @@ export function SoundToggle() {
   }, [])
 
   const toggle = () => {
-    setOn((prev) => {
-      const next = !prev
-      if (playerRef.current) playerRef.current[next ? 'playVideo' : 'pauseVideo']()
-      else pendingRef.current = next
-      return next
-    })
+    const next = !on
+    if (playerRef.current) playerRef.current[next ? 'playVideo' : 'pauseVideo']()
+    else pendingRef.current = next
   }
 
   return (
