@@ -1,8 +1,8 @@
-import contraImg from '../assets/images/projects/contra.jpg'
-import afiImg from '../assets/images/projects/afi.jpg'
-import resonanceImg from '../assets/images/projects/resonance.jpg'
-import nsuImg from '../assets/images/projects/nsu.jpg'
-import fetchImg from '../assets/images/projects/fetch.jpg'
+import contraImg from '../assets/images/projects/contra-coffee-sticker-pack.jpg'
+import afiImg from '../assets/images/projects/afi-marketing-campaign.jpg'
+import resonanceImg from '../assets/images/projects/ui-design-for-resonance.jpg'
+import nsuImg from '../assets/images/projects/nikkei-student-union.jpg'
+import fetchImg from '../assets/images/projects/fetch-doggy-deli.jpg'
 
 export interface CaseStudy {
   slug: string
