@@ -43,29 +43,18 @@ function WorkPanel({
   eyebrow: string
   id?: string
 }) {
-  // Le Mans Classic treatment: the image column's HEIGHT matches the
-  // full page (self-stretch against the row's own min-h-screen), not a
-  // fixed aspect-[4/5] box -- but it still sits in its own column beside
-  // the text, not full-bleed across the whole panel. No vertical padding
-  // on the panel itself (only horizontal) so nothing caps the column
-  // short of the actual viewport height; the text column still centers
-  // vertically via the row's own `items-center`.
+  // Polaroid card sized and shaped exactly like About's -- same
+  // w-[26vw] max-w-sm column, same aspect-[4/5] box (not stretched to
+  // the page height), same -4deg tilt. Only the per-case parallax
+  // amount/position stay data-driven, same as before.
   return (
     <div
       id={id}
       className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 md:px-20"
     >
-      {/* Trying the About photo's polaroid card treatment here too --
-          same fixed paper/shadow colors (independent of the page's color
-          inversion, since a physical object's paper shouldn't invert),
-          same tilt-at-rest/straighten-on-hover interaction. The card
-          itself still self-stretches to the full page height (a flex
-          item's stretched cross size counts as a definite height for its
-          own children's h-full, per the flexbox spec), so this reads as
-          a much bigger polaroid than About's rather than a shrunken box. */}
-      <div className="group relative w-[38vw] max-w-xl shrink-0 self-stretch">
-        <div className="h-full rotate-[-3deg] bg-[#f2efe6] p-3 pb-9 shadow-xl shadow-black/25 transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:rotate-0 group-hover:shadow-2xl group-hover:shadow-black/35">
-          <div className="relative h-full w-full overflow-hidden bg-ink">
+      <div className="group relative w-[26vw] max-w-sm shrink-0">
+        <div className="rotate-[-4deg] bg-[#f2efe6] p-3 pb-9 shadow-xl shadow-black/25 transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:rotate-0 group-hover:shadow-2xl group-hover:shadow-black/35">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-ink">
             {cs.image ? (
               <img
                 src={cs.image}
