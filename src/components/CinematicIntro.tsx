@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { gsap, SplitText } from '../lib/gsap'
+import introPhoto from '../assets/images/intro/IMG_8143.jpg'
 
 const SCENES = [
   {
@@ -204,9 +205,11 @@ export function CinematicIntro() {
             key={scene.headline}
             className="scene-panel relative flex h-full w-screen shrink-0 flex-col justify-end p-8 md:p-16"
           >
-            <span className="font-body pointer-events-none absolute inset-8 flex items-center justify-center border border-dashed border-cream/15 text-xs tracking-[0.22em] text-cream/25 uppercase md:inset-16">
-              [ placeholder video ]
-            </span>
+            <img
+              src={introPhoto}
+              alt="Jayden Ramirez"
+              className="pointer-events-none absolute inset-8 object-cover md:inset-16"
+            />
             <p className="font-body text-xs tracking-[0.22em] text-cream uppercase">
               {scene.eyebrow}
             </p>

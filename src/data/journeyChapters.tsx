@@ -103,10 +103,17 @@ function AboutStatementPanel({
         </div>
       </div>
       <div className="relative ml-auto hidden aspect-[4/5] w-[26vw] max-w-sm shrink-0 overflow-hidden md:block">
+        {/* No `chapter-media` class here, unlike the other panels' media --
+            that class is what JourneyDesktop's parallax tween grabs to swing
+            an oversized (116%, via inset-[-8%]) element back and forth
+            without ever revealing its edges. This is a real photo, not an
+            empty placeholder box, so that same oversize was cropping real
+            content off every side. Sized to fill the frame exactly instead,
+            trading the parallax drift for showing the whole photo. */}
         <img
           src={meGif}
           alt="Jayden Ramirez"
-          className="chapter-media absolute inset-[-8%] h-[116%] w-[116%] object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
     </div>
