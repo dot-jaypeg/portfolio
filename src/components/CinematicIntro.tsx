@@ -126,6 +126,21 @@ export function CinematicIntro() {
         const winEnd = i === n - 1 ? 1 : center + unit * 0.5
         const winWidth = winEnd - winStart
 
+        // Same depth-cue swing JourneyDesktop gives its own chapter media,
+        // scaled to whatever this element's own CSS oversize can safely
+        // hide (see the `data-parallax-amount` comment in JourneyDesktop
+        // for why that amount isn't just a flat default for every image).
+        const media = panels[i].querySelector('.scene-media')
+        if (media) {
+          const amount = Number(media.getAttribute('data-parallax-amount')) || 6
+          tl.fromTo(
+            media,
+            { xPercent: amount },
+            { xPercent: -amount, ease: 'none', duration: winWidth },
+            winStart,
+          )
+        }
+
         // Scene 0 is visible at rest (scroll position 0) -- only scenes
         // reached by scrolling need an entrance fade-in.
         //
@@ -203,14 +218,30 @@ export function CinematicIntro() {
         {SCENES.map((scene, i) => (
           <div
             key={scene.headline}
-            className="scene-panel relative flex h-full w-screen shrink-0 flex-col justify-end p-8 md:p-16"
+            className="scene-panel relative flex h-full w-screen shrink-0 flex-col justify-end overflow-hidden p-8 md:p-16"
           >
             {i === 0 ? (
-              <img
-                src={introPhoto}
-                alt="Jayden Ramirez"
-                className="pointer-events-none absolute inset-8 object-cover md:inset-16"
-              />
+              // Negative inset cancels the panel's own padding so the
+              // photo reads as a true full-bleed hero shot instead of a
+              // framed box floating inside a margin -- the overflow-hidden
+              // here (not just the one on scene-panel) is what lets the
+              // oversized, parallax-driven image inside it swing without
+              // ever revealing its own edges.
+              <div className="absolute -inset-8 overflow-hidden md:-inset-16">
+                {/* `max-w-none` is required, not decorative -- Tailwind's
+                    preflight sets `img { max-width: 100% }`, which
+                    silently caps this element's WIDTH at 100% regardless
+                    of the 112% utility (height isn't affected, since
+                    preflight only overrides max-width, not max-height).
+                    Without it the swing has zero real horizontal bleed
+                    margin and reveals a gap on one side. */}
+                <img
+                  src={introPhoto}
+                  alt="Jayden Ramirez"
+                  data-parallax-amount="6"
+                  className="scene-media pointer-events-none absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover"
+                />
+              </div>
             ) : (
               <span className="font-body pointer-events-none absolute inset-8 flex items-center justify-center border border-dashed border-cream/15 text-xs tracking-[0.22em] text-cream/25 uppercase md:inset-16">
                 [ placeholder video ]

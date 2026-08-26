@@ -125,11 +125,22 @@ export function JourneyDesktop() {
         // media wrapper's own overflow-hidden (media itself is oversized
         // via inset[-8%]) so the swing never reveals empty edges; copy's
         // smaller swing needs no extra bounding.
+        //
+        // The swing amount is configurable per-element via
+        // `data-parallax-amount` (defaulting to the original 8) -- a
+        // real photo's meaningful content (a face, decorative stickers
+        // near the corners) can sit much closer to its own edges than
+        // an abstract placeholder box ever does, so the oversize this
+        // swing needs to stay gap-free can end up clipping into real
+        // content unless that specific element's swing (and matching
+        // CSS oversize) is dialed down to fit how much safe margin it
+        // actually has.
         if (media) {
+          const amount = Number(media.getAttribute('data-parallax-amount')) || 8
           tl.fromTo(
             media,
-            { xPercent: 8 },
-            { xPercent: -8, ease: 'none', duration: winWidth },
+            { xPercent: amount },
+            { xPercent: -amount, ease: 'none', duration: winWidth },
             winStart,
           )
         }

@@ -103,16 +103,28 @@ function AboutStatementPanel({
         </div>
       </div>
       <div className="relative ml-auto hidden aspect-[4/5] w-[26vw] max-w-sm shrink-0 overflow-hidden md:block">
-        {/* The gif itself had a light polaroid-style border baked in
-            (~5-6% margin around the actual photo) -- cropped that out
-            at the source (see me.gif's own crop history) instead of
-            giving up the chapter-media parallax swing, since the
-            oversize that swing needs was clipping into that border
-            anyway, not into the subject. */}
+        {/* The decorative star/camera stickers sit very close to the
+            gif's own edges (within ~5-7% at the tightest point), so the
+            default 8% swing's oversize would clip into them regardless
+            of how the source crop is adjusted -- there just isn't 8%
+            of disposable margin around them to work with. Cropped out
+            most (not all) of the gif's original polaroid-style border,
+            keeping a thin sliver as the swing's bleed margin, and
+            dialed the swing itself down to a smaller, safer amount that
+            fits the room actually available without touching them.
+            `max-w-none` is required, not decorative -- Tailwind's own
+            preflight sets `img { max-width: 100% }`, which was silently
+            capping this element's WIDTH at 100% regardless of the 106%
+            utility (confirmed directly: computed width equaled the
+            container's exactly, while computed height correctly came
+            out to 106%, since only width has a competing max-width
+            rule). That one-sided cap is what was actually clipping the
+            stickers, more than any crop choice. */}
         <img
           src={meGif}
           alt="Jayden Ramirez"
-          className="chapter-media absolute inset-[-8%] h-[116%] w-[116%] object-cover"
+          data-parallax-amount="3"
+          className="chapter-media absolute inset-[-3%] h-[106%] w-[106%] max-w-none object-cover"
         />
       </div>
     </div>
