@@ -59,6 +59,7 @@ function WorkPanel({
               inset: `-${cs.imageParallax ?? 8}%`,
               width: `${100 + (cs.imageParallax ?? 8) * 2}%`,
               height: `${100 + (cs.imageParallax ?? 8) * 2}%`,
+              objectPosition: cs.imagePosition ?? 'center',
             }}
           />
         ) : (

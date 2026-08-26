@@ -21,6 +21,10 @@ export interface CaseStudy {
   // margin) needs a smaller amount than an abstract placeholder box
   // does, or the swing's oversize crops into real content.
   imageParallax?: number
+  // Optional CSS object-position override -- defaults to 'center'.
+  // A wide/off-center source photo can need this to keep the meaningful
+  // subject in frame once object-cover crops it into the 4:5 box.
+  imagePosition?: string
 }
 
 export const CASE_STUDIES: CaseStudy[] = [
@@ -48,6 +52,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'UX/UI & HUD',
     client: 'Chapman University',
     image: resonanceImg,
+    // Source is a wide 16:9 banner with the wordmark on the left and the
+    // character on the right -- centering it (the default) crops half
+    // of each. Biasing all the way right keeps just the character.
+    imagePosition: 'right center',
     description:
       'Interface design for Resonance, focused on making a complex product feel simple to actually use.',
   },
