@@ -102,30 +102,44 @@ function AboutStatementPanel({
           <ExpertisePills />
         </div>
       </div>
-      <div className="relative ml-auto hidden aspect-[4/5] w-[26vw] max-w-sm shrink-0 overflow-hidden md:block">
-        {/* The decorative star/camera stickers sit very close to the
-            gif's own edges (within ~5-7% at the tightest point), so the
-            default 8% swing's oversize would clip into them regardless
-            of how the source crop is adjusted -- there just isn't 8%
-            of disposable margin around them to work with. Cropped out
-            most (not all) of the gif's original polaroid-style border,
-            keeping a thin sliver as the swing's bleed margin, and
-            dialed the swing itself down to a smaller, safer amount that
-            fits the room actually available without touching them.
-            `max-w-none` is required, not decorative -- Tailwind's own
-            preflight sets `img { max-width: 100% }`, which was silently
-            capping this element's WIDTH at 100% regardless of the 106%
-            utility (confirmed directly: computed width equaled the
-            container's exactly, while computed height correctly came
-            out to 106%, since only width has a competing max-width
-            rule). That one-sided cap is what was actually clipping the
-            stickers, more than any crop choice. */}
-        <img
-          src={meGif}
-          alt="Jayden Ramirez"
-          data-parallax-amount="3"
-          className="chapter-media absolute inset-[-3%] h-[106%] w-[106%] max-w-none object-cover"
-        />
+      <div className="group relative ml-auto hidden w-[26vw] max-w-sm shrink-0 md:block">
+        {/* A real polaroid card, not just a photo box -- fixed off-white
+            paper color (not `bg-cream`, which resolves to the
+            crossfading --fg and would go BLACK on this panel, since
+            About's fg is ink) and a fixed shadow color, both
+            deliberately independent of the site's per-section color
+            inversion the way Cursor.tsx's dot fill is, since a physical
+            object's own paper/shadow shouldn't invert with the page.
+            Tilted at rest like it was tossed down; hovering straightens
+            it out, lifts it slightly, and deepens the shadow -- the
+            "picking it up off the table" cue. */}
+        <div className="rotate-[-4deg] bg-[#f2efe6] p-3 pb-9 shadow-xl shadow-black/25 transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:rotate-0 group-hover:shadow-2xl group-hover:shadow-black/35">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-ink">
+            {/* The decorative star/camera stickers sit very close to the
+                gif's own edges (within ~5-7% at the tightest point), so the
+                default 8% swing's oversize would clip into them regardless
+                of how the source crop is adjusted -- there just isn't 8%
+                of disposable margin around them to work with. Cropped out
+                most (not all) of the gif's original polaroid-style border,
+                keeping a thin sliver as the swing's bleed margin, and
+                dialed the swing itself down to a smaller, safer amount that
+                fits the room actually available without touching them.
+                `max-w-none` is required, not decorative -- Tailwind's own
+                preflight sets `img { max-width: 100% }`, which was silently
+                capping this element's WIDTH at 100% regardless of the 106%
+                utility (confirmed directly: computed width equaled the
+                container's exactly, while computed height correctly came
+                out to 106%, since only width has a competing max-width
+                rule). That one-sided cap is what was actually clipping the
+                stickers, more than any crop choice. */}
+            <img
+              src={meGif}
+              alt="Jayden Ramirez"
+              data-parallax-amount="3"
+              className="chapter-media absolute inset-[-3%] h-[106%] w-[106%] max-w-none object-cover"
+            />
+          </div>
+        </div>
       </div>
     </div>
   )
