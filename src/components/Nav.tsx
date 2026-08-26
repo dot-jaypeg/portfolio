@@ -77,7 +77,7 @@ export function Nav() {
               <a
                 href={link.href}
                 onClick={handleClick(link.href)}
-                className="font-body relative text-xs tracking-[0.14em] text-cream/70 uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-teal after:transition-transform after:duration-300 after:content-[''] hover:text-teal hover:after:scale-x-100"
+                className="font-body relative text-xs tracking-[0.14em] text-red uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-teal after:transition-transform after:duration-300 after:content-[''] hover:text-teal hover:after:scale-x-100"
               >
                 {link.label}
               </a>
