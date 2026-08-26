@@ -43,50 +43,46 @@ function WorkPanel({
   eyebrow: string
   id?: string
 }) {
-  // Full-bleed treatment (Le Mans Classic style): the photo fills the
-  // entire panel edge to edge instead of sitting in a boxed-off column
-  // beside the text, with copy overlaid at the bottom on a dark scrim.
-  // Since the image now fully covers the panel at all times (the
-  // oversize/inset swing never lets the flat chapter --bg show through),
-  // the overlay text is set in fixed white/teal rather than the
-  // crossfade's text-cream -- that indirection exists for text sitting
-  // directly on a flat --bg color, which this text no longer does.
+  // Le Mans Classic treatment: the image column's HEIGHT matches the
+  // full page (self-stretch against the row's own min-h-screen), not a
+  // fixed aspect-[4/5] box -- but it still sits in its own column beside
+  // the text, not full-bleed across the whole panel. No vertical padding
+  // on the panel itself (only horizontal) so nothing caps the column
+  // short of the actual viewport height; the text column still centers
+  // vertically via the row's own `items-center`.
   return (
     <div
       id={id}
-      className="chapter-panel relative flex min-h-screen w-screen shrink-0 flex-col justify-end overflow-hidden"
+      className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 md:px-20"
     >
-      {cs.image ? (
-        <img
-          src={cs.image}
-          alt={cs.title}
-          data-parallax-amount={cs.imageParallax ?? 8}
-          className="chapter-media absolute max-w-none object-cover"
-          style={{
-            inset: `-${cs.imageParallax ?? 8}%`,
-            width: `${100 + (cs.imageParallax ?? 8) * 2}%`,
-            height: `${100 + (cs.imageParallax ?? 8) * 2}%`,
-            objectPosition: cs.imagePosition ?? 'center',
-          }}
-        />
-      ) : (
-        <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase select-none">
-          [ placeholder image ]
-        </div>
-      )}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
-      {/* pb-24/md:pb-28, not the plain p-8/md:p-16 every other side uses --
-          ChaptersMenu's trigger is a fixed bottom-8/16 left-8/16 icon, and
-          this block's last line (category) was landing right on top of it
-          at the previous padding. */}
-      <div className="chapter-copy relative z-10 max-w-xl p-8 pb-24 md:p-16 md:pb-28">
-        <p className="font-body text-xs tracking-[0.22em] text-white uppercase">
+      <div className="relative w-[38vw] max-w-xl shrink-0 self-stretch overflow-hidden">
+        {cs.image ? (
+          <img
+            src={cs.image}
+            alt={cs.title}
+            data-parallax-amount={cs.imageParallax ?? 8}
+            className="chapter-media absolute max-w-none object-cover"
+            style={{
+              inset: `-${cs.imageParallax ?? 8}%`,
+              width: `${100 + (cs.imageParallax ?? 8) * 2}%`,
+              height: `${100 + (cs.imageParallax ?? 8) * 2}%`,
+              objectPosition: cs.imagePosition ?? 'center',
+            }}
+          />
+        ) : (
+          <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase select-none">
+            [ placeholder image ]
+          </div>
+        )}
+      </div>
+      <div className="chapter-copy max-w-xl">
+        <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
           {eyebrow}
         </p>
-        <h2 className="chapter-headline font-display mt-4 text-[7vw] leading-[0.9] font-bold tracking-[-0.06em] text-white uppercase md:text-[5vw]">
+        <h2 className="chapter-headline font-display mt-4 text-[7vw] leading-[0.9] font-bold tracking-[-0.06em] text-cream uppercase md:text-[5vw]">
           {cs.title}
         </h2>
-        <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-white/70">
+        <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-cream/60">
           {cs.description}
         </p>
         <p className="font-body mt-4 text-xs tracking-wider text-teal uppercase">
