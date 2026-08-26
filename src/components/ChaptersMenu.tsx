@@ -6,21 +6,33 @@ import { getChapterScrollOffset } from '../lib/journeyScroll'
 
 const pad = (num: number) => String(num).padStart(2, '0')
 
+// The row's own box height never changes on hover -- the auto-scroll
+// math below depends on the track's total scrollHeight staying fixed,
+// so "accordion expanding" is faked via transforms on absolutely
+// positioned dividers/content instead of real layout growth. The top
+// and bottom divider lines scale up in place (transform, not height,
+// so neighboring rows never actually move) and the content scales up
+// slightly with them, reading as the row "opening up" around its own
+// center without ever touching the real box model.
 function WorkRow({ cs, index }: { cs: CaseStudy; index: number }) {
   return (
     <div
       data-project-index={index}
-      className="flex h-[26vh] w-full flex-col items-center justify-center gap-3 border-b border-cream/10 px-6 text-center"
+      className="group relative flex h-[26vh] w-full items-center justify-center overflow-hidden px-6 text-center"
     >
-      <span className="font-body text-xs tracking-[0.22em] text-teal uppercase">
-        {pad(index + 1)}/{pad(WORK_COUNT)}
-      </span>
-      <span className="font-display text-[7vw] font-bold tracking-[-0.06em] text-cream uppercase md:text-[4.5vw]">
-        {cs.title}
-      </span>
-      <span className="font-body text-xs tracking-wider text-cream/50 uppercase">
-        {cs.category}
-      </span>
+      <span className="pointer-events-none absolute inset-x-0 top-0 h-px origin-top scale-y-100 bg-cream/10 transition-transform duration-300 ease-out group-hover:scale-y-[12] group-hover:bg-cream/15" />
+      <div className="relative flex flex-col items-center gap-3 transition-transform duration-300 ease-out group-hover:scale-105">
+        <span className="font-body text-xs tracking-[0.22em] text-teal uppercase">
+          {pad(index + 1)}/{pad(CASE_STUDIES.length)}
+        </span>
+        <span className="font-display text-[7vw] font-bold tracking-[-0.06em] text-cream uppercase md:text-[4.5vw]">
+          {cs.title}
+        </span>
+        <span className="font-body text-xs tracking-wider text-cream/50 uppercase">
+          {cs.category}
+        </span>
+      </div>
+      <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-bottom scale-y-100 bg-cream/10 transition-transform duration-300 ease-out group-hover:scale-y-[12] group-hover:bg-cream/15" />
     </div>
   )
 }
@@ -51,10 +63,16 @@ export function ChaptersMenu() {
   // appeared yet.
   const [journeyInView, setJourneyInView] = useState(false)
 
+  // Only the first WORK_COUNT case studies actually have a chapter built
+  // in the main Journey -- the rest are listed here as a fuller index
+  // but have nowhere to jump to yet, so clicking one just closes the
+  // menu rather than firing a scroll to the wrong (or no) chapter.
   const handleJump = (index: number) => {
     window.__markAutoAdvanceInput?.()
-    const offset = getChapterScrollOffset(index)
-    if (offset != null) window.__lenis?.scrollTo(offset)
+    if (index < WORK_COUNT) {
+      const offset = getChapterScrollOffset(index)
+      if (offset != null) window.__lenis?.scrollTo(offset)
+    }
     closeMenu()
   }
 

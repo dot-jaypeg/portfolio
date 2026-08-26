@@ -14,7 +14,14 @@ export interface JourneyChapter {
   render: () => ReactNode
 }
 
-export const WORK_COUNT = CASE_STUDIES.length
+// Only a curated subset gets a full chapter in the main scroll-jacked
+// Journey -- anyone manually scrolling through Work would otherwise
+// pass every single case study, not just the highlights. The "View All"
+// overlay (ChaptersMenu) still lists the complete CASE_STUDIES set
+// separately; it isn't driven by this featured subset.
+const FEATURED_CASE_STUDIES = CASE_STUDIES.slice(0, 3)
+
+export const WORK_COUNT = FEATURED_CASE_STUDIES.length
 export const ABOUT_COUNT = 2
 export const TOTAL_CHAPTERS = WORK_COUNT + ABOUT_COUNT
 
@@ -150,7 +157,7 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
 }
 
 export const JOURNEY_CHAPTERS: JourneyChapter[] = [
-  ...CASE_STUDIES.map((cs, i) => {
+  ...FEATURED_CASE_STUDIES.map((cs, i) => {
     const eyebrow = `${pad(i + 1)} — Work`
     return {
       key: cs.slug,
