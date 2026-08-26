@@ -76,7 +76,10 @@ export function JourneyDesktop() {
             const key = bg + fg
             if (key !== lastColorKey) {
               lastColorKey = key
-              gsap.set(document.documentElement, { '--bg': bg, '--fg': fg })
+              // --nav-fg mirrors --fg here (unlike CinematicIntro, which
+              // pins it to a fixed red) -- past the intro's own photo,
+              // nav should just read as body copy again.
+              gsap.set(document.documentElement, { '--bg': bg, '--fg': fg, '--nav-fg': fg })
             }
           },
         },

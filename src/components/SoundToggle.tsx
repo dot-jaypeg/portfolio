@@ -115,7 +115,7 @@ export function SoundToggle() {
       <button
         type="button"
         onClick={toggle}
-        className="font-body text-xs tracking-[0.14em] text-red uppercase transition-colors hover:text-teal"
+        className="font-body text-xs tracking-[0.14em] text-[var(--nav-fg)] uppercase transition-colors hover:text-teal"
       >
         Sound: {on ? 'On' : 'Off'}
       </button>

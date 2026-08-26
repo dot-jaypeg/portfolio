@@ -7,39 +7,39 @@ export interface CaseStudy {
 
 export const CASE_STUDIES: CaseStudy[] = [
   {
-    slug: 'case-01',
-    title: 'Case Study 01',
-    category: 'Branding',
-    description:
-      'A full identity system built from the ground up — mark, type, and a set of rules flexible enough to hold across every touchpoint.',
-  },
-  {
-    slug: 'case-02',
-    title: 'Case Study 02',
-    category: 'Digital',
-    description:
-      'A digital marketing push that turned a quiet launch into a campaign people actually talked about, across every channel it touched.',
-  },
-  {
-    slug: 'case-03',
-    title: 'Case Study 03',
-    category: 'Merchandising',
-    description:
-      'Physical goods designed to feel like an extension of the brand instead of an afterthought — packaging, apparel, and everything in between.',
-  },
-  {
-    slug: 'case-04',
-    title: 'Case Study 04',
-    category: 'Motion',
-    description:
-      'Motion and VFX work built to carry a story frame by frame, from early animatics through final color.',
-  },
-  {
-    slug: 'case-05',
-    title: 'Case Study 05',
+    slug: 'contra-coffee-sticker-pack',
+    title: 'Contra Coffee Sticker Pack',
     category: 'Illustration',
     description:
-      'Original illustration work made to stand on its own and to slot cleanly into a larger visual system.',
+      'A playful sticker pack designed to extend Contra Coffee\'s brand voice into something collectible and shareable.',
+  },
+  {
+    slug: 'afi-marketing-campaign',
+    title: 'AFI Marketing Campaign',
+    category: 'Digital',
+    description:
+      'A multi-channel marketing push built to get AFI in front of the right audience at the right moment.',
+  },
+  {
+    slug: 'ui-design-for-resonance',
+    title: 'UI Design for Resonance',
+    category: 'UI/UX',
+    description:
+      'Interface design for Resonance, focused on making a complex product feel simple to actually use.',
+  },
+  {
+    slug: 'nikkei-student-union',
+    title: 'Nikkei Student Union',
+    category: 'Branding',
+    description:
+      'A visual identity built to give a student organization a stronger, more unified presence on campus.',
+  },
+  {
+    slug: 'fetch-doggy-deli',
+    title: 'fetch! doggy deli',
+    category: 'Branding',
+    description:
+      'Brand identity and packaging for a doggy deli, built to feel as playful as the product itself.',
   },
   {
     slug: 'case-06',

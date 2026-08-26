@@ -97,10 +97,23 @@ export function CinematicIntro() {
               progressRef.current.style.transform = `scaleX(${self.progress})`
             }
             const { bg, fg } = colorAtProgress(self.progress)
-            const key = bg + fg
+            // Fixed red ONLY over scene 0's own window ("Hello.", the one
+            // scene with a busy photo behind it) -- NOT the whole
+            // component. Scene 3 ("Jayden Ramirez") has a red *background*
+            // of its own, so pinning nav red across all four scenes would
+            // have recreated the exact red-on-red invisibility bug this
+            // is meant to fix, just one scene later. Every other scene
+            // (1, 2, 3) tracks --fg like body copy does everywhere else.
+            const isFirstScene = Math.round(self.progress * (n - 1)) === 0
+            const navFg = isFirstScene ? '#dd5547' : fg
+            const key = bg + fg + navFg
             if (key !== lastColorKey) {
               lastColorKey = key
-              gsap.set(document.documentElement, { '--bg': bg, '--fg': fg })
+              gsap.set(document.documentElement, {
+                '--bg': bg,
+                '--fg': fg,
+                '--nav-fg': navFg,
+              })
             }
           },
         },

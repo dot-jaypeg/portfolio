@@ -35,10 +35,11 @@ export function useSectionColors() {
 
       gsap.fromTo(
         document.documentElement,
-        { '--bg': from.bg, '--fg': from.fg },
+        { '--bg': from.bg, '--fg': from.fg, '--nav-fg': from.fg },
         {
           '--bg': CONTACT_THEME.bg,
           '--fg': CONTACT_THEME.fg,
+          '--nav-fg': CONTACT_THEME.fg,
           ease: 'none',
           // fromTo() renders its `from` state immediately on creation
           // by default -- at mount, well before any scrolling, which
