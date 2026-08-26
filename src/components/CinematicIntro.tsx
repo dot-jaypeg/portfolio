@@ -107,6 +107,24 @@ export function CinematicIntro() {
             if (progressRef.current) {
               progressRef.current.style.transform = `scaleX(${self.progress})`
             }
+            // A real, confirmed bug: `scrub: 1` doesn't snap self.progress
+            // to match a big instant scroll jump -- it EASES toward it over
+            // about a second. Clicking a nav link straight from the top to
+            // Work jumps the real scroll far past this trigger's own end in
+            // one tick, but self.progress still has to visibly animate
+            // 0 -> 1 to catch up, firing onUpdate repeatedly along the way
+            // and ending on scene 3's red -- well after JourneyDesktop's own
+            // trigger (which barely had to move) already settled on ink.
+            // That belated catch-up write was overwriting Journey's correct
+            // color with a red flash lasting over a second before this
+            // component's own guard eventually let it settle back down.
+            // Comparing the REAL scroll position (self.scroll()) against
+            // this trigger's own end -- not the still-easing self.progress
+            // -- detects "we've already scrolled past this component
+            // entirely" and skips writing colors at all once that's true,
+            // leaving whoever actually owns the current scroll position
+            // uncontested.
+            if (self.scroll() > self.end) return
             const { bg, fg } = colorAtProgress(self.progress)
             // Fixed red ONLY over scene 0's own window ("Hello.", the one
             // scene with a busy photo behind it) -- NOT the whole

@@ -86,6 +86,16 @@ export function JourneyDesktop() {
             if (progressRef.current) {
               progressRef.current.style.transform = `scaleX(${self.progress})`
             }
+            // Same real bug fixed in CinematicIntro: `scrub: 1` eases
+            // self.progress toward a big instant scroll jump over about a
+            // second rather than snapping to it, so a jump straight past
+            // this trigger's own end (e.g. clicking "Contact") fires
+            // onUpdate repeatedly while self.progress catches up 0 -> 1,
+            // its belated writes landing well after Contact's own trigger
+            // already set the right color. self.scroll() is the REAL
+            // scroll position, not the still-easing progress -- once
+            // that's past this trigger's end, stop writing entirely.
+            if (self.scroll() > self.end) return
             const { bg, fg } = colorAtProgress(self.progress)
             const key = bg + fg
             if (key !== lastColorKey) {
