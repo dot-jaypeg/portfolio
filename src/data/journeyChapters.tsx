@@ -3,6 +3,7 @@ import { CASE_STUDIES, type CaseStudy } from './caseStudies'
 import { STACK } from './stack'
 import { CREDENTIALS } from './credentials'
 import { ExpertisePills } from '../components/ExpertisePills'
+import meGif from '../assets/images/about/me.gif'
 
 const pad = (num: number) => String(num).padStart(2, '0')
 
@@ -102,9 +103,11 @@ function AboutStatementPanel({
         </div>
       </div>
       <div className="relative ml-auto hidden aspect-[4/5] w-[26vw] max-w-sm shrink-0 overflow-hidden md:block">
-        <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase select-none">
-          [ placeholder photo ]
-        </div>
+        <img
+          src={meGif}
+          alt="Jayden Ramirez"
+          className="chapter-media absolute inset-[-8%] h-[116%] w-[116%] object-cover"
+        />
       </div>
     </div>
   )
