@@ -43,38 +43,37 @@ function WorkPanel({
   eyebrow: string
   id?: string
 }) {
-  // Polaroid card sized and shaped exactly like About's -- same
-  // w-[26vw] max-w-sm column, same aspect-[4/5] box (not stretched to
-  // the page height), same -4deg tilt. Only the per-case parallax
-  // amount/position stay data-driven, same as before.
+  // Le Mans Classic treatment: the image column's HEIGHT matches the
+  // full page (self-stretch against the row's own min-h-screen), not a
+  // fixed aspect-[4/5] box -- but it still sits in its own column beside
+  // the text, not full-bleed across the whole panel. No vertical padding
+  // on the panel itself (only horizontal) so nothing caps the column
+  // short of the actual viewport height; the text column still centers
+  // vertically via the row's own `items-center`.
   return (
     <div
       id={id}
       className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 md:px-20"
     >
-      <div className="group relative w-[26vw] max-w-sm shrink-0">
-        <div className="rotate-[-4deg] bg-[#f2efe6] p-3 pb-9 shadow-xl shadow-black/25 transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:rotate-0 group-hover:shadow-2xl group-hover:shadow-black/35">
-          <div className="relative aspect-[4/5] w-full overflow-hidden bg-ink">
-            {cs.image ? (
-              <img
-                src={cs.image}
-                alt={cs.title}
-                data-parallax-amount={cs.imageParallax ?? 8}
-                className="chapter-media absolute max-w-none object-cover"
-                style={{
-                  inset: `-${cs.imageParallax ?? 8}%`,
-                  width: `${100 + (cs.imageParallax ?? 8) * 2}%`,
-                  height: `${100 + (cs.imageParallax ?? 8) * 2}%`,
-                  objectPosition: cs.imagePosition ?? 'center',
-                }}
-              />
-            ) : (
-              <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase select-none">
-                [ placeholder image ]
-              </div>
-            )}
+      <div className="relative w-[38vw] max-w-xl shrink-0 self-stretch overflow-hidden">
+        {cs.image ? (
+          <img
+            src={cs.image}
+            alt={cs.title}
+            data-parallax-amount={cs.imageParallax ?? 8}
+            className="chapter-media absolute max-w-none object-cover"
+            style={{
+              inset: `-${cs.imageParallax ?? 8}%`,
+              width: `${100 + (cs.imageParallax ?? 8) * 2}%`,
+              height: `${100 + (cs.imageParallax ?? 8) * 2}%`,
+              objectPosition: cs.imagePosition ?? 'center',
+            }}
+          />
+        ) : (
+          <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase select-none">
+            [ placeholder image ]
           </div>
-        </div>
+        )}
       </div>
       <div className="chapter-copy max-w-xl">
         <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
