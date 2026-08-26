@@ -1,3 +1,9 @@
+import contraImg from '../assets/images/projects/contra.jpg'
+import afiImg from '../assets/images/projects/afi.jpg'
+import resonanceImg from '../assets/images/projects/resonance.jpg'
+import nsuImg from '../assets/images/projects/nsu.jpg'
+import fetchImg from '../assets/images/projects/fetch.jpg'
+
 export interface CaseStudy {
   slug: string
   title: string
@@ -6,6 +12,9 @@ export interface CaseStudy {
   // Shown in the chapter eyebrow as "0N — {client}" in place of a flat
   // "Work" label -- the industry/organization the project was for.
   client: string
+  // Optional -- cases without a real photo yet fall back to the
+  // dashed placeholder box in WorkPanel.
+  image?: string
 }
 
 export const CASE_STUDIES: CaseStudy[] = [
@@ -14,6 +23,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: 'Contra Coffee Sticker Pack',
     category: 'Illustration',
     client: 'Contra Coffee & Tea',
+    image: contraImg,
     description:
       'A playful sticker pack designed to extend Contra Coffee\'s brand voice into something collectible and shareable.',
   },
@@ -22,6 +32,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: 'AFI Marketing Campaign',
     category: 'Digital',
     client: 'Velvet Hammer Music',
+    image: afiImg,
     description:
       'A multi-channel marketing push built to get AFI in front of the right audience at the right moment.',
   },
@@ -30,6 +41,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: 'UI Design for Resonance',
     category: 'UI/UX',
     client: 'Chapman University',
+    image: resonanceImg,
     description:
       'Interface design for Resonance, focused on making a complex product feel simple to actually use.',
   },
@@ -38,6 +50,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: 'Nikkei Student Union',
     category: 'Branding',
     client: 'Chapman University',
+    image: nsuImg,
     description:
       'A visual identity built to give a student organization a stronger, more unified presence on campus.',
   },
@@ -46,6 +59,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: 'fetch! doggy deli',
     category: 'Branding',
     client: 'Academic',
+    image: fetchImg,
     description:
       'Brand identity and packaging for a doggy deli, built to feel as playful as the product itself.',
   },

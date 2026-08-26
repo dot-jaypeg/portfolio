@@ -49,9 +49,17 @@ function WorkPanel({
       className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 py-24 md:px-20"
     >
       <div className="relative aspect-[4/5] w-[38vw] max-w-xl shrink-0 overflow-hidden">
-        <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase select-none">
-          [ placeholder image ]
-        </div>
+        {cs.image ? (
+          <img
+            src={cs.image}
+            alt={cs.title}
+            className="chapter-media absolute inset-[-8%] h-[116%] w-[116%] max-w-none object-cover"
+          />
+        ) : (
+          <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase select-none">
+            [ placeholder image ]
+          </div>
+        )}
       </div>
       <div className="chapter-copy max-w-xl">
         <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
