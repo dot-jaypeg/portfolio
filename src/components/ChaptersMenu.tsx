@@ -226,10 +226,18 @@ export function ChaptersMenu() {
           ref={overlayRef}
           className="fixed inset-0 z-[70] overflow-hidden bg-ink/95"
         >
+          {/* z-[1100], not z-10 -- GSAP's Draggable sets the dragged
+              track's z-index to 1000 the moment a drag starts and never
+              clears it back afterward, so after the first drag the
+              track permanently painted above this button at any lower
+              z-index, making it unclickable for the rest of the
+              session. Confirmed directly: inspecting the track's inline
+              style after a drag shows `z-index: 1000` still sitting
+              there. */}
           <button
             type="button"
             onClick={closeMenu}
-            className="font-body fixed top-6 right-6 z-10 text-xs tracking-[0.22em] text-cream/60 uppercase transition-colors hover:text-cream md:top-10 md:right-10"
+            className="font-body fixed top-6 right-6 z-[1100] text-xs tracking-[0.22em] text-cream/60 uppercase transition-colors hover:text-cream md:top-10 md:right-10"
           >
             (Close)
           </button>

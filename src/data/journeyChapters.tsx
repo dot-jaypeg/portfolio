@@ -19,7 +19,7 @@ export interface JourneyChapter {
 // pass every single case study, not just the highlights. The "View All"
 // overlay (ChaptersMenu) still lists the complete CASE_STUDIES set
 // separately; it isn't driven by this featured subset.
-const FEATURED_CASE_STUDIES = CASE_STUDIES.slice(0, 3)
+const FEATURED_CASE_STUDIES = CASE_STUDIES.slice(0, 5)
 
 export const WORK_COUNT = FEATURED_CASE_STUDIES.length
 export const ABOUT_COUNT = 2
