@@ -65,13 +65,24 @@ export function CinematicIntro() {
       // changed means this component stops touching these properties at
       // all once truly settled, leaving whatever comes after it
       // uncontested.
+      // Same fix as JourneyDesktop's colorAtProgress: fading color over
+      // a full half-unit window read as laggy and disconnected from the
+      // actual scroll -- text for the next scene was already fully
+      // revealed while the background was still slowly catching up well
+      // after. A quarter-unit window centered on the scene boundary (the
+      // same proportion the word-reveal budgets already use below) keeps
+      // the color settled by the time the new scene's headline arrives.
+      const crossDuration = unit * 0.25
       let lastColorKey = ''
       const colorAtProgress = (progress: number) => {
         const i = Math.round(progress * (n - 1))
         if (i === 0) return SCENES[0]
-        const center = i * unit
-        const winStart = center - unit * 0.5
-        const t = gsap.utils.clamp(0, 1, (progress - winStart) / (unit * 0.5))
+        const boundary = (i - 1) * unit + unit * 0.5
+        const t = gsap.utils.clamp(
+          0,
+          1,
+          (progress - (boundary - crossDuration * 0.5)) / crossDuration,
+        )
         const prev = SCENES[i - 1]
         const curr = SCENES[i]
         return {

@@ -179,7 +179,7 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
 
 export const JOURNEY_CHAPTERS: JourneyChapter[] = [
   ...FEATURED_CASE_STUDIES.map((cs, i) => {
-    const eyebrow = `${pad(i + 1)} — Work`
+    const eyebrow = `${pad(i + 1)} — ${cs.client}`
     return {
       key: cs.slug,
       eyebrow,

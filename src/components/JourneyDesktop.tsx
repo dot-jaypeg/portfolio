@@ -45,13 +45,27 @@ export function JourneyDesktop() {
       // color here and skipping the write whenever it hasn't actually
       // changed means Journey stops touching these properties at all
       // once truly settled, leaving Contact's own trigger uncontested.
+      // Matches the clip-mask crossover's own boundary/crossDuration
+      // exactly (see the panel-transition block below) -- a real bug:
+      // this used to fade color over a full half-unit window starting
+      // right at the boundary, while the visual clip-mask swap only
+      // takes a quarter-unit centered ON that boundary. The visual swap
+      // was already finished and the next panel fully settled while
+      // color was still slowly catching up for a while after, reading
+      // as laggy and disconnected from what was actually on screen.
+      // Same crossDuration here guarantees color finishes exactly when
+      // the visual swap does, every time, not just by coincidence.
+      const crossDuration = unit * 0.25
       let lastColorKey = ''
       const colorAtProgress = (progress: number) => {
         const i = Math.round(progress * (n - 1))
         if (i === 0) return JOURNEY_CHAPTERS[0]
-        const center = i * unit
-        const winStart = center - unit * 0.5
-        const t = gsap.utils.clamp(0, 1, (progress - winStart) / (unit * 0.5))
+        const boundary = (i - 1) * unit + unit * 0.5
+        const t = gsap.utils.clamp(
+          0,
+          1,
+          (progress - (boundary - crossDuration * 0.5)) / crossDuration,
+        )
         const prev = JOURNEY_CHAPTERS[i - 1]
         const curr = JOURNEY_CHAPTERS[i]
         return {
@@ -165,7 +179,6 @@ export function JourneyDesktop() {
         // these fight each other.
         if (i < n - 1) {
           const boundary = winEnd
-          const crossDuration = unit * 0.25
           tl.to(
             panel,
             { clipPath: 'inset(0% 0% 100% 0%)', scale: 0.88, ease: 'power1.in', duration: crossDuration },
