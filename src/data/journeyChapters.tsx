@@ -53,7 +53,13 @@ function WorkPanel({
           <img
             src={cs.image}
             alt={cs.title}
-            className="chapter-media absolute inset-[-8%] h-[116%] w-[116%] max-w-none object-cover"
+            data-parallax-amount={cs.imageParallax ?? 8}
+            className="chapter-media absolute max-w-none object-cover"
+            style={{
+              inset: `-${cs.imageParallax ?? 8}%`,
+              width: `${100 + (cs.imageParallax ?? 8) * 2}%`,
+              height: `${100 + (cs.imageParallax ?? 8) * 2}%`,
+            }}
           />
         ) : (
           <div className="chapter-media font-body absolute inset-[-8%] flex items-center justify-center border border-dashed border-cream/20 text-xs tracking-[0.22em] text-cream/30 uppercase select-none">

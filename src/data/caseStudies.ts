@@ -15,6 +15,12 @@ export interface CaseStudy {
   // Optional -- cases without a real photo yet fall back to the
   // dashed placeholder box in WorkPanel.
   image?: string
+  // Optional override for the parallax swing's amount/oversize (see
+  // JourneyDesktop's `data-parallax-amount`) -- defaults to 8. A photo
+  // whose subject sits close to its own edges (little disposable
+  // margin) needs a smaller amount than an abstract placeholder box
+  // does, or the swing's oversize crops into real content.
+  imageParallax?: number
 }
 
 export const CASE_STUDIES: CaseStudy[] = [
@@ -39,7 +45,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: 'ui-design-for-resonance',
     title: 'UI Design for Resonance',
-    category: 'UI/UX',
+    category: 'UX/UI & HUD',
     client: 'Chapman University',
     image: resonanceImg,
     description:
@@ -51,6 +57,11 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Branding',
     client: 'Chapman University',
     image: nsuImg,
+    // The shirt photo is a tall 2:3 crop inside a 4:5 box -- the default
+    // 8% swing oversize was cropping into the shirt itself (collar/hem),
+    // not just background, since there's little vertical margin to
+    // spare. A smaller amount leaves the whole shirt visible.
+    imageParallax: 3,
     description:
       'A visual identity built to give a student organization a stronger, more unified presence on campus.',
   },

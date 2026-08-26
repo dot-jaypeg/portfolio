@@ -234,27 +234,47 @@ export function JourneyDesktop() {
       // it every tick rounded the fractional progress away before it
       // could accumulate -- the loop looked like it was running (all
       // its guards passed) but the page never actually moved. Keeping
-      // our own precise running position and only syncing it forward
-      // when the real scroll position gets ahead of it (first
-      // activation, or the user manually scrolled further) fixes that.
+      // our own precise running position, only re-synced to the real
+      // scroll position at the moment auto-advance actually resumes
+      // (see `wasPaused` below), fixes that without giving up the
+      // sub-pixel accumulation.
       let virtualScrollY: number | null = null
+      // Another real bug: resuming used to only sync virtualScrollY
+      // FORWARD to window.scrollY (virtualScrollY < scrollY), never
+      // backward. Scrolling forward past wherever auto-advance had
+      // been worked fine, but scrolling BACKWARD and stopping there
+      // didn't -- on resume it kept the old, further-along
+      // virtualScrollY and immediately jumped the page forward back to
+      // it, ignoring the manual scroll entirely. `wasPaused` marks the
+      // exact tick auto-advance transitions from paused to active, so
+      // virtualScrollY can be reset to wherever the user actually left
+      // it in EITHER direction just that once, instead of either never
+      // re-syncing backward (the bug) or re-syncing every tick (which
+      // would erase the sub-pixel accumulation this variable exists for).
+      let wasPaused = true
       const autoAdvanceTick = () => {
         const now = performance.now()
         const dt = lastTickTime == null ? 0 : (now - lastTickTime) / 1000
         lastTickTime = now
         if (dt <= 0 || dt > 0.5) return
-        if (window.__chaptersMenuOpen) return
-        if (now - lastInputTime < RESUME_DELAY) return
         const st = tl.scrollTrigger
         const endOffset = workEndOffset()
-        if (!st || endOffset == null) return
         const scrollY = window.scrollY
-        if (scrollY < st.start || scrollY >= endOffset) {
+        const isPaused =
+          window.__chaptersMenuOpen ||
+          now - lastInputTime < RESUME_DELAY ||
+          !st ||
+          endOffset == null ||
+          scrollY < st.start ||
+          scrollY >= endOffset
+        if (isPaused) {
+          wasPaused = true
           virtualScrollY = null
           return
         }
-        if (virtualScrollY == null || virtualScrollY < scrollY) {
+        if (wasPaused || virtualScrollY == null) {
           virtualScrollY = scrollY
+          wasPaused = false
         }
         virtualScrollY = Math.min(endOffset, virtualScrollY + AUTO_SPEED * dt)
         window.__lenis?.scrollTo(virtualScrollY, { immediate: true })
