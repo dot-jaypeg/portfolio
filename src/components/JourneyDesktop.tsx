@@ -6,6 +6,7 @@ export function JourneyDesktop() {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
+  const maskRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -188,12 +189,10 @@ export function JourneyDesktop() {
         // panel clipPath/scale) on three different elements, so none of
         // these fight each other.
         //
-        // The Work -> About boundary (right after ViewAllPanel) had its
-        // own special-cased horizontal hard-edge wipe for a while --
-        // reverted back to this same standard treatment every other
-        // boundary gets, per feedback that the soft scroll crossfade
-        // read better there than the mask swap.
-        if (i < n - 1) {
+        // The Work -> About boundary (right after ViewAllPanel) skips
+        // this and gets its own curtain-sweep mask instead, added below
+        // -- see that block for why.
+        if (i < n - 1 && i !== WORK_COUNT) {
           const boundary = winEnd
           tl.to(
             panel,
@@ -208,7 +207,7 @@ export function JourneyDesktop() {
           )
         }
         // The outgoing "View All" headline still gets its own downscale
-        // + fade independent of the clip-mask above -- unrelated to
+        // + fade independent of the crossover above -- unrelated to
         // which crossover style the boundary uses, kept from the
         // earlier pass. Spans the last 45% of this panel's own dwell
         // window (not a narrow sliver right at the boundary) so it
@@ -221,6 +220,32 @@ export function JourneyDesktop() {
               outHeadline,
               { scale: 0.7, opacity: 0, ease: 'power1.in', duration: winEnd - fadeStart },
               fadeStart,
+            )
+          }
+          // Linear horizontal wipe for this boundary specifically, after
+          // the Le Mans Classic reference -- a straight edge sweeping
+          // across the screen to expose About underneath, rather than
+          // the standard clip-mask crossover every other boundary uses.
+          // A SEPARATE element living outside `trackRef` (a sibling, not
+          // a child), animated with its own independent xPercent tween,
+          // NOT a clip-path on the panels themselves -- clipping the
+          // panels directly was tried for this exact boundary before and
+          // caused a real bug: they're ALSO continuously translated by
+          // the track's own x tween above, and a clip-path keyed to each
+          // panel's own local coordinates fights that translation,
+          // opening a visible gap where neither panel's clipped region
+          // actually covers the screen (confirmed by reading the
+          // clipped element's own boundingClientRect against the
+          // viewport). A standalone full-viewport panel that just
+          // slides across independently sidesteps that architecture
+          // problem entirely -- same fix already proven for
+          // CinematicIntro's Hello -> Branding boundary.
+          if (maskRef.current) {
+            tl.fromTo(
+              maskRef.current,
+              { xPercent: 100 },
+              { xPercent: -100, ease: 'power2.inOut', duration: crossDuration },
+              winEnd - crossDuration * 0.5,
             )
           }
         }
@@ -337,6 +362,18 @@ export function JourneyDesktop() {
       ref={containerRef}
       className="relative h-screen w-screen overflow-hidden bg-ink"
     >
+      {/* A sibling of the track, not a child -- this must NOT ride along
+          with the track's own horizontal x tween, since its whole job is
+          to sweep independently across the fixed viewport for the
+          Work -> About boundary. Colored from the incoming chapter's own
+          bg (About's cream) rather than hardcoded, so it stays correct
+          if that chapter's theme ever changes. */}
+      <div
+        ref={maskRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[8]"
+        style={{ backgroundColor: JOURNEY_CHAPTERS[WORK_COUNT + 1].bg }}
+      />
       <div
         ref={trackRef}
         className="flex h-full"

@@ -235,7 +235,7 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
   )
 }
 
-function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
+function ViewAllPanel() {
   // Sized exactly like a case study's own cover-photo column
   // (w-[38vw] max-w-xl, self-stretch to the full page height) instead
   // of spanning the whole panel -- this divider should read as one more
@@ -246,11 +246,6 @@ function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
   return (
     <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-8 px-8 md:px-20">
       <div className="relative flex w-[38vw] max-w-xl shrink-0 items-center justify-center self-stretch overflow-hidden bg-teal">
-        {/* top-24, not top-8 -- the fixed nav logo sits in that exact
-            corner and the two were overlapping. */}
-        <p className="font-body absolute top-24 left-8 text-xs tracking-[0.32em] text-[#161616]/70 uppercase">
-          {eyebrow}
-        </p>
         {/* A high-impact vertical divider, after the Le Mans Classic
             reference's own yellow "LE MANS MOTORS CLUB" panel -- massive
             rotated type interrupting the horizontal reading flow to mark
@@ -275,19 +270,16 @@ function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
             data-cursor="View All"
             className="chapter-headline chapter-copy font-display group inline-flex items-center gap-4 text-[4.2vw] leading-none font-bold tracking-[-0.04em] whitespace-nowrap text-[#161616] uppercase transition-colors duration-300 hover:text-red"
           >
-            View All Work
-            {/* Left uncountered (not counter-rotated back to
-                horizontal) -- rotated along with the rest of the text it
-                points up, in the same direction the vertical reading
-                flow is already moving, reading as "continue this way"
-                rather than a disconnected horizontal glyph stuck in a
-                vertical line. */}
+            {/* Leading dot bullet instead of a trailing arrow, after the
+                basicagency.com reference's own "● INTO COMPANY VALUE" --
+                rotates along with the rest of the text, so it reads as
+                the first thing the vertical bottom-to-top flow reaches
+                rather than a floating accent mark. */}
             <span
               aria-hidden="true"
-              className="inline-block transition-transform duration-300 ease-out group-hover:-translate-y-3"
-            >
-              →
-            </span>
+              className="inline-block h-[0.32em] w-[0.32em] shrink-0 rounded-full bg-current"
+            />
+            View All Work
           </Link>
         </div>
       </div>
@@ -321,7 +313,7 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
     eyebrow: 'All of my best works',
     bg: '#161616',
     fg: '#fffff0',
-    render: () => <ViewAllPanel eyebrow="All of my best works" />,
+    render: () => <ViewAllPanel />,
   },
   {
     key: 'about-statement',
