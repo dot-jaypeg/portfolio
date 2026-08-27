@@ -127,6 +127,11 @@ function AboutStatementPanel({
       id={id}
       className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 py-24 md:px-20"
     >
+      {/* Fixed cream, mirroring ViewAllPanel's own fixed ink layer right
+          before this one -- see that comment for why the shared soft
+          --bg crossfade can't produce the hard pushing edge this
+          boundary needs on its own. */}
+      <div className="pointer-events-none absolute inset-0 bg-[#fffff0]" />
       <div className="chapter-copy relative max-w-2xl">
         <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
           {eyebrow}
@@ -245,6 +250,15 @@ function ViewAllPanel() {
   // same way WorkPanel's accent colors don't invert with the page.
   return (
     <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-8 px-8 md:px-20">
+      {/* Fixed ink, covering the WHOLE panel (not just the teal
+          column) -- not the crossfading --bg var. The Work -> About
+          boundary is meant to read as About's own panel physically
+          pushing this one out of frame as the track slides them, and
+          that only reads as a hard edge if each panel carries its own
+          solid, non-interpolating color; the shared soft --bg crossfade
+          blends the whole viewport uniformly regardless of which panel
+          is on screen, so it can't produce a moving edge on its own. */}
+      <div className="pointer-events-none absolute inset-0 bg-[#161616]" />
       <div className="relative flex w-[38vw] max-w-xl shrink-0 items-center justify-center self-stretch overflow-hidden bg-teal">
         {/* A high-impact vertical divider, after the Le Mans Classic
             reference's own yellow "LE MANS MOTORS CLUB" panel -- massive
