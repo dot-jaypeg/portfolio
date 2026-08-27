@@ -129,7 +129,16 @@ function AboutStatementPanel({
       id={id}
       className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 py-24 md:px-20"
     >
-      <div className="chapter-copy max-w-2xl">
+      {/* Fixed-color layer (not the crossfading --bg var) so the
+          Work -> About boundary's clip-mask wipe reveals a genuine hard
+          color edge instead of whatever shade the page-wide crossfade
+          happens to be mid-interpolating at that exact scroll position --
+          same "physical object, doesn't invert" reasoning as the polaroid
+          card's own fixed paper color below. Clipped/scaled for free
+          along with the rest of this panel, since it's just another
+          child of the element the crossover tween already targets. */}
+      <div className="pointer-events-none absolute inset-0 bg-[#fffff0]" />
+      <div className="chapter-copy relative max-w-2xl">
         <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
           {eyebrow}
         </p>
@@ -240,7 +249,13 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
 function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
   return (
     <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 flex-col items-center justify-center gap-6 px-8 text-center">
-      <p className="font-body text-xs tracking-[0.32em] text-teal uppercase">
+      {/* Fixed ink, mirroring the fixed cream layer on AboutStatementPanel
+          right after this one -- together they give the boundary's
+          clip-mask wipe a genuine hard color edge (ink -> cream) instead
+          of relying on the page-wide --bg crossfade, which interpolates
+          gradually and wouldn't read as a sharp mask. */}
+      <div className="pointer-events-none absolute inset-0 bg-[#161616]" />
+      <p className="font-body relative text-xs tracking-[0.32em] text-teal uppercase">
         {eyebrow}
       </p>
       {/* The link itself carries `.chapter-headline` -- SplitText doesn't
@@ -249,7 +264,7 @@ function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
       <Link
         to="/work"
         data-cursor="View All"
-        className="chapter-headline font-display group inline-flex items-center gap-4 text-[13vw] leading-[0.82] font-bold tracking-[-0.05em] text-cream uppercase transition-colors duration-300 hover:text-teal md:text-[8vw]"
+        className="chapter-headline font-display group relative inline-flex items-center gap-4 text-[13vw] leading-[0.82] font-bold tracking-[-0.05em] text-cream uppercase transition-colors duration-300 hover:text-teal md:text-[8vw]"
       >
         View All
         <span
@@ -259,7 +274,7 @@ function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
           →
         </span>
       </Link>
-      <p className="font-body max-w-md text-sm leading-relaxed text-cream/50">
+      <p className="font-body relative max-w-md text-sm leading-relaxed text-cream/50">
         Every case study, past and present, in one place.
       </p>
     </div>

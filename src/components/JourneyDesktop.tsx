@@ -187,30 +187,48 @@ export function JourneyDesktop() {
         // Three independent property targets (track x, word opacity/y,
         // panel clipPath/scale) on three different elements, so none of
         // these fight each other.
-        if (i < n - 1) {
+        // The Work -> About boundary (right after the ViewAllPanel
+        // chapter, i === WORK_COUNT) is handled entirely separately from
+        // every other crossover below -- a real bug surfaced building
+        // it: giving it its own LEFT/RIGHT clip-path (to make it read as
+        // a deliberate horizontal wipe) fought the track's own x
+        // translation, which is ALSO continuously moving these same two
+        // panels horizontally. At the exact moment the clip should be
+        // ~70% revealed, the panel's clip-revealed region and its
+        // actually-on-screen region (constrained by the track, which by
+        // construction only ever shows each panel's own trailing/leading
+        // HALF right at a boundary) had already diverged enough to open
+        // a real gap with neither panel's content in it -- confirmed
+        // directly by reading the clipped div's own boundingClientRect
+        // against the viewport. The track's own continuous slide is
+        // ALREADY a right-to-left wipe by construction (panels are laid
+        // out left to right and the incoming one always enters from the
+        // right edge as you scroll forward), so this boundary just
+        // leans on that native motion instead of fighting it with an
+        // extra clip-path -- only the fixed hard-color panel
+        // backgrounds (set on ViewAllPanel/AboutStatementPanel
+        // themselves) and the outgoing headline's own downscale/fade
+        // are special-cased here.
+        const isSectionBoundary = i === WORK_COUNT
+        if (isSectionBoundary) {
+          const outHeadline = panel.querySelector('.chapter-headline')
+          if (outHeadline) {
+            tl.to(
+              outHeadline,
+              { scale: 0.7, opacity: 0, ease: 'power1.in', duration: crossDuration },
+              winEnd - crossDuration * 0.5,
+            )
+          }
+        } else if (i < n - 1) {
           const boundary = winEnd
-          // The Work -> About boundary (right after the ViewAllPanel
-          // chapter, i === WORK_COUNT) gets a horizontal wipe instead of
-          // the standard vertical one -- a deliberate "end of Work, start
-          // of About" beat marking a real section change, closer to the
-          // hard masked sweep the Le Mans Classic reference uses at its
-          // own chapter boundaries, rather than reading as just another
-          // case-study-to-case-study cut.
-          const isSectionBoundary = i === WORK_COUNT
-          const outClip = isSectionBoundary
-            ? 'inset(0% 100% 0% 0%)'
-            : 'inset(0% 0% 100% 0%)'
-          const inFromClip = isSectionBoundary
-            ? 'inset(0% 0% 0% 100%)'
-            : 'inset(100% 0% 0% 0%)'
           tl.to(
             panel,
-            { clipPath: outClip, scale: 0.88, ease: 'power1.in', duration: crossDuration },
+            { clipPath: 'inset(0% 0% 100% 0%)', scale: 0.88, ease: 'power1.in', duration: crossDuration },
             boundary - crossDuration * 0.5,
           )
           tl.fromTo(
             panels[i + 1],
-            { clipPath: inFromClip, scale: 1.08 },
+            { clipPath: 'inset(100% 0% 0% 0%)', scale: 1.08 },
             { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, ease: 'power1.out', duration: crossDuration },
             boundary - crossDuration * 0.5,
           )
