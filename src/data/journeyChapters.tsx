@@ -249,7 +249,7 @@ function ViewAllPanel() {
   // crossfading --bg var) gives the column its own fixed identity, the
   // same way WorkPanel's accent colors don't invert with the page.
   return (
-    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-8 px-8 md:px-20">
+    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center overflow-hidden">
       {/* Fixed ink, covering the WHOLE panel (not just the teal
           column) -- not the crossfading --bg var. The Work -> About
           boundary is meant to read as About's own panel physically
@@ -259,7 +259,17 @@ function ViewAllPanel() {
           blends the whole viewport uniformly regardless of which panel
           is on screen, so it can't produce a moving edge on its own. */}
       <div className="pointer-events-none absolute inset-0 bg-[#161616]" />
-      <div className="relative flex w-[38vw] max-w-xl shrink-0 items-center justify-center self-stretch overflow-hidden bg-teal">
+      {/* ml-auto, flush against the panel's own right edge (no padding
+          on that side) -- this is what's actually adjacent to About's
+          cream panel as the track pushes them past each other, so the
+          teal column needs to sit right at that seam. Sitting further
+          left (the previous layout, with page padding on both sides)
+          left a stretch of plain ink between the teal box and the real
+          push edge, reading as two disconnected things happening --
+          a static teal panel, and a separate ink/cream wipe further
+          over -- instead of one seamless push carrying the whole cover
+          along with it. */}
+      <div className="relative ml-auto flex w-[38vw] max-w-xl shrink-0 items-center justify-center self-stretch overflow-hidden bg-teal">
         {/* A high-impact vertical divider, after the Le Mans Classic
             reference's own yellow "LE MANS MOTORS CLUB" panel -- massive
             rotated type interrupting the horizontal reading flow to mark
