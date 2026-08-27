@@ -28,6 +28,10 @@ export const WORK_COUNT = FEATURED_CASE_STUDIES.length
 export const ABOUT_COUNT = 2
 // +1 for the ViewAllPanel chapter sitting between Work and About.
 export const TOTAL_CHAPTERS = WORK_COUNT + 1 + ABOUT_COUNT
+// Exported so JourneyDesktop's curtain-overlay ghost copy of
+// AboutStatementPanel (see that component) can use the exact same
+// eyebrow text as the real one.
+export const ABOUT_STATEMENT_EYEBROW = `${pad(WORK_COUNT + 2)} — About`
 
 // `min-h-screen` (not `h-full`) deliberately: on desktop these panels
 // sit inside JourneyDesktop's `h-screen` flex-row track, where it's
@@ -115,7 +119,10 @@ function WorkPanel({
   )
 }
 
-function AboutStatementPanel({
+// Exported so JourneyDesktop can render a second, real (not empty)
+// instance of this panel inside its curtain overlay for the Work ->
+// About boundary -- see that component for why.
+export function AboutStatementPanel({
   eyebrow,
   id,
 }: {
@@ -252,29 +259,29 @@ function ViewAllPanel() {
   // colors don't invert with the page.
   return (
     <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center overflow-hidden bg-teal px-8 md:px-20">
-      {/* Two-line horizontal headline, after basicagency.com's own
-          about-page hero ("WE TURN CULTURAL VALUE" / "● INTO COMPANY
-          VALUE") -- a plain statement line, then a dot-bulleted CTA
-          line of the same scale underneath it, left-aligned rather than
-          the previous vertically-rotated treatment. `.chapter-copy`
-          wraps both so they drift together as one unit (the usual
-          per-chapter parallax); `.chapter-headline` stays on just the
-          first line, since that's the one SplitText/the exit tween
-          target. */}
-      <div className="chapter-copy relative flex flex-col items-start gap-1 md:gap-2">
-        <h2 className="chapter-headline font-display text-[7vw] leading-[0.95] font-bold tracking-[-0.04em] text-[#161616] uppercase md:text-[3.6vw]">
+      {/* Two-COLUMN headline, side by side, after basicagency.com's own
+          about-page hero exactly ("WE TURN CULTURAL VALUE" | "● INTO
+          COMPANY VALUE" sit next to each other, each wrapping to its
+          own multi-line stack within a constrained width) -- not two
+          stacked lines. `max-w-sm` on each forces that same wrap.
+          `.chapter-copy` wraps both columns so they drift together as
+          one unit (the usual per-chapter parallax); `.chapter-headline`
+          stays on just the first column, since that's the one
+          SplitText/the exit tween target. */}
+      <div className="chapter-copy relative flex flex-col items-start gap-8 md:flex-row md:items-start md:gap-20">
+        <h2 className="chapter-headline font-display max-w-sm text-[8vw] leading-[0.95] font-bold tracking-[-0.04em] text-[#161616] uppercase md:text-[4.2vw]">
           My Most Recent, and Best Work
         </h2>
         <Link
           to="/work"
           data-cursor="View All"
-          className="group inline-flex items-center gap-4 font-display text-[7vw] leading-[0.95] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:text-[3.6vw]"
+          className="group flex max-w-sm items-start gap-4 font-display text-[8vw] leading-[0.95] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:text-[4.2vw]"
         >
           <span
             aria-hidden="true"
-            className="inline-block h-[0.32em] w-[0.32em] shrink-0 rounded-full bg-current"
+            className="mt-[0.3em] inline-block h-[0.28em] w-[0.28em] shrink-0 rounded-full bg-current"
           />
-          Click to View All
+          <span>Click to View All</span>
         </Link>
       </div>
     </div>
@@ -311,14 +318,11 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
   },
   {
     key: 'about-statement',
-    eyebrow: `${pad(WORK_COUNT + 2)} — About`,
+    eyebrow: ABOUT_STATEMENT_EYEBROW,
     bg: '#fffff0',
     fg: '#161616',
     render: () => (
-      <AboutStatementPanel
-        eyebrow={`${pad(WORK_COUNT + 2)} — About`}
-        id="about"
-      />
+      <AboutStatementPanel eyebrow={ABOUT_STATEMENT_EYEBROW} id="about" />
     ),
   },
   {

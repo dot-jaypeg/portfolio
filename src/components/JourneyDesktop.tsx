@@ -1,6 +1,12 @@
 import { Fragment, useEffect, useRef } from 'react'
 import { gsap, SplitText } from '../lib/gsap'
-import { JOURNEY_CHAPTERS, TOTAL_CHAPTERS, WORK_COUNT } from '../data/journeyChapters'
+import {
+  JOURNEY_CHAPTERS,
+  TOTAL_CHAPTERS,
+  WORK_COUNT,
+  AboutStatementPanel,
+  ABOUT_STATEMENT_EYEBROW,
+} from '../data/journeyChapters'
 
 export function JourneyDesktop() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -11,7 +17,15 @@ export function JourneyDesktop() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       const track = trackRef.current!
-      const panels = gsap.utils.toArray<HTMLElement>('.chapter-panel')
+      // Scoped to the track specifically, not the whole document -- the
+      // curtain overlay below renders a second, real (ghost) instance of
+      // AboutStatementPanel outside the track, which also carries the
+      // `.chapter-panel` class. An unscoped query would pick that up
+      // too, silently inflating `n` and breaking every position/duration
+      // calculation derived from it.
+      const panels = gsap.utils.toArray<HTMLElement>(
+        track.querySelectorAll('.chapter-panel'),
+      )
       const n = panels.length
 
       const splits = panels.map((panel) =>
@@ -134,7 +148,13 @@ export function JourneyDesktop() {
         // development: one long headline's stagger tail alone extended
         // the whole timeline's duration past 1, desyncing every chapter
         // scheduled after it.
-        if (i > 0) {
+        //
+        // About-statement (i === WORK_COUNT + 1) skips its own reveal --
+        // the curtain overlay's ghost copy already shows it fully
+        // settled during the sweep, so this panel is meant to already
+        // look "arrived" the instant it's un-clipped, not restart its
+        // own word-by-word fade-in on top of that.
+        if (i > 0 && i !== WORK_COUNT + 1) {
           const revealBudget = winWidth * 0.4
           const revealDuration = revealBudget * 0.6
           const stagger =
@@ -390,16 +410,26 @@ export function JourneyDesktop() {
       {/* A sibling of the track, not a child -- this must NOT ride along
           with the track's own horizontal x tween, since its whole job is
           to sweep independently across the fixed viewport for the
-          Work -> About boundary's curtain reveal. Colored from the
-          incoming chapter's own bg (About's cream) rather than
-          hardcoded, so it stays correct if that chapter's theme ever
-          changes. */}
+          Work -> About boundary's curtain reveal.
+          Carries a REAL, second instance of AboutStatementPanel (no
+          `id`, so it never collides with the real one's `id="about"`)
+          instead of a bare color -- a real complaint with the previous
+          empty-color-only curtain: the actual headline/body copy/photo
+          only appeared after the sweep finished, reading as "a blank
+          panel wipes across, then content pops in" rather than "the
+          whole About section, background AND type together, grows in."
+          This ghost is purely visual (aria-hidden, pointer-events-none)
+          and is scoped OUT of the `.chapter-panel` query above so it
+          never gets pulled into the scroll-driven track math; the REAL
+          instance inside the track stays clip-hidden until this ghost
+          has fully covered the screen, then takes over seamlessly. */}
       <div
         ref={maskRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[8]"
-        style={{ backgroundColor: JOURNEY_CHAPTERS[WORK_COUNT + 1].bg }}
-      />
+        className="pointer-events-none absolute inset-0 z-[8] overflow-hidden"
+      >
+        <AboutStatementPanel eyebrow={ABOUT_STATEMENT_EYEBROW} />
+      </div>
       <div
         ref={trackRef}
         className="flex h-full"
