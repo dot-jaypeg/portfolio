@@ -43,24 +43,19 @@ function WorkPanel({
   index: number
   id?: string
 }) {
-  // Le Mans Classic's "Le départ" page, specifically: a massive timecode
-  // acting as the primary visual hook, a cleanly styled chapter name
-  // underneath it, then comfortable editorial prose -- a deliberate
-  // inversion of the previous hierarchy where the TITLE was the biggest
-  // thing on the panel. Here the case number plays the timecode's role
-  // (first thing the eye catches, well before the title reads), set in
-  // the regular (not bold) weight for the "crisp monochromatic weight
-  // contrast" the brief calls for against the bold title below it.
-  // Anchored top-left (`items-start` + top padding) rather than
-  // vertically centered, for the same "spatial breath, deliberate
-  // pacing" reason -- a dead-centered block reads as a conventional
-  // hero, not an editorial magazine spread.
-  //
-  // The image column's HEIGHT still matches the full page (self-stretch
-  // against the row's own min-h-screen) -- `self-stretch` on the image
-  // wrapper overrides the row's `items-start` independent of it, so
-  // switching the row's own alignment for the text doesn't shrink the
-  // photo back down.
+  // Closer to how "Below the Line" (Le Mans Classic's own bootleg-zine
+  // sub-site) actually runs its type -- a TINY bracketed metadata row
+  // ("(01)  CLIENT  —  CATEGORY", wide-tracked, easy to skip past) sets
+  // the scene without competing for attention, then the title itself is
+  // the loud, massive, tightly-set condensed block that does the work a
+  // giant standalone numeral was doing before. Body copy is pushed all
+  // the way to the bottom of the column instead of stacked right under
+  // the title -- `justify-between` on a column that self-stretches to
+  // the full page height spreads the two blocks across the whole
+  // viewport, which is what actually reads as "free"/asymmetric rather
+  // than a single tidy stack, matching how those references spread
+  // metadata/headline/body across the full frame instead of clustering
+  // them together.
   return (
     <div
       id={id}
@@ -86,21 +81,20 @@ function WorkPanel({
           </div>
         )}
       </div>
-      <div className="chapter-copy max-w-xl pt-28 md:pt-36">
-        <p className="font-display pointer-events-none text-[15vw] leading-[0.75] font-normal tracking-[-0.03em] text-cream select-none md:text-[9vw]">
-          {pad(index + 1)}
-        </p>
-        <p className="font-body mt-4 text-xs tracking-[0.32em] text-teal uppercase">
-          {cs.client}
-        </p>
-        <h2 className="chapter-headline font-display mt-3 text-[3.4vw] leading-[1.05] font-bold tracking-[-0.02em] text-cream uppercase md:text-[2.2vw]">
-          {cs.title}
-        </h2>
-        <p className="font-body mt-8 max-w-md text-base leading-relaxed text-cream/70">
+      <div className="chapter-copy flex max-w-xl flex-col justify-between self-stretch py-16 md:py-24">
+        <div>
+          <div className="font-body flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs tracking-[0.2em] uppercase">
+            <span className="text-teal">({pad(index + 1)})</span>
+            <span className="text-cream/60">{cs.client}</span>
+            <span className="text-cream/30">—</span>
+            <span className="text-cream/60">{cs.category}</span>
+          </div>
+          <h2 className="chapter-headline font-display mt-8 text-[9vw] leading-[0.82] font-bold tracking-[-0.04em] text-cream uppercase md:text-[5.5vw]">
+            {cs.title}
+          </h2>
+        </div>
+        <p className="font-body max-w-md text-lg leading-relaxed text-cream/70">
           {cs.description}
-        </p>
-        <p className="font-body mt-8 text-[11px] tracking-[0.32em] text-cream/50 uppercase">
-          {cs.category}
         </p>
       </div>
     </div>
