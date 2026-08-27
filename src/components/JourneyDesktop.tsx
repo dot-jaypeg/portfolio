@@ -1,31 +1,16 @@
 import { Fragment, useEffect, useRef } from 'react'
 import { gsap, SplitText } from '../lib/gsap'
-import {
-  JOURNEY_CHAPTERS,
-  TOTAL_CHAPTERS,
-  WORK_COUNT,
-  AboutStatementPanel,
-  ABOUT_STATEMENT_EYEBROW,
-} from '../data/journeyChapters'
+import { JOURNEY_CHAPTERS, TOTAL_CHAPTERS, WORK_COUNT } from '../data/journeyChapters'
 
 export function JourneyDesktop() {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
-  const maskRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const track = trackRef.current!
-      // Scoped to the track specifically, not the whole document -- the
-      // curtain overlay below renders a second, real (ghost) instance of
-      // AboutStatementPanel outside the track, which also carries the
-      // `.chapter-panel` class. An unscoped query would pick that up
-      // too, silently inflating `n` and breaking every position/duration
-      // calculation derived from it.
-      const panels = gsap.utils.toArray<HTMLElement>(
-        track.querySelectorAll('.chapter-panel'),
-      )
+      const panels = gsap.utils.toArray<HTMLElement>('.chapter-panel')
       const n = panels.length
 
       const splits = panels.map((panel) =>
@@ -148,13 +133,7 @@ export function JourneyDesktop() {
         // development: one long headline's stagger tail alone extended
         // the whole timeline's duration past 1, desyncing every chapter
         // scheduled after it.
-        //
-        // About-statement (i === WORK_COUNT + 1) skips its own reveal --
-        // the curtain overlay's ghost copy already shows it fully
-        // settled during the sweep, so this panel is meant to already
-        // look "arrived" the instant it's un-clipped, not restart its
-        // own word-by-word fade-in on top of that.
-        if (i > 0 && i !== WORK_COUNT + 1) {
+        if (i > 0) {
           const revealBudget = winWidth * 0.4
           const revealDuration = revealBudget * 0.6
           const stagger =
@@ -209,17 +188,14 @@ export function JourneyDesktop() {
         // panel clipPath/scale) on three different elements, so none of
         // these fight each other.
         //
-        // The Work -> About boundary (right after ViewAllPanel) skips
-        // this and gets its own curtain reveal instead, added below --
-        // confirmed against actual reference footage: the reference's
-        // outgoing content (a static "FIRST/SHOT" headline) never
-        // itself translates or scales at all -- it just sits there
-        // while an opaque incoming-colored panel grows in from the
-        // right edge and covers it. That's a curtain reveal, not a
-        // slide/push (an earlier pass here mistakenly built the latter
-        // off a more ambiguous description before seeing the actual
-        // footage).
-        if (i < n - 1 && i !== WORK_COUNT) {
+        // Every boundary uses this SAME generic treatment, including
+        // Work -> About -- several different special-cased attempts for
+        // that one boundary specifically (a horizontal clip-path wipe, a
+        // "push" with fixed per-panel colors, a standalone curtain
+        // overlay, that overlay carrying a ghost copy of About's real
+        // content) were all tried and reverted per feedback. Settled on
+        // just letting it behave like every other chapter transition.
+        if (i < n - 1) {
           const boundary = winEnd
           tl.to(
             panel,
@@ -232,67 +208,6 @@ export function JourneyDesktop() {
             { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, ease: 'power1.out', duration: crossDuration },
             boundary - crossDuration * 0.5,
           )
-        }
-        // The outgoing "View All" headline still gets its own downscale
-        // + fade independent of the crossover above -- unrelated to
-        // which crossover style the boundary uses, kept from the
-        // earlier pass. Spans the last 45% of this panel's own dwell
-        // window (not a narrow sliver right at the boundary) so it
-        // reads as continuous with the parallax drift already running.
-        if (i === WORK_COUNT) {
-          const outHeadline = panel.querySelector('.chapter-headline')
-          if (outHeadline) {
-            const fadeStart = winStart + winWidth * 0.55
-            tl.to(
-              outHeadline,
-              { scale: 0.7, opacity: 0, ease: 'power1.in', duration: winEnd - fadeStart },
-              fadeStart,
-            )
-          }
-          // Curtain reveal for this boundary: a SEPARATE element living
-          // outside `trackRef` (a sibling, not a child), animated with
-          // its own independent xPercent tween, NOT a clip-path on the
-          // panels themselves -- clipping the panels directly was tried
-          // for this exact boundary before and caused a real bug: the
-          // panels are ALSO continuously translated by the track's own
-          // x tween above, and a clip-path keyed to each panel's own
-          // local coordinates fights that translation, opening a
-          // visible gap where neither panel's clipped region actually
-          // covers the screen (confirmed by reading the clipped
-          // element's own boundingClientRect against the viewport). A
-          // standalone full-viewport panel translated by xPercent
-          // sidesteps that architecture problem entirely -- and since
-          // it's a solid, featureless color, translating it looks
-          // pixel-identical to a clip-path reveal growing from the right
-          // edge (the same math either way), which is what the
-          // reference actually does.
-          if (maskRef.current) {
-            tl.fromTo(
-              maskRef.current,
-              { xPercent: 100 },
-              { xPercent: -100, ease: 'power2.inOut', duration: crossDuration },
-              winEnd - crossDuration * 0.5,
-            )
-          }
-          // About's own panel is NEVER clipped for this boundary (the
-          // `i !== WORK_COUNT` guard above skips it), which means its
-          // natural, unclipped entrance via the track's own continuous
-          // x tween was ALSO independently visible the whole time --
-          // sliding in from the right on its own schedule, completely
-          // unrelated to the curtain's. Two different cream regions
-          // moving at two different rates is exactly the "ivory stripe
-          // in the middle of teal" bug this caused: the curtain's own
-          // leading edge and About's own natural leading edge were
-          // rarely at the same x position, leaving a gap of whatever
-          // was behind both (teal) visible between them. Force About
-          // fully hidden for this ENTIRE window and only snap it back
-          // to fully visible once the curtain has already finished
-          // covering the screen -- the curtain is the only thing that
-          // ever visibly reveals About now, so there's only one edge
-          // moving, not two.
-          const about = panels[i + 1]
-          tl.set(about, { clipPath: 'inset(0% 0% 0% 100%)' }, winEnd - crossDuration * 0.5)
-          tl.set(about, { clipPath: 'inset(0% 0% 0% 0%)' }, winEnd + crossDuration * 0.5)
         }
       })
 
@@ -407,29 +322,6 @@ export function JourneyDesktop() {
       ref={containerRef}
       className="relative h-screen w-screen overflow-hidden bg-ink"
     >
-      {/* A sibling of the track, not a child -- this must NOT ride along
-          with the track's own horizontal x tween, since its whole job is
-          to sweep independently across the fixed viewport for the
-          Work -> About boundary's curtain reveal.
-          Carries a REAL, second instance of AboutStatementPanel (no
-          `id`, so it never collides with the real one's `id="about"`)
-          instead of a bare color -- a real complaint with the previous
-          empty-color-only curtain: the actual headline/body copy/photo
-          only appeared after the sweep finished, reading as "a blank
-          panel wipes across, then content pops in" rather than "the
-          whole About section, background AND type together, grows in."
-          This ghost is purely visual (aria-hidden, pointer-events-none)
-          and is scoped OUT of the `.chapter-panel` query above so it
-          never gets pulled into the scroll-driven track math; the REAL
-          instance inside the track stays clip-hidden until this ghost
-          has fully covered the screen, then takes over seamlessly. */}
-      <div
-        ref={maskRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[8] overflow-hidden"
-      >
-        <AboutStatementPanel eyebrow={ABOUT_STATEMENT_EYEBROW} />
-      </div>
       <div
         ref={trackRef}
         className="flex h-full"

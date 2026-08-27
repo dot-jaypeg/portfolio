@@ -28,10 +28,6 @@ export const WORK_COUNT = FEATURED_CASE_STUDIES.length
 export const ABOUT_COUNT = 2
 // +1 for the ViewAllPanel chapter sitting between Work and About.
 export const TOTAL_CHAPTERS = WORK_COUNT + 1 + ABOUT_COUNT
-// Exported so JourneyDesktop's curtain-overlay ghost copy of
-// AboutStatementPanel (see that component) can use the exact same
-// eyebrow text as the real one.
-export const ABOUT_STATEMENT_EYEBROW = `${pad(WORK_COUNT + 2)} — About`
 
 // `min-h-screen` (not `h-full`) deliberately: on desktop these panels
 // sit inside JourneyDesktop's `h-screen` flex-row track, where it's
@@ -119,10 +115,7 @@ function WorkPanel({
   )
 }
 
-// Exported so JourneyDesktop can render a second, real (not empty)
-// instance of this panel inside its curtain overlay for the Work ->
-// About boundary -- see that component for why.
-export function AboutStatementPanel({
+function AboutStatementPanel({
   eyebrow,
   id,
 }: {
@@ -318,11 +311,14 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
   },
   {
     key: 'about-statement',
-    eyebrow: ABOUT_STATEMENT_EYEBROW,
+    eyebrow: `${pad(WORK_COUNT + 2)} — About`,
     bg: '#fffff0',
     fg: '#161616',
     render: () => (
-      <AboutStatementPanel eyebrow={ABOUT_STATEMENT_EYEBROW} id="about" />
+      <AboutStatementPanel
+        eyebrow={`${pad(WORK_COUNT + 2)} — About`}
+        id="about"
+      />
     ),
   },
   {
