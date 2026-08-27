@@ -248,35 +248,56 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
 
 function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
   return (
-    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 flex-col items-center justify-center gap-6 px-8 text-center">
+    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center justify-center overflow-hidden px-8 text-center">
       {/* Fixed ink, mirroring the fixed cream layer on AboutStatementPanel
           right after this one -- together they give the boundary's
           clip-mask wipe a genuine hard color edge (ink -> cream) instead
           of relying on the page-wide --bg crossfade, which interpolates
           gradually and wouldn't read as a sharp mask. */}
       <div className="pointer-events-none absolute inset-0 bg-[#161616]" />
-      <p className="font-body relative text-xs tracking-[0.32em] text-teal uppercase">
-        {eyebrow}
-      </p>
-      {/* The link itself carries `.chapter-headline` -- SplitText doesn't
-          care what element it targets, and this IS the panel's headline
-          moment, not a caption underneath one. */}
-      <Link
-        to="/work"
-        data-cursor="View All"
-        className="chapter-headline font-display group relative inline-flex items-center gap-4 text-[13vw] leading-[0.82] font-bold tracking-[-0.05em] text-cream uppercase transition-colors duration-300 hover:text-teal md:text-[8vw]"
+      {/* Oversized numeral drifting behind the headline -- reuses the
+          exact same data-parallax-amount xPercent swing every other
+          chapter's `.chapter-media` gets (JourneyDesktop doesn't care
+          whether that class is on a photo or plain text), giving this
+          otherwise flat single-color panel some real depth instead of
+          sitting completely static while every other chapter has a
+          moving layer. */}
+      <span
+        aria-hidden="true"
+        data-parallax-amount="18"
+        className="chapter-media font-display pointer-events-none absolute inset-0 flex items-center justify-center text-[48vw] leading-none font-bold tracking-[-0.04em] text-cream/[0.04] uppercase select-none"
       >
-        View All
-        <span
-          aria-hidden="true"
-          className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-3"
+        {pad(WORK_COUNT + 1)}
+      </span>
+      {/* `.chapter-copy` -- the same wrapper class gives this its own
+          subtle -4/4 xPercent drift too, same as every other chapter's
+          copy block, so the headline moves at a visibly different rate
+          than the numeral behind it (the actual parallax cue, not just
+          one layer moving). */}
+      <div className="chapter-copy relative flex flex-col items-center gap-6">
+        <p className="font-body text-xs tracking-[0.32em] text-teal uppercase">
+          {eyebrow}
+        </p>
+        {/* The link itself carries `.chapter-headline` -- SplitText
+            doesn't care what element it targets, and this IS the
+            panel's headline moment, not a caption underneath one. */}
+        <Link
+          to="/work"
+          data-cursor="View All"
+          className="chapter-headline font-display group inline-flex items-center gap-4 text-[13vw] leading-[0.82] font-bold tracking-[-0.05em] text-cream uppercase transition-colors duration-300 hover:text-teal md:text-[8vw]"
         >
-          →
-        </span>
-      </Link>
-      <p className="font-body relative max-w-md text-sm leading-relaxed text-cream/50">
-        Every case study, past and present, in one place.
-      </p>
+          View All
+          <span
+            aria-hidden="true"
+            className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-3"
+          >
+            →
+          </span>
+        </Link>
+        <p className="font-body max-w-md text-sm leading-relaxed text-cream/50">
+          Every case study, past and present, in one place.
+        </p>
+      </div>
     </div>
   )
 }
