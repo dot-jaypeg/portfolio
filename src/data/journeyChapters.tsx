@@ -91,15 +91,13 @@ function WorkPanel({
         <span
           className={`font-body whitespace-nowrap text-xs tracking-[0.4em] uppercase [writing-mode:vertical-rl] ${accent}`}
         >
-          Selected Work
+          {cs.client}
         </span>
       </div>
       <div className="chapter-copy flex max-w-3xl flex-1 flex-col justify-between self-stretch py-16 md:py-24">
         <div>
           <div className="font-body flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs tracking-[0.2em] uppercase">
-            <span className={accent}>({pad(index + 1)})</span>
-            <span className="text-cream/60">{cs.client}</span>
-            <span className="text-cream/30">—</span>
+            <span className={accent}>[{pad(index + 1)}]</span>
             <span className="text-cream/60">{cs.category}</span>
           </div>
           <h2 className="chapter-headline font-display mt-8 text-[10vw] leading-[0.78] font-bold tracking-[-0.05em] text-cream uppercase md:text-[6.5vw]">
@@ -248,50 +246,44 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
 
 function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
   return (
-    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center justify-center overflow-hidden px-8 text-center">
+    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center justify-center overflow-hidden px-8 md:px-20">
       {/* Fixed ink, mirroring the fixed cream layer on AboutStatementPanel
           right after this one -- together they give the boundary's
           clip-mask wipe a genuine hard color edge (ink -> cream) instead
           of relying on the page-wide --bg crossfade, which interpolates
           gradually and wouldn't read as a sharp mask. */}
       <div className="pointer-events-none absolute inset-0 bg-[#161616]" />
-      {/* Oversized numeral drifting behind the headline -- reuses the
-          exact same data-parallax-amount xPercent swing every other
-          chapter's `.chapter-media` gets (JourneyDesktop doesn't care
-          whether that class is on a photo or plain text), giving this
-          otherwise flat single-color panel some real depth instead of
-          sitting completely static while every other chapter has a
-          moving layer. */}
-      <span
-        aria-hidden="true"
-        data-parallax-amount="18"
-        className="chapter-media font-display pointer-events-none absolute inset-0 flex items-center justify-center text-[48vw] leading-none font-bold tracking-[-0.04em] text-cream/[0.04] uppercase select-none"
-      >
-        {pad(WORK_COUNT + 1)}
-      </span>
-      {/* `.chapter-copy` -- the same wrapper class gives this its own
-          subtle -4/4 xPercent drift too, same as every other chapter's
-          copy block, so the headline moves at a visibly different rate
-          than the numeral behind it (the actual parallax cue, not just
-          one layer moving). */}
-      <div className="chapter-copy relative flex flex-col items-center gap-6">
+      {/* `.chapter-copy` gives this its own subtle -4/4 xPercent drift,
+          same as every other chapter's copy block -- the parallax cue
+          here, now that the oversized numeral is gone. */}
+      <div className="chapter-copy relative flex w-full max-w-5xl flex-col gap-10">
         <p className="font-body text-xs tracking-[0.32em] text-teal uppercase">
           {eyebrow}
         </p>
-        {/* The link itself carries `.chapter-headline` -- SplitText
-            doesn't care what element it targets, and this IS the
-            panel's headline moment, not a caption underneath one. */}
+        {/* Split two-column headline (stacked on mobile) instead of one
+            centered "View All" -- the link itself still carries
+            `.chapter-headline` as ONE element (SplitText/the exit tween
+            both only look for the first match), with "View" and the
+            dotted "All ->" arranged as its own two children rather than
+            two separate headline elements. */}
         <Link
           to="/work"
           data-cursor="View All"
-          className="chapter-headline font-display group inline-flex items-center gap-4 text-[13vw] leading-[0.82] font-bold tracking-[-0.05em] text-cream uppercase transition-colors duration-300 hover:text-teal md:text-[8vw]"
+          className="chapter-headline font-display group flex flex-col items-start gap-3 text-[16vw] leading-[0.82] font-bold tracking-[-0.05em] text-cream uppercase transition-colors duration-300 hover:text-red md:flex-row md:items-center md:justify-between md:gap-8 md:text-[7.5vw]"
         >
-          View All
-          <span
-            aria-hidden="true"
-            className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-3"
-          >
-            →
+          <span>View</span>
+          <span className="inline-flex items-center gap-4 md:gap-6">
+            <span
+              aria-hidden="true"
+              className="inline-block h-[0.32em] w-[0.32em] shrink-0 rounded-full bg-current"
+            />
+            <span>All</span>
+            <span
+              aria-hidden="true"
+              className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-3"
+            >
+              →
+            </span>
           </span>
         </Link>
         <p className="font-body max-w-md text-sm leading-relaxed text-cream/50">
@@ -317,12 +309,10 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
   }),
   {
     key: 'view-all',
-    eyebrow: `${pad(WORK_COUNT + 1)} — Selected Work`,
+    eyebrow: 'All of my best works',
     bg: '#161616',
     fg: '#fffff0',
-    render: () => (
-      <ViewAllPanel eyebrow={`${pad(WORK_COUNT + 1)} — Selected Work`} />
-    ),
+    render: () => <ViewAllPanel eyebrow="All of my best works" />,
   },
   {
     key: 'about-statement',

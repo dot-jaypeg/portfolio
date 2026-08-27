@@ -59,9 +59,16 @@ body {
   color: var(--color-cream);
 }
 
+/* `*`, not just `a`/`button` -- AllWork's strip cards and other custom
+   interactive elements are plain divs with `role="button"` and their
+   own `cursor-pointer` utility, which the old two-selector rule never
+   matched (it only targeted real `<a>`/`<button>` tags). That let the
+   browser's own default cursor render at the same time as the custom
+   dot over those elements. A blanket descendant rule covers every
+   element regardless of tag, so nothing new needs to be added here
+   again as more custom-cursor targets show up. */
 .custom-cursor-active,
-.custom-cursor-active a,
-.custom-cursor-active button {
+.custom-cursor-active * {
   cursor: none;
 }
 

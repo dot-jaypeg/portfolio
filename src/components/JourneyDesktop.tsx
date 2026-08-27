@@ -211,12 +211,19 @@ export function JourneyDesktop() {
         // are special-cased here.
         const isSectionBoundary = i === WORK_COUNT
         if (isSectionBoundary) {
+          // Spans the last 45% of this panel's own dwell window (not
+          // just a narrow sliver centered on the boundary) so it reads
+          // as continuous with the parallax drift already running across
+          // the whole window, finishing exactly when the hard-edge wipe
+          // takes over -- starting it late and short felt disconnected
+          // from everything else already in motion.
           const outHeadline = panel.querySelector('.chapter-headline')
           if (outHeadline) {
+            const fadeStart = winStart + winWidth * 0.55
             tl.to(
               outHeadline,
-              { scale: 0.7, opacity: 0, ease: 'power1.in', duration: crossDuration },
-              winEnd - crossDuration * 0.5,
+              { scale: 0.7, opacity: 0, ease: 'power1.in', duration: winEnd - fadeStart },
+              fadeStart,
             )
           }
         } else if (i < n - 1) {
