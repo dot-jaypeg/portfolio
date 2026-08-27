@@ -254,6 +254,25 @@ export function JourneyDesktop() {
               winEnd - crossDuration * 0.5,
             )
           }
+          // About's own panel is NEVER clipped for this boundary (the
+          // `i !== WORK_COUNT` guard above skips it), which means its
+          // natural, unclipped entrance via the track's own continuous
+          // x tween was ALSO independently visible the whole time --
+          // sliding in from the right on its own schedule, completely
+          // unrelated to the curtain's. Two different cream regions
+          // moving at two different rates is exactly the "ivory stripe
+          // in the middle of teal" bug this caused: the curtain's own
+          // leading edge and About's own natural leading edge were
+          // rarely at the same x position, leaving a gap of whatever
+          // was behind both (teal) visible between them. Force About
+          // fully hidden for this ENTIRE window and only snap it back
+          // to fully visible once the curtain has already finished
+          // covering the screen -- the curtain is the only thing that
+          // ever visibly reveals About now, so there's only one edge
+          // moving, not two.
+          const about = panels[i + 1]
+          tl.set(about, { clipPath: 'inset(0% 0% 0% 100%)' }, winEnd - crossDuration * 0.5)
+          tl.set(about, { clipPath: 'inset(0% 0% 0% 0%)' }, winEnd + crossDuration * 0.5)
         }
       })
 

@@ -251,36 +251,30 @@ function ViewAllPanel() {
   // whole panel its own fixed identity, the same way WorkPanel's accent
   // colors don't invert with the page.
   return (
-    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center justify-center overflow-hidden bg-teal">
-      {/* A high-impact vertical divider, after the Le Mans Classic
-          reference's own yellow "LE MANS MOTORS CLUB" panel -- massive
-          rotated type interrupting the horizontal reading flow to mark
-          a real section break, rather than a conventional
-          horizontally-set CTA line.
-          The -rotate-90 lives on this OUTER wrapper as a plain, static
-          CSS transform that GSAP never touches -- putting it on the
-          same element as the parallax/exit tweens below was tried
-          first and risked GSAP's own transform writes (xPercent,
-          scale) overwriting or fighting this rotation, since both
-          ultimately resolve to the same `transform` property. The
-          INNER link gets the GSAP-driven classes instead, so the two
-          never touch the same transform. */}
-      <div className="-rotate-90">
+    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center overflow-hidden bg-teal px-8 md:px-20">
+      {/* Two-line horizontal headline, after basicagency.com's own
+          about-page hero ("WE TURN CULTURAL VALUE" / "● INTO COMPANY
+          VALUE") -- a plain statement line, then a dot-bulleted CTA
+          line of the same scale underneath it, left-aligned rather than
+          the previous vertically-rotated treatment. `.chapter-copy`
+          wraps both so they drift together as one unit (the usual
+          per-chapter parallax); `.chapter-headline` stays on just the
+          first line, since that's the one SplitText/the exit tween
+          target. */}
+      <div className="chapter-copy relative flex flex-col items-start gap-1 md:gap-2">
+        <h2 className="chapter-headline font-display text-[7vw] leading-[0.95] font-bold tracking-[-0.04em] text-[#161616] uppercase md:text-[3.6vw]">
+          My Most Recent, and Best Work
+        </h2>
         <Link
           to="/work"
           data-cursor="View All"
-          className="chapter-headline chapter-copy font-display group inline-flex items-center gap-4 text-[4.2vw] leading-none font-bold tracking-[-0.04em] whitespace-nowrap text-[#161616] uppercase transition-colors duration-300 hover:text-red"
+          className="group inline-flex items-center gap-4 font-display text-[7vw] leading-[0.95] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:text-[3.6vw]"
         >
-          {/* Leading dot bullet instead of a trailing arrow, after the
-              basicagency.com reference's own "● INTO COMPANY VALUE" --
-              rotates along with the rest of the text, so it reads as
-              the first thing the vertical bottom-to-top flow reaches
-              rather than a floating accent mark. */}
           <span
             aria-hidden="true"
             className="inline-block h-[0.32em] w-[0.32em] shrink-0 rounded-full bg-current"
           />
-          View All Work
+          Click to View All
         </Link>
       </div>
     </div>
