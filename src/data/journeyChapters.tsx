@@ -241,71 +241,47 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
 }
 
 function ViewAllPanel() {
-  // Sized exactly like a case study's own cover-photo column
-  // (w-[38vw] max-w-xl, self-stretch to the full page height) instead
-  // of spanning the whole panel -- this divider should read as one more
-  // "cover" in the same rhythm as the chapters before it, not a
-  // full-bleed interstitial. `bg-teal` (a static accent color, not the
-  // crossfading --bg var) gives the column its own fixed identity, the
-  // same way WorkPanel's accent colors don't invert with the page.
+  // Full-bleed solid teal, not a narrower cover-photo-sized column --
+  // matches how the Le Mans Classic reference's own chapter panels are
+  // full-width solid color blocks, and fixes a real complaint: a
+  // narrower column (with ink filling the rest of the panel) left a
+  // stretch of dead flat-ink space on screen with nothing happening in
+  // it, especially scrolling in from the previous case study. `bg-teal`
+  // (a static accent color, not the crossfading --bg var) gives the
+  // whole panel its own fixed identity, the same way WorkPanel's accent
+  // colors don't invert with the page.
   return (
-    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center overflow-hidden">
-      {/* Fixed ink, covering the WHOLE panel (not just the teal
-          column) -- not the crossfading --bg var. The Work -> About
-          boundary is meant to read as About's own panel physically
-          pushing this one out of frame as the track slides them, and
-          that only reads as a hard edge if each panel carries its own
-          solid, non-interpolating color; the shared soft --bg crossfade
-          blends the whole viewport uniformly regardless of which panel
-          is on screen, so it can't produce a moving edge on its own. */}
-      <div className="pointer-events-none absolute inset-0 bg-[#161616]" />
-      {/* ml-auto, flush against the panel's own right edge (no padding
-          on that side) -- this is what's actually adjacent to About's
-          cream panel as the track pushes them past each other, so the
-          teal column needs to sit right at that seam. Sitting further
-          left (the previous layout, with page padding on both sides)
-          left a stretch of plain ink between the teal box and the real
-          push edge, reading as two disconnected things happening --
-          a static teal panel, and a separate ink/cream wipe further
-          over -- instead of one seamless push carrying the whole cover
-          along with it. */}
-      <div className="relative ml-auto flex w-[38vw] max-w-xl shrink-0 items-center justify-center self-stretch overflow-hidden bg-teal">
-        {/* A high-impact vertical divider, after the Le Mans Classic
-            reference's own yellow "LE MANS MOTORS CLUB" panel -- massive
-            rotated type interrupting the horizontal reading flow to mark
-            a real section break, rather than a conventional
-            horizontally-set CTA line.
-            The -rotate-90 lives on this OUTER wrapper as a plain, static
-            CSS transform that GSAP never touches -- putting it on the
-            same element as the parallax/exit tweens below was tried
-            first and risked GSAP's own transform writes (xPercent,
-            scale) overwriting or fighting this rotation, since both
-            ultimately resolve to the same `transform` property. The
-            INNER link gets the GSAP-driven classes instead, so the two
-            never touch the same transform.
-            Sized in vw relative to the VIEWPORT, not this now-narrower
-            column, since the binding constraint is fitting the text's
-            un-rotated WIDTH inside the column's full page HEIGHT once
-            rotated -- too large here clipped the top/bottom of the
-            phrase against the panel's own overflow-hidden edge. */}
-        <div className="-rotate-90">
-          <Link
-            to="/work"
-            data-cursor="View All"
-            className="chapter-headline chapter-copy font-display group inline-flex items-center gap-4 text-[4.2vw] leading-none font-bold tracking-[-0.04em] whitespace-nowrap text-[#161616] uppercase transition-colors duration-300 hover:text-red"
-          >
-            {/* Leading dot bullet instead of a trailing arrow, after the
-                basicagency.com reference's own "● INTO COMPANY VALUE" --
-                rotates along with the rest of the text, so it reads as
-                the first thing the vertical bottom-to-top flow reaches
-                rather than a floating accent mark. */}
-            <span
-              aria-hidden="true"
-              className="inline-block h-[0.32em] w-[0.32em] shrink-0 rounded-full bg-current"
-            />
-            View All Work
-          </Link>
-        </div>
+    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center justify-center overflow-hidden bg-teal">
+      {/* A high-impact vertical divider, after the Le Mans Classic
+          reference's own yellow "LE MANS MOTORS CLUB" panel -- massive
+          rotated type interrupting the horizontal reading flow to mark
+          a real section break, rather than a conventional
+          horizontally-set CTA line.
+          The -rotate-90 lives on this OUTER wrapper as a plain, static
+          CSS transform that GSAP never touches -- putting it on the
+          same element as the parallax/exit tweens below was tried
+          first and risked GSAP's own transform writes (xPercent,
+          scale) overwriting or fighting this rotation, since both
+          ultimately resolve to the same `transform` property. The
+          INNER link gets the GSAP-driven classes instead, so the two
+          never touch the same transform. */}
+      <div className="-rotate-90">
+        <Link
+          to="/work"
+          data-cursor="View All"
+          className="chapter-headline chapter-copy font-display group inline-flex items-center gap-4 text-[4.2vw] leading-none font-bold tracking-[-0.04em] whitespace-nowrap text-[#161616] uppercase transition-colors duration-300 hover:text-red"
+        >
+          {/* Leading dot bullet instead of a trailing arrow, after the
+              basicagency.com reference's own "● INTO COMPANY VALUE" --
+              rotates along with the rest of the text, so it reads as
+              the first thing the vertical bottom-to-top flow reaches
+              rather than a floating accent mark. */}
+          <span
+            aria-hidden="true"
+            className="inline-block h-[0.32em] w-[0.32em] shrink-0 rounded-full bg-current"
+          />
+          View All Work
+        </Link>
       </div>
     </div>
   )
