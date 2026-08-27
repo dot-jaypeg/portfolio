@@ -36,24 +36,35 @@ export const TOTAL_CHAPTERS = WORK_COUNT + ABOUT_COUNT
 // is why the identical JSX works unmodified in both contexts.
 function WorkPanel({
   cs,
-  eyebrow,
+  index,
   id,
 }: {
   cs: CaseStudy
-  eyebrow: string
+  index: number
   id?: string
 }) {
-  // Le Mans Classic treatment: the image column's HEIGHT matches the
-  // full page (self-stretch against the row's own min-h-screen), not a
-  // fixed aspect-[4/5] box -- but it still sits in its own column beside
-  // the text, not full-bleed across the whole panel. No vertical padding
-  // on the panel itself (only horizontal) so nothing caps the column
-  // short of the actual viewport height; the text column still centers
-  // vertically via the row's own `items-center`.
+  // Le Mans Classic's "Le départ" page, specifically: a massive timecode
+  // acting as the primary visual hook, a cleanly styled chapter name
+  // underneath it, then comfortable editorial prose -- a deliberate
+  // inversion of the previous hierarchy where the TITLE was the biggest
+  // thing on the panel. Here the case number plays the timecode's role
+  // (first thing the eye catches, well before the title reads), set in
+  // the regular (not bold) weight for the "crisp monochromatic weight
+  // contrast" the brief calls for against the bold title below it.
+  // Anchored top-left (`items-start` + top padding) rather than
+  // vertically centered, for the same "spatial breath, deliberate
+  // pacing" reason -- a dead-centered block reads as a conventional
+  // hero, not an editorial magazine spread.
+  //
+  // The image column's HEIGHT still matches the full page (self-stretch
+  // against the row's own min-h-screen) -- `self-stretch` on the image
+  // wrapper overrides the row's `items-start` independent of it, so
+  // switching the row's own alignment for the text doesn't shrink the
+  // photo back down.
   return (
     <div
       id={id}
-      className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 md:px-20"
+      className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-start gap-12 px-8 md:px-20"
     >
       <div className="relative w-[38vw] max-w-xl shrink-0 self-stretch overflow-hidden">
         {cs.image ? (
@@ -75,17 +86,20 @@ function WorkPanel({
           </div>
         )}
       </div>
-      <div className="chapter-copy max-w-xl">
-        <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
-          {eyebrow}
+      <div className="chapter-copy max-w-xl pt-28 md:pt-36">
+        <p className="font-display pointer-events-none text-[15vw] leading-[0.75] font-normal tracking-[-0.03em] text-cream select-none md:text-[9vw]">
+          {pad(index + 1)}
         </p>
-        <h2 className="chapter-headline font-display mt-4 text-[7vw] leading-[0.9] font-bold tracking-[-0.06em] text-cream uppercase md:text-[5vw]">
+        <p className="font-body mt-4 text-xs tracking-[0.32em] text-teal uppercase">
+          {cs.client}
+        </p>
+        <h2 className="chapter-headline font-display mt-3 text-[3.4vw] leading-[1.05] font-bold tracking-[-0.02em] text-cream uppercase md:text-[2.2vw]">
           {cs.title}
         </h2>
-        <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-cream/60">
+        <p className="font-body mt-8 max-w-md text-base leading-relaxed text-cream/70">
           {cs.description}
         </p>
-        <p className="font-body mt-4 text-xs tracking-wider text-teal uppercase">
+        <p className="font-body mt-8 text-[11px] tracking-[0.32em] text-cream/50 uppercase">
           {cs.category}
         </p>
       </div>
@@ -222,7 +236,7 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
       bg: '#161616',
       fg: '#fffff0',
       render: () => (
-        <WorkPanel cs={cs} eyebrow={eyebrow} id={i === 0 ? 'work' : undefined} />
+        <WorkPanel cs={cs} index={i} id={i === 0 ? 'work' : undefined} />
       ),
     }
   }),
