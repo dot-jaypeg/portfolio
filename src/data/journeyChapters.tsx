@@ -246,49 +246,49 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
 
 function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
   return (
-    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center justify-center overflow-hidden px-8 md:px-20">
-      {/* Fixed ink, mirroring the fixed cream layer on AboutStatementPanel
-          right after this one -- together they give the boundary's
-          clip-mask wipe a genuine hard color edge (ink -> cream) instead
-          of relying on the page-wide --bg crossfade, which interpolates
-          gradually and wouldn't read as a sharp mask. */}
-      <div className="pointer-events-none absolute inset-0 bg-[#161616]" />
-      {/* `.chapter-copy` gives this its own subtle -4/4 xPercent drift,
-          same as every other chapter's copy block -- the parallax cue
-          here, now that the oversized numeral is gone. */}
-      <div className="chapter-copy relative flex w-full max-w-5xl flex-col gap-10">
-        <p className="font-body text-xs tracking-[0.32em] text-teal uppercase">
-          {eyebrow}
-        </p>
-        {/* Split two-column headline (stacked on mobile) instead of one
-            centered "View All" -- the link itself still carries
-            `.chapter-headline` as ONE element (SplitText/the exit tween
-            both only look for the first match), with "View" and the
-            dotted "All ->" arranged as its own two children rather than
-            two separate headline elements. */}
+    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center justify-center overflow-hidden">
+      {/* Fixed teal, not the crossfading --bg var -- mirrors the fixed
+          cream layer on AboutStatementPanel right after this one, so the
+          boundary's hard-edge wipe reads as teal sliding away to reveal
+          cream, a real color-block edge instead of a soft interpolation. */}
+      <div className="pointer-events-none absolute inset-0 bg-[#618c82]" />
+      {/* top-24, not top-8 -- the fixed nav logo sits in that exact
+          corner and the two were overlapping. */}
+      <p className="font-body absolute top-24 left-8 text-xs tracking-[0.32em] text-[#161616]/70 uppercase md:top-28 md:left-12">
+        {eyebrow}
+      </p>
+      {/* A high-impact vertical divider, after the Le Mans Classic
+          reference's own yellow "LE MANS MOTORS CLUB" panel -- massive
+          rotated type interrupting the horizontal reading flow to mark
+          a real section break, rather than a conventional
+          horizontally-set CTA line.
+          The -rotate-90 lives on this OUTER wrapper as a plain, static
+          CSS transform that GSAP never touches -- putting it on the
+          same element as the parallax/exit tweens below was tried first
+          and risked GSAP's own transform writes (xPercent, scale)
+          overwriting or fighting this rotation, since both ultimately
+          resolve to the same `transform` property. The INNER link gets
+          the GSAP-driven classes instead, so the two never touch the
+          same transform. */}
+      <div className="-rotate-90">
         <Link
           to="/work"
           data-cursor="View All"
-          className="chapter-headline font-display group flex flex-col items-start gap-3 text-[16vw] leading-[0.82] font-bold tracking-[-0.05em] text-cream uppercase transition-colors duration-300 hover:text-red md:flex-row md:items-center md:justify-between md:gap-8 md:text-[7.5vw]"
+          className="chapter-headline chapter-copy font-display group inline-flex items-center gap-6 text-[9vw] leading-none font-bold tracking-[-0.04em] whitespace-nowrap text-[#161616] uppercase transition-colors duration-300 hover:text-red md:text-[6.5vw]"
         >
-          <span>View</span>
-          <span className="inline-flex items-center gap-4 md:gap-6">
-            <span
-              aria-hidden="true"
-              className="inline-block h-[0.32em] w-[0.32em] shrink-0 rounded-full bg-current"
-            />
-            <span>All</span>
-            <span
-              aria-hidden="true"
-              className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-3"
-            >
-              →
-            </span>
+          View All Work
+          {/* Left uncountered (not counter-rotated back to horizontal) --
+              rotated along with the rest of the text it points up, in
+              the same direction the vertical reading flow is already
+              moving, reading as "continue this way" rather than a
+              disconnected horizontal glyph stuck in a vertical line. */}
+          <span
+            aria-hidden="true"
+            className="inline-block transition-transform duration-300 ease-out group-hover:-translate-y-3"
+          >
+            →
           </span>
         </Link>
-        <p className="font-body max-w-md text-sm leading-relaxed text-cream/50">
-          Every case study, past and present, in one place.
-        </p>
       </div>
     </div>
   )
@@ -310,8 +310,8 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
   {
     key: 'view-all',
     eyebrow: 'All of my best works',
-    bg: '#161616',
-    fg: '#fffff0',
+    bg: '#618c82',
+    fg: '#161616',
     render: () => <ViewAllPanel eyebrow="All of my best works" />,
   },
   {

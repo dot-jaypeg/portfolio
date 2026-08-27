@@ -290,7 +290,7 @@ export function CinematicIntro() {
                     legibility against a busy photo -- independent of the
                     fixed red nav-fg pin above, which solves a different
                     problem (nav contrast against the page-wide red bg). */}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
               </div>
             ) : (
               <span className="font-body pointer-events-none absolute inset-8 flex items-center justify-center border border-dashed border-cream/15 text-xs tracking-[0.22em] text-cream/25 uppercase md:inset-16">
