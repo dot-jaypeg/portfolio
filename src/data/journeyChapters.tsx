@@ -43,23 +43,26 @@ function WorkPanel({
   index: number
   id?: string
 }) {
-  // Closer to how "Below the Line" (Le Mans Classic's own bootleg-zine
-  // sub-site) actually runs its type -- a TINY bracketed metadata row
-  // ("(01)  CLIENT  —  CATEGORY", wide-tracked, easy to skip past) sets
-  // the scene without competing for attention, then the title itself is
-  // the loud, massive, tightly-set condensed block that does the work a
-  // giant standalone numeral was doing before. Body copy is pushed all
-  // the way to the bottom of the column instead of stacked right under
-  // the title -- `justify-between` on a column that self-stretches to
-  // the full page height spreads the two blocks across the whole
-  // viewport, which is what actually reads as "free"/asymmetric rather
-  // than a single tidy stack, matching how those references spread
-  // metadata/headline/body across the full frame instead of clustering
-  // them together.
+  // Turned up the "fun"/unpredictable dial a level past the last pass --
+  // three specific devices borrowed straight from the references:
+  // (1) sides ALTERNATE per case study (flex-row-reverse on odd indices)
+  // instead of every chapter running the identical image-left/text-right
+  // layout -- that repetition across 5 back-to-back chapters was a big
+  // part of why it read as flat/orderly rather than scattered.
+  // (2) the title now actually fills the available width (`flex-1`
+  // instead of a `max-w-xl` cap that left a dead black gap on the
+  // right), at a genuinely loud size.
+  // (3) a rotated vertical strip and an oversized quotation mark, both
+  // in an accent color that alternates teal/red by index -- a direct
+  // callback to the reference's rotated colored text strip and pull-quote
+  // treatment, using colors already in this site's palette rather than
+  // introducing their yellow.
+  const flipped = index % 2 === 1
+  const accent = index % 2 === 0 ? 'text-teal' : 'text-red'
   return (
     <div
       id={id}
-      className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-start gap-12 px-8 md:px-20"
+      className={`chapter-panel relative flex min-h-screen w-screen shrink-0 items-start gap-8 px-8 md:px-20 ${flipped ? 'flex-row-reverse' : ''}`}
     >
       <div className="relative w-[38vw] max-w-xl shrink-0 self-stretch overflow-hidden">
         {cs.image ? (
@@ -81,19 +84,29 @@ function WorkPanel({
           </div>
         )}
       </div>
-      <div className="chapter-copy flex max-w-xl flex-col justify-between self-stretch py-16 md:py-24">
+      <div className="hidden shrink-0 self-stretch items-center justify-center md:flex">
+        <span
+          className={`font-body whitespace-nowrap text-xs tracking-[0.4em] uppercase [writing-mode:vertical-rl] ${accent}`}
+        >
+          Selected Work
+        </span>
+      </div>
+      <div className="chapter-copy flex max-w-3xl flex-1 flex-col justify-between self-stretch py-16 md:py-24">
         <div>
           <div className="font-body flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs tracking-[0.2em] uppercase">
-            <span className="text-teal">({pad(index + 1)})</span>
+            <span className={accent}>({pad(index + 1)})</span>
             <span className="text-cream/60">{cs.client}</span>
             <span className="text-cream/30">—</span>
             <span className="text-cream/60">{cs.category}</span>
           </div>
-          <h2 className="chapter-headline font-display mt-8 text-[9vw] leading-[0.82] font-bold tracking-[-0.04em] text-cream uppercase md:text-[5.5vw]">
+          <h2 className="chapter-headline font-display mt-8 text-[10vw] leading-[0.78] font-bold tracking-[-0.05em] text-cream uppercase md:text-[6.5vw]">
             {cs.title}
           </h2>
         </div>
-        <p className="font-body max-w-md text-lg leading-relaxed text-cream/70">
+        <p className="font-body max-w-lg text-lg leading-relaxed text-cream/70">
+          <span className={`font-display mr-1 align-top text-3xl ${accent}`}>
+            &ldquo;
+          </span>
           {cs.description}
         </p>
       </div>
