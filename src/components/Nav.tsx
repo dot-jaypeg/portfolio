@@ -1,4 +1,5 @@
 import type { MouseEvent } from 'react'
+import { ScrollTrigger } from '../lib/gsap'
 import { getChapterScrollOffset } from '../lib/journeyScroll'
 import { WORK_COUNT } from '../data/journeyChapters'
 import { SoundToggle } from './SoundToggle'
@@ -16,9 +17,15 @@ const LINKS = [
 // instead; on mobile (or before the ScrollTrigger initializes),
 // getChapterScrollOffset returns null and this falls back to the plain
 // element lookup, which is correct there since Journey never pins.
+//
+// `WORK_COUNT + 1`, not `WORK_COUNT` -- a real bug found in a later
+// sweep: this was never updated when the ViewAllPanel chapter was
+// inserted into JOURNEY_CHAPTERS between the case studies and About,
+// so About's real index shifted by one and clicking "About" was
+// silently landing on View All instead (confirmed directly).
 const CHAPTER_INDEX: Record<string, number> = {
   '#work': 0,
-  '#about': WORK_COUNT,
+  '#about': WORK_COUNT + 1,
 }
 
 export function Nav() {
@@ -44,18 +51,34 @@ export function Nav() {
         // of the document sidesteps that entirely.
         if (href === '#top') {
           window.__lenis?.scrollTo(0, { immediate: true })
-          return
+        } else if (href in CHAPTER_INDEX && getChapterScrollOffset(CHAPTER_INDEX[href]) != null) {
+          window.__lenis?.scrollTo(getChapterScrollOffset(CHAPTER_INDEX[href])!, {
+            immediate: true,
+          })
+        } else {
+          const target = document.querySelector(href)
+          if (target) window.__lenis?.scrollTo(target as HTMLElement, { immediate: true })
         }
-        if (href in CHAPTER_INDEX) {
-          const offset = getChapterScrollOffset(CHAPTER_INDEX[href])
-          if (offset != null) {
-            window.__lenis?.scrollTo(offset, { immediate: true })
-            return
-          }
-        }
-        const target = document.querySelector(href)
-        if (!target) return
-        window.__lenis?.scrollTo(target as HTMLElement, { immediate: true })
+        // A real bug this jump can trigger: landing exactly on a
+        // ScrollTrigger's own progress:0 boundary (e.g. "Work", which
+        // jumps straight to Journey chapter 0) can be a no-perceptible-
+        // change event from GSAP's own point of view if that trigger had
+        // never been active before and was already reporting progress:0
+        // by default -- confirmed directly (a MutationObserver on
+        // --nav-fg showed zero writes for ~1.8s after such a jump, stuck
+        // showing whatever color the PREVIOUS section left behind, until
+        // Journey's own auto-advance loop eventually nudged the scroll
+        // position and incidentally triggered a real update). Forcing a
+        // global recompute makes every active trigger's onUpdate fire
+        // immediately regardless of whether GSAP thinks anything changed
+        // -- but only AFTER a frame, not synchronously here: Lenis's own
+        // `scrollTo(..., {immediate:true})` still applies the actual
+        // scroll position on its own next animation-frame tick even
+        // though it skips the smooth-scroll animation, so calling this
+        // synchronously recomputed against the STALE pre-jump position
+        // and did nothing (confirmed directly -- nav-fg was still stuck
+        // 1.5s after the real scroll had already landed).
+        requestAnimationFrame(() => ScrollTrigger.update())
       }
       window.__maskTransition ? window.__maskTransition(jump) : jump()
     }
