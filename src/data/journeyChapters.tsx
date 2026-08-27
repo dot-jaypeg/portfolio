@@ -127,15 +127,6 @@ function AboutStatementPanel({
       id={id}
       className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 py-24 md:px-20"
     >
-      {/* Fixed-color layer (not the crossfading --bg var) so the
-          Work -> About boundary's clip-mask wipe reveals a genuine hard
-          color edge instead of whatever shade the page-wide crossfade
-          happens to be mid-interpolating at that exact scroll position --
-          same "physical object, doesn't invert" reasoning as the polaroid
-          card's own fixed paper color below. Clipped/scaled for free
-          along with the rest of this panel, since it's just another
-          child of the element the crossover tween already targets. */}
-      <div className="pointer-events-none absolute inset-0 bg-[#fffff0]" />
       <div className="chapter-copy relative max-w-2xl">
         <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
           {eyebrow}
@@ -245,50 +236,60 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
 }
 
 function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
+  // Sized exactly like a case study's own cover-photo column
+  // (w-[38vw] max-w-xl, self-stretch to the full page height) instead
+  // of spanning the whole panel -- this divider should read as one more
+  // "cover" in the same rhythm as the chapters before it, not a
+  // full-bleed interstitial. `bg-teal` (a static accent color, not the
+  // crossfading --bg var) gives the column its own fixed identity, the
+  // same way WorkPanel's accent colors don't invert with the page.
   return (
-    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center justify-center overflow-hidden">
-      {/* Fixed teal, not the crossfading --bg var -- mirrors the fixed
-          cream layer on AboutStatementPanel right after this one, so the
-          boundary's hard-edge wipe reads as teal sliding away to reveal
-          cream, a real color-block edge instead of a soft interpolation. */}
-      <div className="pointer-events-none absolute inset-0 bg-[#618c82]" />
-      {/* top-24, not top-8 -- the fixed nav logo sits in that exact
-          corner and the two were overlapping. */}
-      <p className="font-body absolute top-24 left-8 text-xs tracking-[0.32em] text-[#161616]/70 uppercase md:top-28 md:left-12">
-        {eyebrow}
-      </p>
-      {/* A high-impact vertical divider, after the Le Mans Classic
-          reference's own yellow "LE MANS MOTORS CLUB" panel -- massive
-          rotated type interrupting the horizontal reading flow to mark
-          a real section break, rather than a conventional
-          horizontally-set CTA line.
-          The -rotate-90 lives on this OUTER wrapper as a plain, static
-          CSS transform that GSAP never touches -- putting it on the
-          same element as the parallax/exit tweens below was tried first
-          and risked GSAP's own transform writes (xPercent, scale)
-          overwriting or fighting this rotation, since both ultimately
-          resolve to the same `transform` property. The INNER link gets
-          the GSAP-driven classes instead, so the two never touch the
-          same transform. */}
-      <div className="-rotate-90">
-        <Link
-          to="/work"
-          data-cursor="View All"
-          className="chapter-headline chapter-copy font-display group inline-flex items-center gap-6 text-[9vw] leading-none font-bold tracking-[-0.04em] whitespace-nowrap text-[#161616] uppercase transition-colors duration-300 hover:text-red md:text-[6.5vw]"
-        >
-          View All Work
-          {/* Left uncountered (not counter-rotated back to horizontal) --
-              rotated along with the rest of the text it points up, in
-              the same direction the vertical reading flow is already
-              moving, reading as "continue this way" rather than a
-              disconnected horizontal glyph stuck in a vertical line. */}
-          <span
-            aria-hidden="true"
-            className="inline-block transition-transform duration-300 ease-out group-hover:-translate-y-3"
+    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-8 px-8 md:px-20">
+      <div className="relative flex w-[38vw] max-w-xl shrink-0 items-center justify-center self-stretch overflow-hidden bg-teal">
+        {/* top-24, not top-8 -- the fixed nav logo sits in that exact
+            corner and the two were overlapping. */}
+        <p className="font-body absolute top-24 left-8 text-xs tracking-[0.32em] text-[#161616]/70 uppercase">
+          {eyebrow}
+        </p>
+        {/* A high-impact vertical divider, after the Le Mans Classic
+            reference's own yellow "LE MANS MOTORS CLUB" panel -- massive
+            rotated type interrupting the horizontal reading flow to mark
+            a real section break, rather than a conventional
+            horizontally-set CTA line.
+            The -rotate-90 lives on this OUTER wrapper as a plain, static
+            CSS transform that GSAP never touches -- putting it on the
+            same element as the parallax/exit tweens below was tried
+            first and risked GSAP's own transform writes (xPercent,
+            scale) overwriting or fighting this rotation, since both
+            ultimately resolve to the same `transform` property. The
+            INNER link gets the GSAP-driven classes instead, so the two
+            never touch the same transform.
+            Sized in vw relative to the VIEWPORT, not this now-narrower
+            column, since the binding constraint is fitting the text's
+            un-rotated WIDTH inside the column's full page HEIGHT once
+            rotated -- too large here clipped the top/bottom of the
+            phrase against the panel's own overflow-hidden edge. */}
+        <div className="-rotate-90">
+          <Link
+            to="/work"
+            data-cursor="View All"
+            className="chapter-headline chapter-copy font-display group inline-flex items-center gap-4 text-[4.2vw] leading-none font-bold tracking-[-0.04em] whitespace-nowrap text-[#161616] uppercase transition-colors duration-300 hover:text-red"
           >
-            →
-          </span>
-        </Link>
+            View All Work
+            {/* Left uncountered (not counter-rotated back to
+                horizontal) -- rotated along with the rest of the text it
+                points up, in the same direction the vertical reading
+                flow is already moving, reading as "continue this way"
+                rather than a disconnected horizontal glyph stuck in a
+                vertical line. */}
+            <span
+              aria-hidden="true"
+              className="inline-block transition-transform duration-300 ease-out group-hover:-translate-y-3"
+            >
+              →
+            </span>
+          </Link>
+        </div>
       </div>
     </div>
   )

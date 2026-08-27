@@ -187,46 +187,13 @@ export function JourneyDesktop() {
         // Three independent property targets (track x, word opacity/y,
         // panel clipPath/scale) on three different elements, so none of
         // these fight each other.
-        // The Work -> About boundary (right after the ViewAllPanel
-        // chapter, i === WORK_COUNT) is handled entirely separately from
-        // every other crossover below -- a real bug surfaced building
-        // it: giving it its own LEFT/RIGHT clip-path (to make it read as
-        // a deliberate horizontal wipe) fought the track's own x
-        // translation, which is ALSO continuously moving these same two
-        // panels horizontally. At the exact moment the clip should be
-        // ~70% revealed, the panel's clip-revealed region and its
-        // actually-on-screen region (constrained by the track, which by
-        // construction only ever shows each panel's own trailing/leading
-        // HALF right at a boundary) had already diverged enough to open
-        // a real gap with neither panel's content in it -- confirmed
-        // directly by reading the clipped div's own boundingClientRect
-        // against the viewport. The track's own continuous slide is
-        // ALREADY a right-to-left wipe by construction (panels are laid
-        // out left to right and the incoming one always enters from the
-        // right edge as you scroll forward), so this boundary just
-        // leans on that native motion instead of fighting it with an
-        // extra clip-path -- only the fixed hard-color panel
-        // backgrounds (set on ViewAllPanel/AboutStatementPanel
-        // themselves) and the outgoing headline's own downscale/fade
-        // are special-cased here.
-        const isSectionBoundary = i === WORK_COUNT
-        if (isSectionBoundary) {
-          // Spans the last 45% of this panel's own dwell window (not
-          // just a narrow sliver centered on the boundary) so it reads
-          // as continuous with the parallax drift already running across
-          // the whole window, finishing exactly when the hard-edge wipe
-          // takes over -- starting it late and short felt disconnected
-          // from everything else already in motion.
-          const outHeadline = panel.querySelector('.chapter-headline')
-          if (outHeadline) {
-            const fadeStart = winStart + winWidth * 0.55
-            tl.to(
-              outHeadline,
-              { scale: 0.7, opacity: 0, ease: 'power1.in', duration: winEnd - fadeStart },
-              fadeStart,
-            )
-          }
-        } else if (i < n - 1) {
+        //
+        // The Work -> About boundary (right after ViewAllPanel) had its
+        // own special-cased horizontal hard-edge wipe for a while --
+        // reverted back to this same standard treatment every other
+        // boundary gets, per feedback that the soft scroll crossfade
+        // read better there than the mask swap.
+        if (i < n - 1) {
           const boundary = winEnd
           tl.to(
             panel,
@@ -239,6 +206,23 @@ export function JourneyDesktop() {
             { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, ease: 'power1.out', duration: crossDuration },
             boundary - crossDuration * 0.5,
           )
+        }
+        // The outgoing "View All" headline still gets its own downscale
+        // + fade independent of the clip-mask above -- unrelated to
+        // which crossover style the boundary uses, kept from the
+        // earlier pass. Spans the last 45% of this panel's own dwell
+        // window (not a narrow sliver right at the boundary) so it
+        // reads as continuous with the parallax drift already running.
+        if (i === WORK_COUNT) {
+          const outHeadline = panel.querySelector('.chapter-headline')
+          if (outHeadline) {
+            const fadeStart = winStart + winWidth * 0.55
+            tl.to(
+              outHeadline,
+              { scale: 0.7, opacity: 0, ease: 'power1.in', duration: winEnd - fadeStart },
+              fadeStart,
+            )
+          }
         }
       })
 
