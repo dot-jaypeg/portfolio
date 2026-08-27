@@ -189,14 +189,28 @@ export function JourneyDesktop() {
         // these fight each other.
         if (i < n - 1) {
           const boundary = winEnd
+          // The Work -> About boundary (right after the ViewAllPanel
+          // chapter, i === WORK_COUNT) gets a horizontal wipe instead of
+          // the standard vertical one -- a deliberate "end of Work, start
+          // of About" beat marking a real section change, closer to the
+          // hard masked sweep the Le Mans Classic reference uses at its
+          // own chapter boundaries, rather than reading as just another
+          // case-study-to-case-study cut.
+          const isSectionBoundary = i === WORK_COUNT
+          const outClip = isSectionBoundary
+            ? 'inset(0% 100% 0% 0%)'
+            : 'inset(0% 0% 100% 0%)'
+          const inFromClip = isSectionBoundary
+            ? 'inset(0% 0% 0% 100%)'
+            : 'inset(100% 0% 0% 0%)'
           tl.to(
             panel,
-            { clipPath: 'inset(0% 0% 100% 0%)', scale: 0.88, ease: 'power1.in', duration: crossDuration },
+            { clipPath: outClip, scale: 0.88, ease: 'power1.in', duration: crossDuration },
             boundary - crossDuration * 0.5,
           )
           tl.fromTo(
             panels[i + 1],
-            { clipPath: 'inset(100% 0% 0% 0%)', scale: 1.08 },
+            { clipPath: inFromClip, scale: 1.08 },
             { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, ease: 'power1.out', duration: crossDuration },
             boundary - crossDuration * 0.5,
           )
