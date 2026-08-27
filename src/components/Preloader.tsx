@@ -6,11 +6,15 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
   const wordmarkRef = useRef<HTMLParagraphElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const lineRef = useRef<HTMLDivElement>(null)
-  const counterRef = useRef<HTMLParagraphElement>(null)
+  const cornersRef = useRef<HTMLDivElement>(null)
+  const counterRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const split = new SplitText(wordmarkRef.current, { type: 'chars' })
+      const corners = cornersRef.current
+        ? gsap.utils.toArray<HTMLElement>(cornersRef.current.children)
+        : []
       const counter = { value: 0 }
 
       const tl = gsap.timeline({
@@ -18,14 +22,25 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
       })
 
       tl.set(rootRef.current, { autoAlpha: 1 })
-        .from(split.chars, {
+        .from(corners, {
           opacity: 0,
-          y: 60,
-          rotateZ: 4,
-          stagger: 0.04,
-          duration: 0.7,
-          ease: 'power3.out',
+          y: 8,
+          stagger: 0.06,
+          duration: 0.5,
+          ease: 'power2.out',
         })
+        .from(
+          split.chars,
+          {
+            opacity: 0,
+            y: 60,
+            rotateZ: 4,
+            stagger: 0.04,
+            duration: 0.7,
+            ease: 'power3.out',
+          },
+          '<+=0.1',
+        )
         .fromTo(
           lineRef.current,
           { scaleX: 0 },
@@ -56,8 +71,8 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
           duration: 0.4,
           ease: 'power2.in',
         })
+        .to(corners, { opacity: 0, duration: 0.3 }, '<')
         .to(lineRef.current, { opacity: 0, duration: 0.3 }, '<')
-        .to(counterRef.current, { opacity: 0, duration: 0.3 }, '<')
         .to(
           panelRef.current,
           { yPercent: -100, duration: 0.9, ease: 'expo.inOut' },
@@ -80,23 +95,46 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     >
       <div
         ref={panelRef}
-        className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-8 overflow-hidden bg-ink"
+        className="absolute inset-0 flex h-full w-full flex-col items-center justify-center overflow-hidden bg-ink px-8 py-8 md:px-14 md:py-12"
       >
+        {/* Bracketed corner metadata, borrowed from the 5blox reference --
+            small enough to read as set-dressing rather than competing
+            with the wordmark, which is what actually makes a mostly-empty
+            loading screen feel "designed" instead of bare. */}
+        <div
+          ref={cornersRef}
+          className="font-body pointer-events-none absolute inset-8 text-[10px] tracking-[0.22em] text-cream/50 uppercase md:inset-14"
+        >
+          <span className="absolute top-0 left-0">[ .jaypeg · studio ]</span>
+          <span className="absolute top-0 right-0">[ selected works ]</span>
+          <span className="absolute bottom-0 left-0">
+            [ multidisciplinary designer ]
+          </span>
+        </div>
+
+        <p className="font-body text-xs tracking-[0.3em] text-cream/50 uppercase">
+          Branding · Digital · Motion
+        </p>
         <p
           ref={wordmarkRef}
-          className="font-display text-[22vw] leading-none font-bold tracking-[-0.06em] text-cream italic md:text-[18vw]"
+          className="font-display mt-4 text-[22vw] leading-none font-bold tracking-[-0.06em] text-cream italic md:text-[18vw]"
         >
           .jaypeg
         </p>
-        <div
-          ref={lineRef}
-          className="mt-14 h-[2px] w-56 origin-left bg-cream/40 md:w-80"
-        />
-        <p
-          ref={counterRef}
-          className="font-body text-base tracking-[0.22em] text-cream/50"
-        >
-          000
+
+        {/* Full-width bar anchored to the very bottom of the screen
+            (matching the 5blox reference) instead of a short centered
+            rule under the wordmark -- reuses the exact base-line +
+            origin-left scaleX fill pattern already used for every other
+            scroll-progress bar on the site (CinematicIntro, Journey). */}
+        <div className="absolute inset-x-8 bottom-8 h-px bg-cream/15 md:inset-x-14 md:bottom-12">
+          <div
+            ref={lineRef}
+            className="h-full w-full origin-left scale-x-0 bg-cream"
+          />
+        </div>
+        <p className="font-body absolute right-8 bottom-11 text-[10px] tracking-[0.22em] text-cream/50 uppercase md:right-14 md:bottom-16">
+          [ Loading — <span ref={counterRef}>000</span> ]
         </p>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import { CASE_STUDIES, type CaseStudy } from './caseStudies'
 import { STACK } from './stack'
 import { CREDENTIALS } from './credentials'
@@ -16,15 +17,17 @@ export interface JourneyChapter {
 }
 
 // Only a curated subset gets a full chapter in the main scroll-jacked
-// Journey -- anyone manually scrolling through Work would otherwise
-// pass every single case study, not just the highlights. The "View All"
-// overlay (ChaptersMenu) still lists the complete CASE_STUDIES set
-// separately; it isn't driven by this featured subset.
+// Journey -- anyone manually scrolling through Work would otherwise pass
+// every single case study, not just the highlights. The full CASE_STUDIES
+// set (including the still-placeholder 06-10 entries) lives on the
+// dedicated /work page instead, linked from the ViewAllPanel chapter
+// right after this featured run ends.
 const FEATURED_CASE_STUDIES = CASE_STUDIES.slice(0, 5)
 
 export const WORK_COUNT = FEATURED_CASE_STUDIES.length
 export const ABOUT_COUNT = 2
-export const TOTAL_CHAPTERS = WORK_COUNT + ABOUT_COUNT
+// +1 for the ViewAllPanel chapter sitting between Work and About.
+export const TOTAL_CHAPTERS = WORK_COUNT + 1 + ABOUT_COUNT
 
 // `min-h-screen` (not `h-full`) deliberately: on desktop these panels
 // sit inside JourneyDesktop's `h-screen` flex-row track, where it's
@@ -234,6 +237,35 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
   )
 }
 
+function ViewAllPanel({ eyebrow }: { eyebrow: string }) {
+  return (
+    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 flex-col items-center justify-center gap-6 px-8 text-center">
+      <p className="font-body text-xs tracking-[0.32em] text-teal uppercase">
+        {eyebrow}
+      </p>
+      {/* The link itself carries `.chapter-headline` -- SplitText doesn't
+          care what element it targets, and this IS the panel's headline
+          moment, not a caption underneath one. */}
+      <Link
+        to="/work"
+        data-cursor="View All"
+        className="chapter-headline font-display group inline-flex items-center gap-4 text-[13vw] leading-[0.82] font-bold tracking-[-0.05em] text-cream uppercase transition-colors duration-300 hover:text-teal md:text-[8vw]"
+      >
+        View All
+        <span
+          aria-hidden="true"
+          className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-3"
+        >
+          →
+        </span>
+      </Link>
+      <p className="font-body max-w-md text-sm leading-relaxed text-cream/50">
+        Every case study, past and present, in one place.
+      </p>
+    </div>
+  )
+}
+
 export const JOURNEY_CHAPTERS: JourneyChapter[] = [
   ...FEATURED_CASE_STUDIES.map((cs, i) => {
     const eyebrow = `${pad(i + 1)} — ${cs.client}`
@@ -248,24 +280,33 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
     }
   }),
   {
+    key: 'view-all',
+    eyebrow: `${pad(WORK_COUNT + 1)} — Selected Work`,
+    bg: '#161616',
+    fg: '#fffff0',
+    render: () => (
+      <ViewAllPanel eyebrow={`${pad(WORK_COUNT + 1)} — Selected Work`} />
+    ),
+  },
+  {
     key: 'about-statement',
-    eyebrow: `${pad(WORK_COUNT + 1)} — About`,
+    eyebrow: `${pad(WORK_COUNT + 2)} — About`,
     bg: '#fffff0',
     fg: '#161616',
     render: () => (
       <AboutStatementPanel
-        eyebrow={`${pad(WORK_COUNT + 1)} — About`}
+        eyebrow={`${pad(WORK_COUNT + 2)} — About`}
         id="about"
       />
     ),
   },
   {
     key: 'about-credentials',
-    eyebrow: `${pad(WORK_COUNT + 2)} — About`,
+    eyebrow: `${pad(WORK_COUNT + 3)} — About`,
     bg: '#fffff0',
     fg: '#161616',
     render: () => (
-      <AboutCredentialsPanel eyebrow={`${pad(WORK_COUNT + 2)} — About`} />
+      <AboutCredentialsPanel eyebrow={`${pad(WORK_COUNT + 3)} — About`} />
     ),
   },
 ]
