@@ -309,10 +309,18 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
     }
   }),
   {
+    // Ink/cream, matching the Work chapters around it -- NOT teal.
+    // This chapter's bg/fg drive the page-WIDE crossfade (html/body,
+    // nav color, everything else on screen), so setting it to teal
+    // tinted the entire viewport that color, not just the panel's own
+    // column -- the exact "takes up the whole page" bug. Teal now lives
+    // ONLY as the fixed `bg-teal` accent on the column itself inside
+    // ViewAllPanel, the same way WorkPanel's accent colors are a local
+    // detail rather than the page's own theme.
     key: 'view-all',
     eyebrow: 'All of my best works',
-    bg: '#618c82',
-    fg: '#161616',
+    bg: '#161616',
+    fg: '#fffff0',
     render: () => <ViewAllPanel eyebrow="All of my best works" />,
   },
   {
