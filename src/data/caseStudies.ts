@@ -52,6 +52,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     client: 'Velvet Hammer Music',
     image: afiImg,
     accent: '#e6869a',
+    // The bassist's jump carries his head close to the top edge of the
+    // source frame -- centering (the default) crops right into it. Biasing
+    // toward the top keeps his head in frame at the cost of some floor.
+    imagePosition: 'center top',
     description:
       'A multi-channel marketing push built to get AFI in front of the right audience at the right moment.',
   },
