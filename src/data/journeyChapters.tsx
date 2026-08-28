@@ -91,10 +91,17 @@ function WorkPanel({
             corner placard -- simpler, and the gradient guarantees
             contrast across the WHOLE lower third of the photo rather
             than needing its own opaque backdrop chip behind just the
-            label. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+            label. Pushed darker still per feedback. */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black to-transparent" />
+        {/* Lighter cream, not the teal/red accent -- that accent belongs
+            on the category label below instead (swapped back after an
+            earlier pass put it here by mistake). `.chapter-media` gives
+            this its own independent parallax drift, same mechanic as
+            the photo itself, now that JourneyDesktop supports more than
+            one media target per panel. */}
         <span
-          className={`font-body absolute bottom-6 left-6 text-xs tracking-[0.3em] uppercase md:bottom-10 md:left-10 ${accent}`}
+          data-parallax-amount="4"
+          className="chapter-media font-body absolute bottom-6 left-6 text-xs tracking-[0.3em] text-cream uppercase md:bottom-10 md:left-10"
         >
           {cs.client}
         </span>
@@ -104,13 +111,12 @@ function WorkPanel({
           <h2 className="chapter-headline font-display text-[10vw] leading-[0.78] font-bold tracking-[-0.05em] text-cream uppercase md:text-[6.5vw]">
             {cs.title}
           </h2>
-          {/* Category now sits under the title instead of in a metadata
-              row above it, and the case number next to it is gone
-              entirely -- per feedback. Lighter cream tone, not the
-              teal/red accent -- per feedback that the design-medium
-              label reads better as plain body-adjacent text than
-              something calling attention to itself with color. */}
-          <p className="font-body mt-4 text-xs tracking-[0.3em] text-cream/70 uppercase">
+          {/* Category sits under the title instead of in a metadata row
+              above it, and the case number next to it is gone entirely
+              -- per feedback. Back to the teal/red accent (reverted --
+              an earlier pass swapped this and the client label's colors
+              by mistake). */}
+          <p className={`font-body mt-4 text-xs tracking-[0.3em] uppercase ${accent}`}>
             {cs.category}
           </p>
         </div>

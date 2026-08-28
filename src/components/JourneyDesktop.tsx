@@ -121,7 +121,14 @@ export function JourneyDesktop() {
         const winEnd = i === n - 1 ? 1 : center + unit * 0.5
         const winWidth = winEnd - winStart
         const split = splits[i]
-        const media = panel.querySelector('.chapter-media')
+        // querySelectorAll, not querySelector -- a panel can have more
+        // than one independently-drifting parallax target now (e.g.
+        // WorkPanel's photo AND its overlaid client-name label both
+        // carry `.chapter-media`, each with its own
+        // `data-parallax-amount`, so they move at different rates
+        // instead of the label sitting completely static while
+        // everything else on the panel has motion).
+        const mediaEls = panel.querySelectorAll('.chapter-media')
         const copy = panel.querySelector('.chapter-copy')
 
         // Panel 0 is visible at rest -- only chapters reached by
@@ -162,7 +169,7 @@ export function JourneyDesktop() {
         // content unless that specific element's swing (and matching
         // CSS oversize) is dialed down to fit how much safe margin it
         // actually has.
-        if (media) {
+        mediaEls.forEach((media) => {
           const amount = Number(media.getAttribute('data-parallax-amount')) || 8
           tl.fromTo(
             media,
@@ -170,7 +177,7 @@ export function JourneyDesktop() {
             { xPercent: -amount, ease: 'none', duration: winWidth },
             winStart,
           )
-        }
+        })
         if (copy) {
           tl.fromTo(
             copy,
