@@ -278,8 +278,15 @@ function ViewAllPanel() {
   return (
     <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center overflow-hidden bg-teal px-8 md:px-20">
       {/* Two-COLUMN headline, side by side, after basicagency.com's own
-          about-page hero.
-          Each column now drifts at its OWN rate during scroll -- the
+          about-page hero. That reference doesn't just butt its second
+          line up against the first with a fixed gap -- the second line
+          starts at the viewport's horizontal midpoint regardless of how
+          wide the first line's own text is. A flex row with a gap can't
+          do that (it packs the second block flush against the first),
+          so this is a 2-column GRID instead: each headline sits in its
+          own half-width column, left-aligned within it, which is what
+          pins the second column's start to the 50% mark.
+          Each column still drifts at its OWN rate during scroll -- the
           same media/copy two-speed parallax every other chapter has,
           just reused on text instead of a photo, since this panel has
           neither. Reusing the EXISTING classes/mechanic rather than
@@ -292,7 +299,7 @@ function ViewAllPanel() {
           itself no longer carries either class -- it's just layout now.
           `.chapter-headline` still lives on the first column alone,
           since that's the one SplitText/the exit tween target. */}
-      <div className="relative flex flex-col items-start gap-8 md:flex-row md:items-start md:gap-20">
+      <div className="relative grid w-full grid-cols-1 items-start gap-8 md:grid-cols-2 md:gap-0">
         <h2
           data-parallax-amount="8"
           className="chapter-headline chapter-media font-display max-w-lg text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase md:text-[7.5vw]"
