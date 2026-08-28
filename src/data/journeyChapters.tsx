@@ -262,10 +262,19 @@ function ViewAllPanel() {
   return (
     <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center overflow-hidden bg-teal px-8 md:px-20">
       {/* Two-COLUMN headline, side by side, after basicagency.com's own
-          about-page hero -- "staggered" (the second column pushed down
-          via md:mt-*, not aligned to the same top edge as the first)
-          rather than sitting flush together, matching how that
-          reference offsets its own two lines instead of aligning them.
+          about-page hero. Two real mismatches against that reference,
+          caught by comparing screenshots directly:
+          (1) the dot needs to sit INLINE with the first line of text
+          (wrapping naturally with it, appearing once), sized to roughly
+          match the adjacent capital letters' height -- not a flex
+          sibling centered against the WHOLE multi-line block, which is
+          what `flex items-center` on the Link did before (it landed the
+          giant 1em-of-the-headline-size dot in the middle of all four
+          lines instead of beside the first word).
+          (2) the stagger between columns needed to be more pronounced --
+          bumped from a fixed 96px to a font-relative 1.4em so it scales
+          with the responsive vw-based text size instead of a flat px
+          amount that reads as barely-offset at this scale.
           `.chapter-copy` wraps both columns so they drift together as
           one unit (the usual per-chapter parallax); `.chapter-headline`
           stays on just the first column, since that's the one
@@ -277,16 +286,13 @@ function ViewAllPanel() {
         <Link
           to="/work"
           data-cursor="View All"
-          className="group flex max-w-lg items-center gap-5 font-display text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:mt-24 md:text-[7.5vw]"
+          className="group block max-w-lg font-display text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:mt-[1.4em] md:text-[7.5vw]"
         >
-          {/* "As big as the font size" -- 1em ties its diameter directly
-              to whatever the surrounding text size is, rather than a
-              small fixed fraction of it. */}
           <span
             aria-hidden="true"
-            className="inline-block h-[1em] w-[1em] shrink-0 rounded-full bg-current"
+            className="mr-4 inline-block h-[0.5em] w-[0.5em] rounded-full bg-current align-middle"
           />
-          <span>Click to View All</span>
+          Click to View All
         </Link>
       </div>
     </div>
