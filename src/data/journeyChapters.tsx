@@ -86,21 +86,15 @@ function WorkPanel({
             [ placeholder image ]
           </div>
         )}
-        {/* Moved onto the photo itself (a corner overlay, like a gallery
-            placard) instead of living in its own narrow gap-column
-            between image and copy -- floating alone in that empty
-            column with nothing else around it read as arbitrary/"just
-            stuck there". Anchoring it to the image keeps the vertical-
-            rotated treatment (still the one unique-feeling element on
-            the panel) but gives it something to actually belong to.
-            A small fixed-dark scrim behind it (not just a drop-shadow)
-            -- confirmed directly that a shadow alone wasn't enough:
-            against a light/busy patch of a photo (Contra's own white
-            sticker illustrations), the teal/red text nearly vanished.
-            A real backdrop guarantees contrast regardless of whatever
-            happens to be behind it at that corner. */}
+        {/* A real bottom gradient (not a small local scrim) plus plain
+            horizontal type, replacing the earlier vertical-rotated
+            corner placard -- simpler, and the gradient guarantees
+            contrast across the WHOLE lower third of the photo rather
+            than needing its own opaque backdrop chip behind just the
+            label. */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
         <span
-          className={`font-body pointer-events-none absolute bottom-6 left-6 whitespace-nowrap bg-black/50 px-1.5 py-3 text-xs tracking-[0.5em] uppercase backdrop-blur-[2px] [writing-mode:vertical-rl] md:bottom-10 md:left-10 ${accent}`}
+          className={`font-body absolute bottom-6 left-6 text-xs tracking-[0.3em] uppercase md:bottom-10 md:left-10 ${accent}`}
         >
           {cs.client}
         </span>
