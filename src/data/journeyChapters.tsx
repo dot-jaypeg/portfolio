@@ -87,22 +87,28 @@ function WorkPanel({
           </div>
         )}
       </div>
-      <div className="hidden shrink-0 self-stretch items-center justify-center md:flex">
+      {/* Bottom-aligned now (items-end), not vertically centered -- and
+          wider tracking (0.5em, up from 0.4em) -- per feedback that the
+          client-name strip read better anchored to the floor of the
+          panel than floating in the middle of the page. */}
+      <div className="hidden shrink-0 self-stretch items-end justify-center pb-16 md:flex md:pb-24">
         <span
-          className={`font-body whitespace-nowrap text-xs tracking-[0.4em] uppercase [writing-mode:vertical-rl] ${accent}`}
+          className={`font-body whitespace-nowrap text-xs tracking-[0.5em] uppercase [writing-mode:vertical-rl] ${accent}`}
         >
           {cs.client}
         </span>
       </div>
       <div className="chapter-copy flex max-w-3xl flex-1 flex-col justify-between self-stretch py-16 md:py-24">
         <div>
-          <div className="font-body flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs tracking-[0.2em] uppercase">
-            <span className={accent}>[{pad(index + 1)}]</span>
-            <span className="text-cream/60">{cs.category}</span>
-          </div>
-          <h2 className="chapter-headline font-display mt-8 text-[10vw] leading-[0.78] font-bold tracking-[-0.05em] text-cream uppercase md:text-[6.5vw]">
+          <h2 className="chapter-headline font-display text-[10vw] leading-[0.78] font-bold tracking-[-0.05em] text-cream uppercase md:text-[6.5vw]">
             {cs.title}
           </h2>
+          {/* Category now sits under the title instead of in a metadata
+              row above it, and the case number next to it is gone
+              entirely -- per feedback. */}
+          <p className={`font-body mt-4 text-xs tracking-[0.3em] uppercase ${accent}`}>
+            {cs.category}
+          </p>
         </div>
         <p className="font-body max-w-lg text-lg leading-relaxed text-cream/70">
           <span className={`font-display mr-1 align-top text-3xl ${accent}`}>
@@ -115,13 +121,7 @@ function WorkPanel({
   )
 }
 
-function AboutStatementPanel({
-  eyebrow,
-  id,
-}: {
-  eyebrow: string
-  id?: string
-}) {
+function AboutStatementPanel({ id }: { id?: string }) {
   return (
     <div
       id={id}
@@ -133,19 +133,21 @@ function AboutStatementPanel({
           boundary needs on its own. */}
       <div className="pointer-events-none absolute inset-0 bg-[#fffff0]" />
       <div className="chapter-copy relative max-w-2xl">
-        <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
-          {eyebrow}
-        </p>
-        <h2 className="chapter-headline font-display mt-4 text-[7vw] leading-[0.95] font-bold tracking-[-0.06em] text-cream uppercase md:text-[5vw]">
+        <h2 className="chapter-headline font-display text-[7vw] leading-[0.95] font-bold tracking-[-0.06em] text-cream uppercase md:text-[5vw]">
           Multidisciplinary Designer.
         </h2>
         <p className="font-body mt-8 max-w-xl text-base leading-relaxed text-cream/70">
-          A designer working across branding, digital marketing, and visual
-          storytelling. Running my own freelance business, .jaypeg studios,
-          and building my foundation at Chapman taught me how to approach
-          creative challenges from all angles. I draw from a wide toolkit —
-          whether making art for a published Steam game or using my
-          photography and videography background to tell a brand's story.
+          California-based designer composing high-impact visual
+          identities across branding, digital marketing, and web design.
+          Currently shaping creative direction for small businesses at
+          Advanced Marketers, I draw from a wide toolkit built during my
+          time at Chapman. I approach every challenge from multiple
+          angles, whether I'm utilizing my photography and videography
+          background to tell a brand's story, or creating visual assets
+          for a published Steam game. When I step away from the screen,
+          I'm usually collecting Peach Riot figures, photographing
+          friends &amp; landscapes, cosplaying at conventions, or on my
+          PS4.
         </p>
         <div className="mt-10">
           <ExpertisePills />
@@ -194,15 +196,12 @@ function AboutStatementPanel({
   )
 }
 
-function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
+function AboutCredentialsPanel() {
   return (
     <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-16 px-8 py-24 md:px-20">
       <div className="chapter-copy max-w-4xl">
-        <p className="font-body text-xs tracking-[0.22em] text-teal uppercase">
-          {eyebrow}
-        </p>
-        <h2 className="chapter-headline font-display mt-4 text-[6vw] leading-[0.9] font-bold tracking-[-0.06em] text-cream uppercase md:text-[4vw]">
-          Stack &amp; Credentials
+        <h2 className="chapter-headline font-display text-[6vw] leading-[0.9] font-bold tracking-[-0.06em] text-cream uppercase md:text-[4vw]">
+          Expertise
         </h2>
         <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-2">
           <div>
@@ -233,6 +232,16 @@ function AboutCredentialsPanel({ eyebrow }: { eyebrow: string }) {
                 </li>
               ))}
             </ul>
+            {/* Same pill treatment as ExpertisePills, just bigger --
+                a real, direct download (not just a link to view it)
+                since the file is served straight from /public. */}
+            <a
+              href="/resume/RamirezJayden_2026Resume.pdf"
+              download
+              className="font-body mt-8 inline-block rounded-full border border-cream/20 px-6 py-3 text-sm tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
+            >
+              Download Resume
+            </a>
           </div>
         </div>
       </div>
@@ -253,26 +262,29 @@ function ViewAllPanel() {
   return (
     <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center overflow-hidden bg-teal px-8 md:px-20">
       {/* Two-COLUMN headline, side by side, after basicagency.com's own
-          about-page hero exactly ("WE TURN CULTURAL VALUE" | "● INTO
-          COMPANY VALUE" sit next to each other, each wrapping to its
-          own multi-line stack within a constrained width) -- not two
-          stacked lines. `max-w-sm` on each forces that same wrap.
+          about-page hero -- "staggered" (the second column pushed down
+          via md:mt-*, not aligned to the same top edge as the first)
+          rather than sitting flush together, matching how that
+          reference offsets its own two lines instead of aligning them.
           `.chapter-copy` wraps both columns so they drift together as
           one unit (the usual per-chapter parallax); `.chapter-headline`
           stays on just the first column, since that's the one
           SplitText/the exit tween target. */}
       <div className="chapter-copy relative flex flex-col items-start gap-8 md:flex-row md:items-start md:gap-20">
-        <h2 className="chapter-headline font-display max-w-sm text-[8vw] leading-[0.95] font-bold tracking-[-0.04em] text-[#161616] uppercase md:text-[4.2vw]">
-          My Most Recent, and Best Work
+        <h2 className="chapter-headline font-display max-w-lg text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase md:text-[7.5vw]">
+          My Most Recent and Best Work
         </h2>
         <Link
           to="/work"
           data-cursor="View All"
-          className="group flex max-w-sm items-start gap-4 font-display text-[8vw] leading-[0.95] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:text-[4.2vw]"
+          className="group flex max-w-lg items-center gap-5 font-display text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:mt-24 md:text-[7.5vw]"
         >
+          {/* "As big as the font size" -- 1em ties its diameter directly
+              to whatever the surrounding text size is, rather than a
+              small fixed fraction of it. */}
           <span
             aria-hidden="true"
-            className="mt-[0.3em] inline-block h-[0.28em] w-[0.28em] shrink-0 rounded-full bg-current"
+            className="inline-block h-[1em] w-[1em] shrink-0 rounded-full bg-current"
           />
           <span>Click to View All</span>
         </Link>
@@ -310,24 +322,21 @@ export const JOURNEY_CHAPTERS: JourneyChapter[] = [
     render: () => <ViewAllPanel />,
   },
   {
+    // `eyebrow` here is still just data (used nowhere else in the
+    // codebase, confirmed) -- kept for consistency with every other
+    // chapter's shape even though neither About panel renders one
+    // on-screen anymore, per feedback that these subheads were clutter.
     key: 'about-statement',
     eyebrow: `${pad(WORK_COUNT + 2)} — About`,
     bg: '#fffff0',
     fg: '#161616',
-    render: () => (
-      <AboutStatementPanel
-        eyebrow={`${pad(WORK_COUNT + 2)} — About`}
-        id="about"
-      />
-    ),
+    render: () => <AboutStatementPanel id="about" />,
   },
   {
     key: 'about-credentials',
     eyebrow: `${pad(WORK_COUNT + 3)} — About`,
     bg: '#fffff0',
     fg: '#161616',
-    render: () => (
-      <AboutCredentialsPanel eyebrow={`${pad(WORK_COUNT + 3)} — About`} />
-    ),
+    render: () => <AboutCredentialsPanel />,
   },
 ]

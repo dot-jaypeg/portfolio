@@ -40,7 +40,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: 'afi-marketing-campaign',
     title: 'AFI Marketing Campaign',
-    category: 'Digital Marketing // Ad Campaigns // Social Media',
+    category: 'Digital Marketing',
     client: 'Velvet Hammer Music',
     image: afiImg,
     description:
@@ -62,7 +62,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: 'nikkei-student-union',
     title: 'Nikkei Student Union',
-    category: 'Digital Photo // Merchandising // Social Media',
+    category: 'Photo & Merchandising',
     client: 'Chapman University',
     image: nsuImg,
     // The shirt photo is a tall 2:3 crop inside a 4:5 box -- the default
@@ -76,7 +76,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: 'fetch-doggy-deli',
     title: 'fetch! doggy deli',
-    category: 'Branding & Ad // Merchandising',
+    category: 'Branding & Advertising',
     client: 'Academic',
     image: fetchImg,
     description:

@@ -33,7 +33,6 @@ export function CinematicIntro() {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
-  const maskRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -166,31 +165,6 @@ export function CinematicIntro() {
         0,
       )
 
-      // A mask sweep for the Hello -> Branding boundary specifically
-      // (scene 0 -> 1), after the Le Mans Classic reference. This is a
-      // SEPARATE element living outside `trackRef` (a sibling, not a
-      // child), animated with its own independent xPercent tween --
-      // NOT a clip-path on the scene panels themselves. Clipping the
-      // panels directly was tried for an analogous boundary in Journey
-      // and caused a real bug: the panels are ALSO continuously
-      // translated by the track's own x tween above, and a clip-path
-      // keyed to each panel's own local coordinates fights that
-      // translation, opening a visible gap where neither panel's
-      // clipped region actually covers the screen. A standalone
-      // full-viewport panel that just slides across independently
-      // sidesteps that entirely, while leaving the existing media
-      // swing and word entrance/exit animations on the scenes
-      // untouched underneath it.
-      if (maskRef.current) {
-        const maskBoundary = 0.5 * unit // scene 0/1 boundary, matches colorAtProgress's own
-        tl.fromTo(
-          maskRef.current,
-          { xPercent: 100 },
-          { xPercent: -100, ease: 'power2.inOut', duration: crossDuration },
-          maskBoundary - crossDuration * 0.5,
-        )
-      }
-
       splits.forEach((split, i) => {
         const center = i * unit
         const winStart = i === 0 ? 0 : center - unit * 0.5
@@ -281,26 +255,6 @@ export function CinematicIntro() {
       ref={containerRef}
       className="relative h-screen w-screen overflow-hidden bg-ink"
     >
-      {/* A sibling of the track, not a child -- this must NOT ride along
-          with the track's own horizontal x tween, since its whole job is
-          to move independently across the fixed viewport. No inline
-          transform here -- GSAP's fromTo() already renders its "from"
-          state immediately on creation (before first paint), and a real
-          bug came from trying to pre-empt that: setting a plain
-          `transform: translateX(100%)` inline gets parsed by GSAP as a
-          separate fixed pixel offset the first time it touches this
-          element, and xPercent then ADDS on top of that residual offset
-          instead of replacing it -- confirmed directly (computed
-          transform matrix showed 2880px at rest and 0px at the "end"
-          instead of the intended 1440px and -1440px), which is why the
-          mask looked stuck covering the screen instead of sweeping
-          off-screen left. */}
-      <div
-        ref={maskRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[8]"
-        style={{ backgroundColor: SCENES[1].bg }}
-      />
       <div
         ref={trackRef}
         className="flex h-full"
@@ -343,10 +297,17 @@ export function CinematicIntro() {
                 [ placeholder video ]
               </span>
             )}
-            <p className="font-body text-xs tracking-[0.22em] text-cream uppercase">
-              {scene.eyebrow}
-            </p>
-            <h2 className="scene-headline font-display mt-4 text-[13vw] leading-[0.8] font-bold tracking-[-0.06em] text-cream uppercase">
+            {/* Only "Hello." keeps its eyebrow -- the other three scenes'
+                subheads ("02 -- Expertise" etc.) were removed as
+                clutter, per feedback. */}
+            {i === 0 && (
+              <p className="font-body text-xs tracking-[0.22em] text-cream uppercase">
+                {scene.eyebrow}
+              </p>
+            )}
+            <h2
+              className={`scene-headline font-display text-[13vw] leading-[0.8] font-bold tracking-[-0.06em] text-cream uppercase ${i === 0 ? 'mt-4' : ''}`}
+            >
               {scene.headline}
             </h2>
           </div>

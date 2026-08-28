@@ -142,7 +142,7 @@ export function AllWork() {
           to="/"
           className="font-body text-xs tracking-[0.22em] text-cream/60 uppercase transition-colors hover:text-cream"
         >
-          (Close)
+          [Close]
         </Link>
       </header>
 
