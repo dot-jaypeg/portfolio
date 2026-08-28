@@ -25,6 +25,13 @@ export interface CaseStudy {
   // A wide/off-center source photo can need this to keep the meaningful
   // subject in frame once object-cover crops it into the 4:5 box.
   imagePosition?: string
+  // Optional hex accent -- colors the category label and the pull-quote
+  // mark in WorkPanel with THIS project's own palette instead of the
+  // site's default teal/red alternation, so each case study is
+  // color-coordinated to its actual brand/work rather than an arbitrary
+  // index-based rotation. Falls back to the site's teal when absent
+  // (the still-placeholder case-06..10 entries).
+  accent?: string
 }
 
 export const CASE_STUDIES: CaseStudy[] = [
@@ -34,6 +41,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Illustration',
     client: 'Contra Coffee & Tea',
     image: contraImg,
+    accent: '#9cc7b1',
     description:
       'A playful sticker pack designed to extend Contra Coffee\'s brand voice into something collectible and shareable.',
   },
@@ -43,6 +51,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Digital Marketing',
     client: 'Velvet Hammer Music',
     image: afiImg,
+    accent: '#e6869a',
     description:
       'A multi-channel marketing push built to get AFI in front of the right audience at the right moment.',
   },
@@ -52,6 +61,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'UX/UI & HUD',
     client: 'Chapman University',
     image: resonanceImg,
+    accent: '#49e1f6',
     // Source is a wide 16:9 banner with the wordmark on the left and the
     // character on the right -- centering it (the default) crops half
     // of each. Biasing all the way right keeps just the character.
@@ -65,6 +75,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Photo & Merchandising',
     client: 'Chapman University',
     image: nsuImg,
+    accent: '#b52025',
     // The shirt photo is a tall 2:3 crop inside a 4:5 box -- the default
     // 8% swing oversize was cropping into the shirt itself (collar/hem),
     // not just background, since there's little vertical margin to
@@ -79,6 +90,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Branding & Advertising',
     client: 'Academic',
     image: fetchImg,
+    accent: '#45815a',
     description:
       'Brand identity and packaging for a doggy deli, built to feel as playful as the product itself.',
   },

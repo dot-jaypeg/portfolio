@@ -47,21 +47,23 @@ function WorkPanel({
   id?: string
 }) {
   // Turned up the "fun"/unpredictable dial a level past the last pass --
-  // three specific devices borrowed straight from the references:
-  // (1) sides ALTERNATE per case study (flex-row-reverse on odd indices)
+  // sides ALTERNATE per case study (flex-row-reverse on odd indices)
   // instead of every chapter running the identical image-left/text-right
   // layout -- that repetition across 5 back-to-back chapters was a big
-  // part of why it read as flat/orderly rather than scattered.
-  // (2) the title now actually fills the available width (`flex-1`
-  // instead of a `max-w-xl` cap that left a dead black gap on the
-  // right), at a genuinely loud size.
-  // (3) a rotated vertical strip and an oversized quotation mark, both
-  // in an accent color that alternates teal/red by index -- a direct
-  // callback to the reference's rotated colored text strip and pull-quote
-  // treatment, using colors already in this site's palette rather than
-  // introducing their yellow.
+  // part of why it read as flat/orderly rather than scattered. The
+  // title fills the available width (`flex-1` instead of a `max-w-xl`
+  // cap that left a dead black gap on the right), at a genuinely loud
+  // size.
   const flipped = index % 2 === 1
-  const accent = index % 2 === 0 ? 'text-teal' : 'text-red'
+  // Per-project hex, not an index-based teal/red alternation -- each
+  // case study is now color-coordinated to its OWN actual palette
+  // (e.g. AFI's own pink, Resonance's own cyan) rather than an
+  // arbitrary rotation. Falls back to the site's teal for the
+  // still-placeholder case-06..10 entries, which have no accent set.
+  // A hex value can't be expressed as a Tailwind color-name class, so
+  // this is applied via inline `style` instead of `className` at each
+  // use site below.
+  const accent = cs.accent ?? '#618c82'
   return (
     <div
       id={id}
@@ -113,15 +115,19 @@ function WorkPanel({
           </h2>
           {/* Category sits under the title instead of in a metadata row
               above it, and the case number next to it is gone entirely
-              -- per feedback. Back to the teal/red accent (reverted --
-              an earlier pass swapped this and the client label's colors
-              by mistake). */}
-          <p className={`font-body mt-4 text-xs tracking-[0.3em] uppercase ${accent}`}>
+              -- per feedback. */}
+          <p
+            style={{ color: accent }}
+            className="font-body mt-4 text-xs tracking-[0.3em] uppercase"
+          >
             {cs.category}
           </p>
         </div>
         <p className="font-body max-w-lg text-lg leading-relaxed text-cream/70">
-          <span className={`font-display mr-1 align-top text-3xl ${accent}`}>
+          <span
+            style={{ color: accent }}
+            className="font-display mr-1 align-top text-3xl"
+          >
             &ldquo;
           </span>
           {cs.description}
