@@ -86,14 +86,21 @@ function WorkPanel({
             [ placeholder image ]
           </div>
         )}
-      </div>
-      {/* Bottom-aligned now (items-end), not vertically centered -- and
-          wider tracking (0.5em, up from 0.4em) -- per feedback that the
-          client-name strip read better anchored to the floor of the
-          panel than floating in the middle of the page. */}
-      <div className="hidden shrink-0 self-stretch items-end justify-center pb-16 md:flex md:pb-24">
+        {/* Moved onto the photo itself (a corner overlay, like a gallery
+            placard) instead of living in its own narrow gap-column
+            between image and copy -- floating alone in that empty
+            column with nothing else around it read as arbitrary/"just
+            stuck there". Anchoring it to the image keeps the vertical-
+            rotated treatment (still the one unique-feeling element on
+            the panel) but gives it something to actually belong to.
+            A small fixed-dark scrim behind it (not just a drop-shadow)
+            -- confirmed directly that a shadow alone wasn't enough:
+            against a light/busy patch of a photo (Contra's own white
+            sticker illustrations), the teal/red text nearly vanished.
+            A real backdrop guarantees contrast regardless of whatever
+            happens to be behind it at that corner. */}
         <span
-          className={`font-body whitespace-nowrap text-xs tracking-[0.5em] uppercase [writing-mode:vertical-rl] ${accent}`}
+          className={`font-body pointer-events-none absolute bottom-6 left-6 whitespace-nowrap bg-black/50 px-1.5 py-3 text-xs tracking-[0.5em] uppercase backdrop-blur-[2px] [writing-mode:vertical-rl] md:bottom-10 md:left-10 ${accent}`}
         >
           {cs.client}
         </span>
@@ -262,31 +269,31 @@ function ViewAllPanel() {
   return (
     <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center overflow-hidden bg-teal px-8 md:px-20">
       {/* Two-COLUMN headline, side by side, after basicagency.com's own
-          about-page hero. Two real mismatches against that reference,
-          caught by comparing screenshots directly:
-          (1) the dot needs to sit INLINE with the first line of text
-          (wrapping naturally with it, appearing once), sized to roughly
-          match the adjacent capital letters' height -- not a flex
-          sibling centered against the WHOLE multi-line block, which is
-          what `flex items-center` on the Link did before (it landed the
-          giant 1em-of-the-headline-size dot in the middle of all four
-          lines instead of beside the first word).
-          (2) the stagger between columns needed to be more pronounced --
-          bumped from a fixed 96px to a font-relative 1.4em so it scales
-          with the responsive vw-based text size instead of a flat px
-          amount that reads as barely-offset at this scale.
-          `.chapter-copy` wraps both columns so they drift together as
-          one unit (the usual per-chapter parallax); `.chapter-headline`
-          stays on just the first column, since that's the one
-          SplitText/the exit tween target. */}
-      <div className="chapter-copy relative flex flex-col items-start gap-8 md:flex-row md:items-start md:gap-20">
-        <h2 className="chapter-headline font-display max-w-lg text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase md:text-[7.5vw]">
+          about-page hero.
+          Each column now drifts at its OWN rate during scroll -- the
+          same media/copy two-speed parallax every other chapter has,
+          just reused on text instead of a photo, since this panel has
+          neither. Reusing the EXISTING classes/mechanic rather than
+          adding new tween code: `.chapter-media` reads its own
+          `data-parallax-amount` (8, matching the site's usual default)
+          for a more pronounced drift, `.chapter-copy` gets the fixed
+          +-4 drift every other panel's copy block gets. They can't
+          both live on the outer wrapper (JourneyDesktop's
+          querySelector only grabs the FIRST match), so the wrapper
+          itself no longer carries either class -- it's just layout now.
+          `.chapter-headline` still lives on the first column alone,
+          since that's the one SplitText/the exit tween target. */}
+      <div className="relative flex flex-col items-start gap-8 md:flex-row md:items-start md:gap-20">
+        <h2
+          data-parallax-amount="8"
+          className="chapter-headline chapter-media font-display max-w-lg text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase md:text-[7.5vw]"
+        >
           My Most Recent and Best Work
         </h2>
         <Link
           to="/work"
           data-cursor="View All"
-          className="group block max-w-lg font-display text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:mt-[1.4em] md:text-[7.5vw]"
+          className="chapter-copy group block max-w-lg font-display text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:mt-[1.4em] md:text-[7.5vw]"
         >
           <span
             aria-hidden="true"
