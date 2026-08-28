@@ -92,7 +92,7 @@ function WorkPanel({
             contrast across the WHOLE lower third of the photo rather
             than needing its own opaque backdrop chip behind just the
             label. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
         <span
           className={`font-body absolute bottom-6 left-6 text-xs tracking-[0.3em] uppercase md:bottom-10 md:left-10 ${accent}`}
         >
@@ -106,8 +106,11 @@ function WorkPanel({
           </h2>
           {/* Category now sits under the title instead of in a metadata
               row above it, and the case number next to it is gone
-              entirely -- per feedback. */}
-          <p className={`font-body mt-4 text-xs tracking-[0.3em] uppercase ${accent}`}>
+              entirely -- per feedback. Lighter cream tone, not the
+              teal/red accent -- per feedback that the design-medium
+              label reads better as plain body-adjacent text than
+              something calling attention to itself with color. */}
+          <p className="font-body mt-4 text-xs tracking-[0.3em] text-cream/70 uppercase">
             {cs.category}
           </p>
         </div>
