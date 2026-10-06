@@ -28,14 +28,13 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         split = new SplitText(wordmarkRef.current, { type: 'chars' })
         const chars = split.chars as HTMLElement[]
 
-        // Only the character CURRENTLY being "typed" should read as
-        // motion-blurred -- everything already placed stays sharp. That
-        // means each char needs its OWN independent blur, which rules out
-        // a single clipping mask over the whole word (the previous
-        // approach): this animates each char's own `filter` instead, so
-        // blur is local to whichever letter is mid-reveal at any given
-        // instant.
-        gsap.set(chars, { opacity: 0, filter: 'blur(10px)' })
+        // Only the character(s) CURRENTLY being "typed" should read as
+        // motion-blurred -- already-placed ones stay sharp. That means
+        // each char needs its OWN independent blur, which rules out a
+        // single clipping mask over the whole word: this animates each
+        // char's own `filter` instead, so blur is local to whichever
+        // letters are mid-reveal at any given instant.
+        gsap.set(chars, { opacity: 0, filter: 'blur(14px)' })
 
         // Each char's right edge, measured BEFORE animating anything --
         // opacity/filter don't affect layout, so these positions are
@@ -53,7 +52,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         // A blinking caret, ticking on its own independent loop rather
         // than the main timeline -- it reads as "alive" exactly because
         // its blink keeps a steady rhythm of its own, same as a real
-        // terminal, while its `x` position still gets snapped forward by
+        // terminal, while its `x` position still gets tweened forward by
         // the main timeline below.
         const blink = gsap.to(cursorRef.current, {
           opacity: 0,
@@ -67,8 +66,13 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
           onComplete: () => onComplete(),
         })
 
-        const charDuration = 0.1
-        const charStagger = 0.11
+        // Duration deliberately longer than the stagger, so each char's
+        // blur hasn't finished settling by the time the next one starts
+        // -- a couple of characters are always mid-transition together,
+        // trailing into each other, rather than either the whole word
+        // blurring as one block or exactly one crisp letter at a time.
+        const charDuration = 0.22
+        const charStagger = 0.08
 
         tl.set(rootRef.current, { autoAlpha: 1 })
 
@@ -83,7 +87,15 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
               ease: 'power2.out',
             },
             start,
-          ).set(cursorRef.current, { x: charRightEdges[i] }, start)
+          ).to(
+            cursorRef.current,
+            {
+              x: charRightEdges[i],
+              duration: charStagger,
+              ease: 'power1.out',
+            },
+            start,
+          )
         })
 
         const typingEnd = (chars.length - 1) * charStagger + charDuration
