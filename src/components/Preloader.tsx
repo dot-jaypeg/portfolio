@@ -128,21 +128,32 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
       >
         {/* The clipping mask: its width animates 0 -> full, revealing the
             (otherwise already fully-rendered, never-reflowing) text
-            underneath one character-width "step" at a time. */}
+            underneath one character-width "step" at a time.
+            Font-size/line-height live HERE, not on the <p> -- the <p>
+            just inherits them -- so this box's own "em" establishes a
+            sizing context independent of exactly how tall the text's
+            own tight (leading-none) line box computes in any given
+            browser. The box is deliberately taller (1.6em) than one
+            text line: different engines (and italic/oblique faces in
+            particular) can render a glyph's visual ink slightly outside
+            its nominal line box, and overflow-hidden has no way to tell
+            "real descender" from "nothing there" -- so this is a fixed
+            safety margin, not a measurement of any one browser's actual
+            glyph metrics. */}
         <div
           ref={maskRef}
-          className="relative inline-block overflow-hidden whitespace-nowrap"
+          className="relative inline-flex h-[1.6em] items-center overflow-hidden text-[22vw] leading-none whitespace-nowrap md:text-[18vw]"
         >
           <p
             ref={wordmarkRef}
-            className="font-display text-[22vw] leading-none font-bold tracking-[-0.06em] text-cream italic md:text-[18vw]"
+            className="font-display font-bold tracking-[-0.06em] text-cream italic"
           >
             .jaypeg
           </p>
           <span
             ref={cursorRef}
             aria-hidden="true"
-            className="absolute top-0 right-0 h-full w-[0.045em] bg-cream"
+            className="absolute top-1/2 right-0 h-[0.85em] w-[0.045em] -translate-y-1/2 bg-cream"
           />
         </div>
 
