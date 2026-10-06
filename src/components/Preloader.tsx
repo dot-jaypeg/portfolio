@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
-import { gsap } from '../lib/gsap'
+import { gsap, SplitText } from '../lib/gsap'
 
 export function Preloader({ onComplete }: { onComplete: () => void }) {
   const rootRef = useRef<HTMLDivElement>(null)
-  const maskRef = useRef<HTMLDivElement>(null)
+  const wordWrapRef = useRef<HTMLDivElement>(null)
   const wordmarkRef = useRef<HTMLParagraphElement>(null)
   const cursorRef = useRef<HTMLSpanElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -13,40 +13,48 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
   useEffect(() => {
     let cancelled = false
     let ctx: gsap.Context | undefined
+    let split: SplitText | undefined
 
     // `font-display: swap` (index.css) paints the fallback font
     // immediately and swaps to the real one once it loads -- if that
-    // swap lands mid-animation, the text reflows to the real font's
-    // (different) width while the mask's target width stays whatever
-    // was measured off the FALLBACK font, clipping the now-wider text.
-    // Waiting for fonts.ready before measuring/animating means the
-    // metrics we measure are the ones that are actually final.
+    // swap lands after we've measured each char's position below, the
+    // cursor's stops would be off by however much the real font
+    // reflowed the text. Waiting for fonts.ready first means the
+    // positions we measure are the ones that are actually final.
     document.fonts.ready.then(() => {
       if (cancelled) return
 
       ctx = gsap.context(() => {
-        const maskEl = maskRef.current!
-        // Read the text's natural width BEFORE clipping it -- white-space:
-        // nowrap keeps this constant regardless of the mask's own width, so
-        // this is safe to use as the animation's end value. The italic
-        // face's final "g" visually overhangs its own logical advance
-        // width (true of any oblique/italic cut), so scrollWidth alone
-        // clips its tail -- padding the target by a sliver of the font
-        // size (not of the word's width) gives that overhang room
-        // regardless of viewport size, since the overhang itself scales
-        // with font size, not word length.
-        const fontSizePx = parseFloat(getComputedStyle(wordmarkRef.current!).fontSize)
-        const fullWidth = maskEl.scrollWidth + fontSizePx * 0.08
-        gsap.set(maskEl, { width: 0 })
-        gsap.set(wordmarkRef.current, { filter: 'blur(18px)' })
+        split = new SplitText(wordmarkRef.current, { type: 'chars' })
+        const chars = split.chars as HTMLElement[]
+
+        // Only the character CURRENTLY being "typed" should read as
+        // motion-blurred -- everything already placed stays sharp. That
+        // means each char needs its OWN independent blur, which rules out
+        // a single clipping mask over the whole word (the previous
+        // approach): this animates each char's own `filter` instead, so
+        // blur is local to whichever letter is mid-reveal at any given
+        // instant.
+        gsap.set(chars, { opacity: 0, filter: 'blur(10px)' })
+
+        // Each char's right edge, measured BEFORE animating anything --
+        // opacity/filter don't affect layout, so these positions are
+        // final and stable for the whole sequence. The cursor's `x`
+        // snaps to the new value as each char starts revealing, which is
+        // what makes it track the "typing" position without any mask to
+        // pin it to.
+        const wrapRect = wordWrapRef.current!.getBoundingClientRect()
+        const charRightEdges = chars.map(
+          (char) => char.getBoundingClientRect().right - wrapRect.left,
+        )
+
         const counter = { value: 0 }
 
-        // A blinking caret, ticking on its own independent loop rather than
-        // the main timeline -- a typing cursor reads as "alive" exactly
-        // because its blink keeps a steady rhythm of its own, same as a
-        // real terminal. It's `right: 0` INSIDE the width-animated mask, so
-        // it's pinned to the mask's own right edge and tracks the reveal
-        // for free as that width grows -- no per-character JS needed.
+        // A blinking caret, ticking on its own independent loop rather
+        // than the main timeline -- it reads as "alive" exactly because
+        // its blink keeps a steady rhythm of its own, same as a real
+        // terminal, while its `x` position still gets snapped forward by
+        // the main timeline below.
         const blink = gsap.to(cursorRef.current, {
           opacity: 0,
           duration: 0.5,
@@ -59,33 +67,33 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
           onComplete: () => onComplete(),
         })
 
+        const charDuration = 0.1
+        const charStagger = 0.11
+
         tl.set(rootRef.current, { autoAlpha: 1 })
-          .to(maskEl, {
-            // A continuous eased wipe, not a stepped reveal -- 'steps()'
-            // read as mechanical keystroke clicks, which is the "clicky"
-            // feel this replaces. power3 decelerating into place pairs
-            // with the blur tween below: fast + blurred at the start,
-            // slowing and sharpening together like a fast camera pan
-            // settling into focus.
-            width: fullWidth,
-            duration: 0.85,
-            ease: 'power3.out',
-          })
-          .to(
-            wordmarkRef.current,
+
+        chars.forEach((char, i) => {
+          const start = i * charStagger
+          tl.to(
+            char,
             {
+              opacity: 1,
               filter: 'blur(0px)',
-              duration: 0.85,
-              ease: 'power3.out',
+              duration: charDuration,
+              ease: 'power2.out',
             },
-            '<',
-          )
-          .fromTo(
-            lineRef.current,
-            { scaleX: 0 },
-            { scaleX: 1, duration: 1.1, ease: 'power2.inOut' },
-            '<',
-          )
+            start,
+          ).set(cursorRef.current, { x: charRightEdges[i] }, start)
+        })
+
+        const typingEnd = (chars.length - 1) * charStagger + charDuration
+
+        tl.fromTo(
+          lineRef.current,
+          { scaleX: 0 },
+          { scaleX: 1, duration: 1.1, ease: 'power2.inOut' },
+          0,
+        )
           .to(
             counter,
             {
@@ -100,11 +108,11 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
                 }
               },
             },
-            '<',
+            0,
           )
-          .to({}, { duration: 0.35 })
+          .to({}, { duration: 0.35 }, typingEnd)
           .call(() => blink.kill())
-          .to(maskEl, {
+          .to(wordWrapRef.current, {
             opacity: 0,
             y: -40,
             duration: 0.4,
@@ -125,6 +133,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     return () => {
       cancelled = true
       ctx?.revert()
+      split?.revert()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -139,34 +148,17 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         ref={panelRef}
         className="absolute inset-0 flex h-full w-full flex-col items-center justify-center overflow-hidden bg-ink px-8 py-8 md:px-14 md:py-12"
       >
-        {/* The clipping mask: its width animates 0 -> full, revealing the
-            (otherwise already fully-rendered, never-reflowing) text
-            underneath one character-width "step" at a time.
-            Font-size/line-height live HERE, not on the <p> -- the <p>
-            just inherits them -- so this box's own "em" establishes a
-            sizing context independent of exactly how tall the text's
-            own tight (leading-none) line box computes in any given
-            browser. The box is deliberately taller (1.6em) than one
-            text line: different engines (and italic/oblique faces in
-            particular) can render a glyph's visual ink slightly outside
-            its nominal line box, and overflow-hidden has no way to tell
-            "real descender" from "nothing there" -- so this is a fixed
-            safety margin, not a measurement of any one browser's actual
-            glyph metrics. */}
-        <div
-          ref={maskRef}
-          className="relative inline-flex h-[1.6em] items-center overflow-hidden text-[22vw] leading-none whitespace-nowrap md:text-[18vw]"
-        >
+        <div ref={wordWrapRef} className="relative inline-block">
           <p
             ref={wordmarkRef}
-            className="font-display font-bold tracking-[-0.06em] text-cream italic"
+            className="font-display text-[22vw] leading-none font-bold tracking-[-0.06em] text-cream italic md:text-[18vw]"
           >
             .jaypeg
           </p>
           <span
             ref={cursorRef}
             aria-hidden="true"
-            className="absolute top-1/2 right-0 h-[0.85em] w-[0.045em] -translate-y-1/2 bg-cream"
+            className="absolute top-1/2 left-0 h-[0.78em] w-[0.045em] -translate-y-1/2 bg-cream"
           />
         </div>
 
