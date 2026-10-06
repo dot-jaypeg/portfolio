@@ -1,30 +1,58 @@
 import { useEffect, useRef } from 'react'
-import { gsap, SplitText } from '../lib/gsap'
+import { gsap } from '../lib/gsap'
 
 export function Preloader({ onComplete }: { onComplete: () => void }) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const maskRef = useRef<HTMLDivElement>(null)
   const wordmarkRef = useRef<HTMLParagraphElement>(null)
+  const cursorRef = useRef<HTMLSpanElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const lineRef = useRef<HTMLDivElement>(null)
   const counterRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const split = new SplitText(wordmarkRef.current, { type: 'chars' })
+      const maskEl = maskRef.current!
+      // Read the text's natural width BEFORE clipping it -- white-space:
+      // nowrap keeps this constant regardless of the mask's own width, so
+      // this is safe to use as the animation's end value. The italic
+      // face's final "g" visually overhangs its own logical advance
+      // width (true of any oblique/italic cut), so scrollWidth alone
+      // clips its tail -- padding the target by a sliver of the font
+      // size (not of the word's width) gives that overhang room
+      // regardless of viewport size, since the overhang itself scales
+      // with font size, not word length.
+      const fontSizePx = parseFloat(getComputedStyle(wordmarkRef.current!).fontSize)
+      const fullWidth = maskEl.scrollWidth + fontSizePx * 0.08
+      gsap.set(maskEl, { width: 0 })
       const counter = { value: 0 }
+
+      // A blinking caret, ticking on its own independent loop rather than
+      // the main timeline -- a typing cursor reads as "alive" exactly
+      // because its blink keeps a steady rhythm of its own, same as a
+      // real terminal. It's `right: 0` INSIDE the width-animated mask, so
+      // it's pinned to the mask's own right edge and tracks the reveal
+      // for free as that width grows -- no per-character JS needed.
+      const blink = gsap.to(cursorRef.current, {
+        opacity: 0,
+        duration: 0.5,
+        repeat: -1,
+        yoyo: true,
+        ease: 'steps(1)',
+      })
 
       const tl = gsap.timeline({
         onComplete: () => onComplete(),
       })
 
       tl.set(rootRef.current, { autoAlpha: 1 })
-        .from(split.chars, {
-          opacity: 0,
-          y: 60,
-          rotateZ: 4,
-          stagger: 0.04,
-          duration: 0.7,
-          ease: 'power3.out',
+        .to(maskEl, {
+          // A stepped reveal (one jump per character), not an eased
+          // width tween -- that's what makes it read as typed keystrokes
+          // rather than a smooth wipe-in.
+          width: fullWidth,
+          duration: 0.65,
+          ease: 'steps(7)',
         })
         .fromTo(
           lineRef.current,
@@ -49,10 +77,10 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
           '<',
         )
         .to({}, { duration: 0.35 })
-        .to(split.chars, {
+        .call(() => blink.kill())
+        .to(maskEl, {
           opacity: 0,
           y: -40,
-          stagger: 0.02,
           duration: 0.4,
           ease: 'power2.in',
         })
@@ -64,7 +92,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         )
         .set(rootRef.current, { autoAlpha: 0 })
 
-      return () => split.revert()
+      return () => blink.kill()
     })
 
     return () => ctx.revert()
@@ -81,12 +109,25 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         ref={panelRef}
         className="absolute inset-0 flex h-full w-full flex-col items-center justify-center overflow-hidden bg-ink px-8 py-8 md:px-14 md:py-12"
       >
-        <p
-          ref={wordmarkRef}
-          className="font-display text-[22vw] leading-none font-bold tracking-[-0.06em] text-cream italic md:text-[18vw]"
+        {/* The clipping mask: its width animates 0 -> full, revealing the
+            (otherwise already fully-rendered, never-reflowing) text
+            underneath one character-width "step" at a time. */}
+        <div
+          ref={maskRef}
+          className="relative inline-block overflow-hidden whitespace-nowrap"
         >
-          .jaypeg
-        </p>
+          <p
+            ref={wordmarkRef}
+            className="font-display text-[22vw] leading-none font-bold tracking-[-0.06em] text-cream italic md:text-[18vw]"
+          >
+            .jaypeg
+          </p>
+          <span
+            ref={cursorRef}
+            aria-hidden="true"
+            className="absolute top-0 right-0 h-full w-[0.045em] bg-cream"
+          />
+        </div>
 
         {/* Full-width bar anchored to the very bottom of the screen
             (matching the 5blox reference) instead of a short centered
