@@ -11,91 +11,108 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
   const counterRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      const maskEl = maskRef.current!
-      // Read the text's natural width BEFORE clipping it -- white-space:
-      // nowrap keeps this constant regardless of the mask's own width, so
-      // this is safe to use as the animation's end value. The italic
-      // face's final "g" visually overhangs its own logical advance
-      // width (true of any oblique/italic cut), so scrollWidth alone
-      // clips its tail -- padding the target by a sliver of the font
-      // size (not of the word's width) gives that overhang room
-      // regardless of viewport size, since the overhang itself scales
-      // with font size, not word length.
-      const fontSizePx = parseFloat(getComputedStyle(wordmarkRef.current!).fontSize)
-      const fullWidth = maskEl.scrollWidth + fontSizePx * 0.08
-      gsap.set(maskEl, { width: 0 })
-      const counter = { value: 0 }
+    let cancelled = false
+    let ctx: gsap.Context | undefined
 
-      // A blinking caret, ticking on its own independent loop rather than
-      // the main timeline -- a typing cursor reads as "alive" exactly
-      // because its blink keeps a steady rhythm of its own, same as a
-      // real terminal. It's `right: 0` INSIDE the width-animated mask, so
-      // it's pinned to the mask's own right edge and tracks the reveal
-      // for free as that width grows -- no per-character JS needed.
-      const blink = gsap.to(cursorRef.current, {
-        opacity: 0,
-        duration: 0.5,
-        repeat: -1,
-        yoyo: true,
-        ease: 'steps(1)',
-      })
+    // `font-display: swap` (index.css) paints the fallback font
+    // immediately and swaps to the real one once it loads -- if that
+    // swap lands mid-animation, the text reflows to the real font's
+    // (different) width while the mask's target width stays whatever
+    // was measured off the FALLBACK font, clipping the now-wider text.
+    // Waiting for fonts.ready before measuring/animating means the
+    // metrics we measure are the ones that are actually final.
+    document.fonts.ready.then(() => {
+      if (cancelled) return
 
-      const tl = gsap.timeline({
-        onComplete: () => onComplete(),
-      })
+      ctx = gsap.context(() => {
+        const maskEl = maskRef.current!
+        // Read the text's natural width BEFORE clipping it -- white-space:
+        // nowrap keeps this constant regardless of the mask's own width, so
+        // this is safe to use as the animation's end value. The italic
+        // face's final "g" visually overhangs its own logical advance
+        // width (true of any oblique/italic cut), so scrollWidth alone
+        // clips its tail -- padding the target by a sliver of the font
+        // size (not of the word's width) gives that overhang room
+        // regardless of viewport size, since the overhang itself scales
+        // with font size, not word length.
+        const fontSizePx = parseFloat(getComputedStyle(wordmarkRef.current!).fontSize)
+        const fullWidth = maskEl.scrollWidth + fontSizePx * 0.08
+        gsap.set(maskEl, { width: 0 })
+        const counter = { value: 0 }
 
-      tl.set(rootRef.current, { autoAlpha: 1 })
-        .to(maskEl, {
-          // A stepped reveal (one jump per character), not an eased
-          // width tween -- that's what makes it read as typed keystrokes
-          // rather than a smooth wipe-in.
-          width: fullWidth,
-          duration: 0.65,
-          ease: 'steps(7)',
-        })
-        .fromTo(
-          lineRef.current,
-          { scaleX: 0 },
-          { scaleX: 1, duration: 1.1, ease: 'power2.inOut' },
-          '<',
-        )
-        .to(
-          counter,
-          {
-            value: 100,
-            duration: 1.1,
-            ease: 'power2.inOut',
-            onUpdate: () => {
-              if (counterRef.current) {
-                counterRef.current.textContent = String(
-                  Math.round(counter.value),
-                ).padStart(3, '0')
-              }
-            },
-          },
-          '<',
-        )
-        .to({}, { duration: 0.35 })
-        .call(() => blink.kill())
-        .to(maskEl, {
+        // A blinking caret, ticking on its own independent loop rather than
+        // the main timeline -- a typing cursor reads as "alive" exactly
+        // because its blink keeps a steady rhythm of its own, same as a
+        // real terminal. It's `right: 0` INSIDE the width-animated mask, so
+        // it's pinned to the mask's own right edge and tracks the reveal
+        // for free as that width grows -- no per-character JS needed.
+        const blink = gsap.to(cursorRef.current, {
           opacity: 0,
-          y: -40,
-          duration: 0.4,
-          ease: 'power2.in',
+          duration: 0.5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'steps(1)',
         })
-        .to(lineRef.current, { opacity: 0, duration: 0.3 }, '<')
-        .to(
-          panelRef.current,
-          { yPercent: -100, duration: 0.9, ease: 'expo.inOut' },
-          '-=0.1',
-        )
-        .set(rootRef.current, { autoAlpha: 0 })
 
-      return () => blink.kill()
+        const tl = gsap.timeline({
+          onComplete: () => onComplete(),
+        })
+
+        tl.set(rootRef.current, { autoAlpha: 1 })
+          .to(maskEl, {
+            // A stepped reveal (one jump per character), not an eased
+            // width tween -- that's what makes it read as typed keystrokes
+            // rather than a smooth wipe-in.
+            width: fullWidth,
+            duration: 0.65,
+            ease: 'steps(7)',
+          })
+          .fromTo(
+            lineRef.current,
+            { scaleX: 0 },
+            { scaleX: 1, duration: 1.1, ease: 'power2.inOut' },
+            '<',
+          )
+          .to(
+            counter,
+            {
+              value: 100,
+              duration: 1.1,
+              ease: 'power2.inOut',
+              onUpdate: () => {
+                if (counterRef.current) {
+                  counterRef.current.textContent = String(
+                    Math.round(counter.value),
+                  ).padStart(3, '0')
+                }
+              },
+            },
+            '<',
+          )
+          .to({}, { duration: 0.35 })
+          .call(() => blink.kill())
+          .to(maskEl, {
+            opacity: 0,
+            y: -40,
+            duration: 0.4,
+            ease: 'power2.in',
+          })
+          .to(lineRef.current, { opacity: 0, duration: 0.3 }, '<')
+          .to(
+            panelRef.current,
+            { yPercent: -100, duration: 0.9, ease: 'expo.inOut' },
+            '-=0.1',
+          )
+          .set(rootRef.current, { autoAlpha: 0 })
+
+        return () => blink.kill()
+      })
     })
 
-    return () => ctx.revert()
+    return () => {
+      cancelled = true
+      ctx?.revert()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
