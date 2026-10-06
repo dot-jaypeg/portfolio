@@ -38,6 +38,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         const fontSizePx = parseFloat(getComputedStyle(wordmarkRef.current!).fontSize)
         const fullWidth = maskEl.scrollWidth + fontSizePx * 0.08
         gsap.set(maskEl, { width: 0 })
+        gsap.set(wordmarkRef.current, { filter: 'blur(18px)' })
         const counter = { value: 0 }
 
         // A blinking caret, ticking on its own independent loop rather than
@@ -60,13 +61,25 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
 
         tl.set(rootRef.current, { autoAlpha: 1 })
           .to(maskEl, {
-            // A stepped reveal (one jump per character), not an eased
-            // width tween -- that's what makes it read as typed keystrokes
-            // rather than a smooth wipe-in.
+            // A continuous eased wipe, not a stepped reveal -- 'steps()'
+            // read as mechanical keystroke clicks, which is the "clicky"
+            // feel this replaces. power3 decelerating into place pairs
+            // with the blur tween below: fast + blurred at the start,
+            // slowing and sharpening together like a fast camera pan
+            // settling into focus.
             width: fullWidth,
-            duration: 0.65,
-            ease: 'steps(7)',
+            duration: 0.85,
+            ease: 'power3.out',
           })
+          .to(
+            wordmarkRef.current,
+            {
+              filter: 'blur(0px)',
+              duration: 0.85,
+              ease: 'power3.out',
+            },
+            '<',
+          )
           .fromTo(
             lineRef.current,
             { scaleX: 0 },
