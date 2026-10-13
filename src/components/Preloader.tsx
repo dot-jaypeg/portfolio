@@ -27,33 +27,57 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
       ctx = gsap.context(() => {
         split = new SplitText(wordmarkRef.current, { type: 'chars' })
         const chars = split.chars as HTMLElement[]
+        gsap.set(chars, { opacity: 0 })
 
-        // Only the character(s) CURRENTLY being "typed" should read as
-        // motion-blurred -- already-placed ones stay sharp. That means
-        // each char needs its OWN independent blur, which rules out a
-        // single clipping mask over the whole word: this animates each
-        // char's own `filter` instead, so blur is local to whichever
-        // letters are mid-reveal at any given instant.
-        gsap.set(chars, { opacity: 0, filter: 'blur(14px)' })
-
-        // Each char's right edge, measured BEFORE animating anything --
+        // Each char's own span, measured BEFORE animating anything --
         // opacity/filter don't affect layout, so these positions are
-        // final and stable for the whole sequence. The cursor's `x`
-        // snaps to the new value as each char starts revealing, which is
-        // what makes it track the "typing" position without any mask to
-        // pin it to.
+        // final and stable for the whole sequence.
         const wrapRect = wordWrapRef.current!.getBoundingClientRect()
-        const charRightEdges = chars.map(
-          (char) => char.getBoundingClientRect().right - wrapRect.left,
-        )
+        const charSpans = chars.map((char) => {
+          const r = char.getBoundingClientRect()
+          return { left: r.left - wrapRect.left, right: r.right - wrapRect.left }
+        })
+        const totalWidth = charSpans[charSpans.length - 1].right
+
+        // A single continuously-eased "reveal position" drives every
+        // character's opacity/blur together, rather than each char
+        // getting its own separate tween -- that's what makes this read
+        // as ONE fluid sweep instead of a sequence of discrete
+        // per-letter events. `bandWidth` is how wide the soft, blurred
+        // transition zone trailing the sweep is: characters behind it
+        // are fully sharp, characters ahead haven't appeared yet, and
+        // whichever ones the sweep is currently passing through fade
+        // in and sharpen together, in lockstep with how close the sweep
+        // is to having fully passed them.
+        const fontSizePx = parseFloat(getComputedStyle(wordmarkRef.current!).fontSize)
+        const bandWidth = fontSizePx * 0.55
+        const maxBlur = fontSizePx * 0.045
+
+        const applySweep = (pos: number) => {
+          charSpans.forEach(({ left, right }, i) => {
+            const center = (left + right) / 2
+            const frac = gsap.utils.clamp(
+              0,
+              1,
+              (pos - (center - bandWidth / 2)) / bandWidth,
+            )
+            chars[i].style.opacity = String(frac)
+            chars[i].style.filter = `blur(${(1 - frac) * maxBlur}px)`
+          })
+          // Via gsap.set, not a raw style write -- GSAP already owns this
+          // element's transform for the blink tween's sibling property
+          // (opacity), and keeping both on GSAP's own cache avoids either
+          // one clobbering the other's idea of the current transform.
+          gsap.set(cursorRef.current, { x: Math.min(pos, totalWidth), yPercent: -50 })
+        }
+        applySweep(0)
 
         const counter = { value: 0 }
 
         // A blinking caret, ticking on its own independent loop rather
         // than the main timeline -- it reads as "alive" exactly because
         // its blink keeps a steady rhythm of its own, same as a real
-        // terminal, while its `x` position still gets tweened forward by
-        // the main timeline below.
+        // terminal, independent of the sweep moving it forward.
         const blink = gsap.to(cursorRef.current, {
           opacity: 0,
           duration: 0.5,
@@ -66,39 +90,19 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
           onComplete: () => onComplete(),
         })
 
-        // Duration deliberately longer than the stagger, so each char's
-        // blur hasn't finished settling by the time the next one starts
-        // -- a couple of characters are always mid-transition together,
-        // trailing into each other, rather than either the whole word
-        // blurring as one block or exactly one crisp letter at a time.
-        const charDuration = 0.22
-        const charStagger = 0.08
+        const sweep = { pos: 0 }
+        const typingEnd = 0.95
 
-        tl.set(rootRef.current, { autoAlpha: 1 })
-
-        chars.forEach((char, i) => {
-          const start = i * charStagger
-          tl.to(
-            char,
-            {
-              opacity: 1,
-              filter: 'blur(0px)',
-              duration: charDuration,
-              ease: 'power2.out',
-            },
-            start,
-          ).to(
-            cursorRef.current,
-            {
-              x: charRightEdges[i],
-              duration: charStagger,
-              ease: 'power1.out',
-            },
-            start,
-          )
+        tl.set(rootRef.current, { autoAlpha: 1 }).to(sweep, {
+          // Overshoots past the word's own width so the LAST character's
+          // band fully clears (its center sits bandWidth/2 before the
+          // right edge) -- applySweep already clamps the cursor itself
+          // to stop exactly at the word's end regardless.
+          pos: totalWidth + bandWidth,
+          duration: typingEnd,
+          ease: 'power2.out',
+          onUpdate: () => applySweep(sweep.pos),
         })
-
-        const typingEnd = (chars.length - 1) * charStagger + charDuration
 
         tl.fromTo(
           lineRef.current,
