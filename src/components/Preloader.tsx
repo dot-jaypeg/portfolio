@@ -66,7 +66,17 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         // box (negative inset on all sides) gives the blur real room;
         // the gradient math below adds `pad` back everywhere to account
         // for the box's origin having shifted left/up by that amount.
-        const pad = blurPx * 4
+        //
+        // `pad` must be at least `bandWidth`, not just the blur radius:
+        // the band's own fade-in zone trails `bandWidth` behind `edge`,
+        // and near the very start of the sweep (edge close to 0) that
+        // fade zone's left stop falls at a negative local position --
+        // if the box's own edge doesn't reach that far, the STILL-
+        // FORMING gradient gets clipped by the box boundary itself,
+        // showing a hard flat cutoff on a blur patch before any real
+        // typing has even happened yet. Caught by watching the very
+        // first frames of the sweep, not just the settled end state.
+        const pad = bandWidth + blurPx * 2
         blurEl.style.inset = `${-pad}px`
 
         // The cursor bar IS the reveal mechanism, not a decoration that
