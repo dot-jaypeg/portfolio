@@ -54,8 +54,14 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         // far less noticeable than a clipped glyph would be, so it
         // doesn't need the same safety margin as the mask does.
         const cursorRestX = scrollW + fontSizePx * 0.02
-        const bandWidth = fontSizePx * 0.5
-        const blurPx = fontSizePx * 0.07
+        // Lighter and narrower than the first version -- a wide, strong
+        // blur left letters unrecognizable for long enough mid-sweep
+        // that they read as broken/missing a piece rather than "coming
+        // into focus". Keeping both smaller means less of the word is
+        // ever ambiguous at once, and what blur there is resolves into
+        // a real letterform faster.
+        const bandWidth = fontSizePx * 0.3
+        const blurPx = fontSizePx * 0.04
         blurEl.style.filter = `blur(${blurPx}px)`
 
         // Applying a mask to an element clips that element's own ink
