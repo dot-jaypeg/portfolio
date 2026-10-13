@@ -29,11 +29,14 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         const blurEl = blurLayerRef.current!
 
         // The italic face's final "g" visually overhangs its own logical
-        // advance width -- revealing exactly up to scrollWidth clips its
-        // tail, so the sweep's target is padded by a sliver of the font
-        // size (scales with the glyph, not the word's length).
+        // advance width (its upper stroke swings further right than the
+        // glyph's own advance box) -- revealing exactly up to scrollWidth
+        // clips it, so the sweep's target is padded by a chunk of the
+        // font size (scales with the glyph, not the word's length). 0.08
+        // wasn't enough margin and still clipped the stroke; 0.2 clears
+        // it with room to spare.
         const fontSizePx = parseFloat(getComputedStyle(sharpEl).fontSize)
-        const totalWidth = sharpEl.scrollWidth + fontSizePx * 0.08
+        const totalWidth = sharpEl.scrollWidth + fontSizePx * 0.2
         const bandWidth = fontSizePx * 0.5
         const blurPx = fontSizePx * 0.07
         blurEl.style.filter = `blur(${blurPx}px)`
