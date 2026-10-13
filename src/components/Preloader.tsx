@@ -78,6 +78,19 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         // first frames of the sweep, not just the settled end state.
         const pad = bandWidth + blurPx * 2
         blurEl.style.inset = `${-pad}px`
+        // `inset: -pad` only moves the BOX -- the text CONTENT inside
+        // still starts flowing from that box's own top-left corner,
+        // which is now `pad` px up-and-left of where the sharp layer's
+        // text starts. Without this, the blurred word renders visibly
+        // offset from the sharp one (a disconnected smear floating up
+        // and to the left of the actual glyphs, not aligned with them
+        // at all) rather than directly on top of it. Padding pushes the
+        // content back in by the same amount the box grew by, which
+        // cancels the shift exactly while leaving the box itself just
+        // as oversized (mask-image's pixel coordinates are relative to
+        // the border box, which padding doesn't move, so none of the
+        // gradient math above needs to change for this).
+        blurEl.style.padding = `${pad}px`
 
         // The cursor bar IS the reveal mechanism, not a decoration that
         // happens to track it: a hard-edged mask on the sharp text
