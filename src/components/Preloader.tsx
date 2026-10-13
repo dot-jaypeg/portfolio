@@ -38,6 +38,17 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         const blurPx = fontSizePx * 0.07
         blurEl.style.filter = `blur(${blurPx}px)`
 
+        // Applying a mask to an element clips that element's own ink
+        // overflow to its tight layout box -- including a blur filter's
+        // spread, which otherwise paints past the box freely. Without
+        // this, the masked+blurred layer's glow gets chopped off in a
+        // hard rectangle right at the text's own edge. Expanding the
+        // box (negative inset on all sides) gives the blur real room;
+        // the gradient math below adds `pad` back everywhere to account
+        // for the box's origin having shifted left/up by that amount.
+        const pad = blurPx * 4
+        blurEl.style.inset = `${-pad}px`
+
         // The cursor bar IS the reveal mechanism, not a decoration that
         // happens to track it: a hard-edged mask on the sharp text
         // reveals everything up to the cursor's position, while a
@@ -62,15 +73,19 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
           // totalWidth) is what gives the band a full, symmetric fade at
           // both the very start and very end instead of popping in solid
           // or leaving a blurred smudge stuck at the final position.
-          const bandStart = edge - bandWidth
-          const bandEnd = edge + bandWidth
+          // Everything shifted by `+pad` since blurEl's own box (and so
+          // its mask's coordinate origin) now starts `pad`px to the left
+          // of the text's actual left edge.
+          const bandStart = edge - bandWidth + pad
+          const center = edge + pad
+          const bandEnd = edge + bandWidth + pad
           blurEl.style.setProperty(
             'mask-image',
-            `linear-gradient(to right, transparent ${bandStart}px, #000 ${edge}px, transparent ${bandEnd}px)`,
+            `linear-gradient(to right, transparent ${bandStart}px, #000 ${center}px, transparent ${bandEnd}px)`,
           )
           blurEl.style.setProperty(
             '-webkit-mask-image',
-            `linear-gradient(to right, transparent ${bandStart}px, #000 ${edge}px, transparent ${bandEnd}px)`,
+            `linear-gradient(to right, transparent ${bandStart}px, #000 ${center}px, transparent ${bandEnd}px)`,
           )
 
           gsap.set(cursorRef.current, { x: clampedEdge })
@@ -187,14 +202,19 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
           <p
             ref={blurLayerRef}
             aria-hidden="true"
-            className="font-display pointer-events-none absolute inset-0 text-[22vw] leading-none font-bold tracking-[-0.06em] text-cream italic md:text-[18vw]"
+            className="font-display pointer-events-none absolute text-[22vw] leading-none font-bold tracking-[-0.06em] text-cream italic md:text-[18vw]"
           >
             .jaypeg
           </p>
+          {/* `text-[22vw] md:text-[18vw]` repeated here, not just on the
+              <p> elements -- the cursor's own height/width are in `em`,
+              which resolves against ITS OWN font-size. Without this it
+              inherits the page's ordinary body font-size instead of the
+              wordmark's, rendering as a tiny sliver next to giant text. */}
           <span
             ref={cursorRef}
             aria-hidden="true"
-            className="absolute top-1/2 left-0 h-[0.85em] w-[0.08em] -translate-y-1/2 bg-cream shadow-[0_0_18px_4px_rgba(255,255,240,0.55)]"
+            className="absolute top-1/2 left-0 h-[0.85em] w-[0.08em] -translate-y-1/2 bg-cream text-[22vw] shadow-[0_0_18px_4px_rgba(255,255,240,0.55)] md:text-[18vw]"
           />
         </div>
 
