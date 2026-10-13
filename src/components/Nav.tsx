@@ -1,20 +1,24 @@
 import type { MouseEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { ScrollTrigger } from '../lib/gsap'
 import { getChapterScrollOffset } from '../lib/journeyScroll'
 import { WORK_COUNT } from '../data/journeyChapters'
 import { SoundToggle } from './SoundToggle'
 
-const LINKS = [
-  { label: 'Work', href: '#work' },
+// "Work" is a real route now (the /work accordion gallery is the
+// official project page), not a same-page scroll jump -- it's a plain
+// router Link, rendered separately below, not one of these section
+// anchors.
+const SECTION_LINKS = [
   { label: 'About', href: '#about' },
   { label: 'Contact', href: '#contact' },
 ]
 
-// Work/About now live inside Journey's pinned horizontal track on
-// desktop, so their DOM elements freeze at wherever the pin left them
-// once you've scrolled past -- same issue #top already has for
-// CinematicIntro. Route those two through the chapter-offset math
-// instead; on mobile (or before the ScrollTrigger initializes),
+// About still lives inside Journey's pinned horizontal track on
+// desktop, so its DOM element freezes at wherever the pin left it once
+// you've scrolled past -- same issue #top already has for
+// CinematicIntro. Route it through the chapter-offset math instead;
+// on mobile (or before the ScrollTrigger initializes),
 // getChapterScrollOffset returns null and this falls back to the plain
 // element lookup, which is correct there since Journey never pins.
 //
@@ -24,9 +28,11 @@ const LINKS = [
 // so About's real index shifted by one and clicking "About" was
 // silently landing on View All instead (confirmed directly).
 const CHAPTER_INDEX: Record<string, number> = {
-  '#work': 0,
   '#about': WORK_COUNT + 1,
 }
+
+const NAV_LINK_CLASS =
+  "font-body relative text-xs tracking-[0.14em] text-[var(--nav-fg)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-teal after:transition-transform after:duration-300 after:content-[''] hover:text-teal hover:after:scale-x-100"
 
 export function Nav() {
   const handleClick =
@@ -60,8 +66,7 @@ export function Nav() {
           if (target) window.__lenis?.scrollTo(target as HTMLElement, { immediate: true })
         }
         // A real bug this jump can trigger: landing exactly on a
-        // ScrollTrigger's own progress:0 boundary (e.g. "Work", which
-        // jumps straight to Journey chapter 0) can be a no-perceptible-
+        // ScrollTrigger's own progress:0 boundary can be a no-perceptible-
         // change event from GSAP's own point of view if that trigger had
         // never been active before and was already reporting progress:0
         // by default -- confirmed directly (a MutationObserver on
@@ -95,12 +100,17 @@ export function Nav() {
       </a>
       <nav>
         <ul className="flex items-center gap-6 md:gap-8">
-          {LINKS.map((link) => (
+          <li>
+            <Link to="/work" className={NAV_LINK_CLASS}>
+              Work
+            </Link>
+          </li>
+          {SECTION_LINKS.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}
                 onClick={handleClick(link.href)}
-                className="font-body relative text-xs tracking-[0.14em] text-[var(--nav-fg)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-teal after:transition-transform after:duration-300 after:content-[''] hover:text-teal hover:after:scale-x-100"
+                className={NAV_LINK_CLASS}
               >
                 {link.label}
               </a>
