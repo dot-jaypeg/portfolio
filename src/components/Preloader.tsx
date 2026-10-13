@@ -40,18 +40,30 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         const totalWidth = charSpans[charSpans.length - 1].right
 
         // A single continuously-eased "reveal position" drives every
-        // character's opacity/blur together, rather than each char
-        // getting its own separate tween -- that's what makes this read
-        // as ONE fluid sweep instead of a sequence of discrete
-        // per-letter events. `bandWidth` is how wide the soft, blurred
-        // transition zone trailing the sweep is: characters behind it
-        // are fully sharp, characters ahead haven't appeared yet, and
-        // whichever ones the sweep is currently passing through fade
-        // in and sharpen together, in lockstep with how close the sweep
-        // is to having fully passed them.
+        // character's opacity/blur/stretch together, rather than each
+        // char getting its own separate tween -- that's what makes this
+        // read as ONE fluid sweep instead of a sequence of discrete
+        // per-letter events. `bandWidth` is how wide the soft transition
+        // zone trailing the sweep is: characters behind it are fully
+        // sharp, characters ahead haven't appeared yet, and whichever
+        // ones the sweep is currently passing through fade/sharpen/
+        // un-stretch together, in lockstep with how far the sweep has
+        // moved past them.
+        //
+        // A plain `blur()` alone reads as "out of focus" (an even haze
+        // in every direction), not motion -- real motion blur is
+        // DIRECTIONAL. Stretching each char horizontally (scaleX, from
+        // its own left edge) while it's still blurred, and relaxing
+        // that stretch back to 1 as it settles, is what actually sells
+        // "moving fast left-to-right" rather than "soft focus".
         const fontSizePx = parseFloat(getComputedStyle(wordmarkRef.current!).fontSize)
-        const bandWidth = fontSizePx * 0.55
-        const maxBlur = fontSizePx * 0.045
+        const bandWidth = fontSizePx * 0.6
+        const maxBlur = fontSizePx * 0.09
+        const maxStretch = 1.6
+
+        chars.forEach((char) => {
+          char.style.transformOrigin = 'left center'
+        })
 
         const applySweep = (pos: number) => {
           charSpans.forEach(({ left, right }, i) => {
@@ -61,8 +73,10 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
               1,
               (pos - (center - bandWidth / 2)) / bandWidth,
             )
+            const settle = 1 - frac
             chars[i].style.opacity = String(frac)
-            chars[i].style.filter = `blur(${(1 - frac) * maxBlur}px)`
+            chars[i].style.filter = `blur(${settle * maxBlur}px)`
+            chars[i].style.transform = `scaleX(${1 + settle * (maxStretch - 1)})`
           })
           // Via gsap.set, not a raw style write -- GSAP already owns this
           // element's transform for the blink tween's sibling property
@@ -91,7 +105,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         })
 
         const sweep = { pos: 0 }
-        const typingEnd = 0.95
+        const typingEnd = 1.25
 
         tl.set(rootRef.current, { autoAlpha: 1 }).to(sweep, {
           // Overshoots past the word's own width so the LAST character's
