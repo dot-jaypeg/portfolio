@@ -30,13 +30,30 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
 
         // The italic face's final "g" visually overhangs its own logical
         // advance width (its upper stroke swings further right than the
-        // glyph's own advance box) -- revealing exactly up to scrollWidth
-        // clips it, so the sweep's target is padded by a chunk of the
-        // font size (scales with the glyph, not the word's length). 0.08
-        // wasn't enough margin and still clipped the stroke; 0.2 clears
-        // it with room to spare.
+        // glyph's own advance box). Neither scrollWidth nor a Range's
+        // getBoundingClientRect() reports that overhang -- both reflect
+        // the text's LAYOUT metrics (glyph advance widths), and this
+        // overhang is a purely visual rasterization effect that doesn't
+        // show up in either one. No fudge-factor multiplier on top of
+        // either measurement (0.08, 0.2, a Range-based remeasure -- all
+        // tried, all still clipped it in some environment) can be
+        // trusted, because there's no reliable signal for how far THIS
+        // browser/OS actually rasterizes the glyph past its own box.
+        //
+        // So: stop trying to compute where the cutoff can safely sit
+        // near the glyph's edge at all. Past `safeRevealThreshold`,
+        // applySweep removes the mask from the sharp layer entirely --
+        // the glyph then renders with its full natural, un-clipped
+        // shape, which can't be wrong regardless of overhang, since
+        // there's no cutoff boundary anywhere near it to get wrong.
         const fontSizePx = parseFloat(getComputedStyle(sharpEl).fontSize)
-        const totalWidth = sharpEl.scrollWidth + fontSizePx * 0.2
+        const scrollW = sharpEl.scrollWidth
+        const safeRevealThreshold = scrollW + fontSizePx * 0.15
+        // Where the cursor visually settles once typing finishes --
+        // tight to the real text, since a few px of looseness here is
+        // far less noticeable than a clipped glyph would be, so it
+        // doesn't need the same safety margin as the mask does.
+        const cursorRestX = scrollW + fontSizePx * 0.02
         const bandWidth = fontSizePx * 0.5
         const blurPx = fontSizePx * 0.07
         blurEl.style.filter = `blur(${blurPx}px)`
@@ -61,21 +78,26 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         // (not per-character opacity) are what makes this one
         // continuous wipe rather than a sequence of discrete letters.
         const applySweep = (edge: number) => {
-          const clampedEdge = Math.min(edge, totalWidth)
-          sharpEl.style.setProperty(
-            'mask-image',
-            `linear-gradient(to right, #000 0, #000 ${clampedEdge}px, transparent ${clampedEdge}px)`,
-          )
-          sharpEl.style.setProperty(
-            '-webkit-mask-image',
-            `linear-gradient(to right, #000 0, #000 ${clampedEdge}px, transparent ${clampedEdge}px)`,
-          )
+          if (edge >= safeRevealThreshold) {
+            sharpEl.style.setProperty('mask-image', 'none')
+            sharpEl.style.setProperty('-webkit-mask-image', 'none')
+          } else {
+            sharpEl.style.setProperty(
+              'mask-image',
+              `linear-gradient(to right, #000 0, #000 ${edge}px, transparent ${edge}px)`,
+            )
+            sharpEl.style.setProperty(
+              '-webkit-mask-image',
+              `linear-gradient(to right, #000 0, #000 ${edge}px, transparent ${edge}px)`,
+            )
+          }
 
           // Deliberately NOT clamped to the word's own bounds -- letting
           // the fade-in/fade-out stops fall off-canvas (negative, or past
-          // totalWidth) is what gives the band a full, symmetric fade at
-          // both the very start and very end instead of popping in solid
-          // or leaving a blurred smudge stuck at the final position.
+          // the word's width) is what gives the band a full, symmetric
+          // fade at both the very start and very end instead of popping
+          // in solid or leaving a blurred smudge stuck at the final
+          // position.
           // Everything shifted by `+pad` since blurEl's own box (and so
           // its mask's coordinate origin) now starts `pad`px to the left
           // of the text's actual left edge.
@@ -91,7 +113,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
             `linear-gradient(to right, transparent ${bandStart}px, #000 ${center}px, transparent ${bandEnd}px)`,
           )
 
-          gsap.set(cursorRef.current, { x: clampedEdge })
+          gsap.set(cursorRef.current, { x: Math.min(edge, cursorRestX) })
         }
         applySweep(0)
 
@@ -120,12 +142,14 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
 
         tl.set(rootRef.current, { autoAlpha: 1 })
           .to(sweep, {
-            // Overshoots past the word's own width so the blur band (which
+            // Overshoots past safeRevealThreshold so the blur band (which
             // straddles `edge` on both sides) fully clears the last
             // character by the end, instead of leaving a blur smudge
-            // sitting at the final position -- the sharp mask and cursor
-            // both clamp to `totalWidth` regardless, inside applySweep.
-            edge: totalWidth + bandWidth,
+            // sitting at the final position. The mask itself is long
+            // since removed entirely by this point (applySweep drops it
+            // past safeRevealThreshold), and the cursor's own position
+            // clamps to the tighter cursorRestX regardless.
+            edge: safeRevealThreshold + bandWidth,
             duration: typingEnd,
             ease: 'power2.inOut',
             onUpdate: () => applySweep(sweep.edge),
