@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { CASE_STUDIES } from '../data/caseStudies'
 import { Cursor } from '../components/Cursor'
 import { Grain } from '../components/Grain'
+import { useMaskNavigate } from '../hooks/useMaskNavigate'
 
 const pad = (num: number) => String(num).padStart(2, '0')
 
@@ -124,6 +125,15 @@ function Strip({
 
 export function AllWork() {
   const [active, setActive] = useState(0)
+  const maskNavigate = useMaskNavigate()
+  // Same curtain-wipe transition as the homepage's own Nav jumps, so
+  // leaving this page feels consistent with arriving at it -- without
+  // this, a plain Link back to "/" would swap instantly while the
+  // outward trip (from Nav's "Work" link) covers/uncovers smoothly.
+  const goHome = (e: { preventDefault: () => void }) => {
+    e.preventDefault()
+    maskNavigate('/')
+  }
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-ink">
@@ -133,6 +143,7 @@ export function AllWork() {
       <header className="fixed inset-x-0 top-0 z-20 flex items-center justify-between px-6 py-6 md:px-10">
         <Link
           to="/"
+          onClick={goHome}
           data-cursor="Home"
           className="font-display text-2xl font-bold tracking-[-0.06em] text-cream italic md:text-3xl"
         >
@@ -140,6 +151,7 @@ export function AllWork() {
         </Link>
         <Link
           to="/"
+          onClick={goHome}
           className="font-body text-xs tracking-[0.22em] text-cream/60 uppercase transition-colors hover:text-cream"
         >
           [Close]

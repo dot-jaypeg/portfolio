@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom'
 import { ScrollTrigger } from '../lib/gsap'
 import { getChapterScrollOffset } from '../lib/journeyScroll'
 import { WORK_COUNT } from '../data/journeyChapters'
+import { useMaskNavigate } from '../hooks/useMaskNavigate'
 import { SoundToggle } from './SoundToggle'
 
 // "Work" is a real route now (the /work accordion gallery is the
-// official project page), not a same-page scroll jump -- it's a plain
-// router Link, rendered separately below, not one of these section
-// anchors.
+// official project page), not a same-page scroll jump -- it's a real
+// router Link (not one of these section anchors), rendered separately
+// below, routed through the same curtain-wipe transition via
+// useMaskNavigate so going to a whole new page feels like the same
+// transition as jumping between sections on the homepage.
 const SECTION_LINKS = [
   { label: 'About', href: '#about' },
   { label: 'Contact', href: '#contact' },
@@ -35,6 +38,7 @@ const NAV_LINK_CLASS =
   "font-body relative text-xs tracking-[0.14em] text-[var(--nav-fg)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-teal after:transition-transform after:duration-300 after:content-[''] hover:text-teal hover:after:scale-x-100"
 
 export function Nav() {
+  const maskNavigate = useMaskNavigate()
   const handleClick =
     (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault()
@@ -101,7 +105,14 @@ export function Nav() {
       <nav>
         <ul className="flex items-center gap-6 md:gap-8">
           <li>
-            <Link to="/work" className={NAV_LINK_CLASS}>
+            <Link
+              to="/work"
+              onClick={(e) => {
+                e.preventDefault()
+                maskNavigate('/work')
+              }}
+              className={NAV_LINK_CLASS}
+            >
               Work
             </Link>
           </li>
