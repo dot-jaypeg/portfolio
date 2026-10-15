@@ -1,10 +1,11 @@
-import { useState, type KeyboardEvent } from 'react'
+import { useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { CASE_STUDIES } from '../data/caseStudies'
 import { Cursor } from '../components/Cursor'
 import { Grain } from '../components/Grain'
 import { useMaskNavigate } from '../hooks/useMaskNavigate'
 import { getChapterScrollOffset } from '../lib/journeyScroll'
+import { gsap, Flip } from '../lib/gsap'
 
 const pad = (num: number) => String(num).padStart(2, '0')
 
@@ -15,20 +16,31 @@ const pad = (num: number) => String(num).padStart(2, '0')
 // `div`, not `button`, for each strip -- the active one needs its own
 // real <button> nested inside for "next", and interactive elements
 // can't nest.
+//
+// The actual width transition isn't CSS anymore -- see `AllWork`'s
+// GSAP Flip setup below. Letting the browser's own CSS transition
+// interpolate `flex`/`min-width` directly means a real layout reflow
+// AND a fresh image repaint on every one of the 10 strips, every
+// single frame, which is what made this feel janky instead of smooth.
 function Strip({
   cs,
   index,
   isActive,
+  isHovered,
   onSelect,
   onNext,
+  onHoverStart,
+  onHoverEnd,
 }: {
   cs: (typeof CASE_STUDIES)[number]
   index: number
   isActive: boolean
+  isHovered: boolean
   onSelect: () => void
   onNext: () => void
+  onHoverStart: () => void
+  onHoverEnd: () => void
 }) {
-  const [isHovered, setIsHovered] = useState(false)
   // Hovering widens a strip and shows its photo fully, the same way
   // clicking does -- but the full title/category/Next content block
   // below only appears once a strip is genuinely ACTIVE (clicked), not
@@ -56,14 +68,14 @@ function Strip({
       tabIndex={0}
       onClick={onSelect}
       onKeyDown={handleKeyDown}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
       data-cursor={isActive ? undefined : 'View'}
       style={{
         flex: expanded ? '8 8 0%' : '1 1 0%',
         minWidth: expanded ? 280 : 56,
       }}
-      className="group relative h-full shrink-0 cursor-pointer overflow-hidden border-r border-cream/10 text-left transition-[flex] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] last:border-r-0 focus-visible:outline-none"
+      className="group relative h-full shrink-0 cursor-pointer overflow-hidden border-r border-cream/10 text-left last:border-r-0 focus-visible:outline-none"
     >
       {cs.image ? (
         <img
@@ -149,6 +161,100 @@ function Strip({
 
 export function AllWork() {
   const [active, setActive] = useState(0)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const rowRef = useRef<HTMLDivElement>(null)
+  const flipStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null)
+
+  // Captures the row's current layout BEFORE an active/hover change, so
+  // the effect below can hand it to Flip.from, which fakes the same
+  // visual width transition using transforms (scaleX + translateX)
+  // instead of letting the browser interpolate `flex`/`min-width`
+  // directly -- that's what made this smooth instead of janky.
+  const captureFlip = () => {
+    if (rowRef.current) {
+      flipStateRef.current = Flip.getState(Array.from(rowRef.current.children))
+    }
+  }
+
+  // Runs AFTER React has already committed the new flex/min-width
+  // values (useLayoutEffect, not useEffect, so it fires before the
+  // browser paints the "snapped" end state) -- Flip.from reads the
+  // elements' now-current geometry, compares it to what captureFlip
+  // saved, and animates from the old to the new.
+  useLayoutEffect(() => {
+    if (!flipStateRef.current) return
+    Flip.from(flipStateRef.current, {
+      duration: 0.7,
+      ease: 'power3.inOut',
+      // Each strip sizes itself via `flex: N N 0%` -- an explicit
+      // flex-basis, which always wins over a plain `width` property.
+      // Flip's default technique fakes a size change by tweening an
+      // inline width/height, so without `scale: true` that injected
+      // width gets silently overridden by flex-basis: the strip snaps
+      // to its final size instantly and only a position correction
+      // (translateX) actually animates, which is what read as janky.
+      // scaleX/scaleY transforms work regardless of the sizing model.
+      scale: true,
+      // A strip's scaleX transform stretches its full-bleed <img> right
+      // along with it. Pre-computing one inverse counter-scale up front
+      // (e.g. via Flip's own nested-state handling) doesn't actually
+      // cancel this: the parent's scale and a counter-tween both ease
+      // independently over the same 0.7s, and lerp(a,b,t) * lerp(1/a,
+      // 1/b,t) isn't 1 for any t strictly between 0 and 1 -- so the
+      // photo still visibly warped mid-transition. Recomputing the
+      // exact reciprocal every frame from the strip's own live,
+      // already-eased scaleX is the only way to keep the two multiplying
+      // out to 1 at every instant, not just at the start and end.
+      //
+      // The <img> itself also carries its own `transition-transform
+      // duration-700` class (for the unrelated group-hover:scale-105
+      // zoom) -- a CSS transition applies to ANY change in `transform`,
+      // including these inline per-frame gsap.set calls, so without
+      // overriding it to `none` here the browser was smoothing/lagging
+      // every one of these ~60fps counter-scale updates over its own
+      // 700ms curve, which was the actual source of the warped look
+      // (not the counter-scale math, which was already correct).
+      onStart: () => {
+        if (!rowRef.current) return
+        for (const strip of rowRef.current.children) {
+          const img = strip.querySelector('img')
+          if (img) img.style.transition = 'none'
+        }
+      },
+      onUpdate: () => {
+        if (!rowRef.current) return
+        for (const strip of rowRef.current.children) {
+          const img = strip.querySelector('img')
+          if (!img) continue
+          const scaleX = Number(gsap.getProperty(strip, 'scaleX'))
+          const scaleY = Number(gsap.getProperty(strip, 'scaleY'))
+          gsap.set(img, { scaleX: 1 / scaleX, scaleY: 1 / scaleY })
+        }
+      },
+      onComplete: () => {
+        if (!rowRef.current) return
+        for (const strip of rowRef.current.children) {
+          const img = strip.querySelector('img')
+          if (img) img.style.transition = ''
+        }
+      },
+    })
+    flipStateRef.current = null
+  }, [active, hoveredIndex])
+
+  const selectStrip = (i: number) => {
+    captureFlip()
+    setActive(i)
+  }
+  const advanceStrip = () => {
+    captureFlip()
+    setActive((a) => (a + 1) % CASE_STUDIES.length)
+  }
+  const hoverStrip = (i: number | null) => {
+    captureFlip()
+    setHoveredIndex(i)
+  }
+
   const maskNavigate = useMaskNavigate()
   // Same curtain-wipe transition as the homepage's own Nav jumps, so
   // leaving this page feels consistent with arriving at it -- without
@@ -211,15 +317,18 @@ export function AllWork() {
           forcing everything to fit is what keeps idle strips from being
           crushed down to unreadable slivers there. On desktop the row
           already fits with room to spare, so this is a no-op. */}
-      <div className="flex h-full w-full overflow-x-auto">
+      <div ref={rowRef} className="flex h-full w-full overflow-x-auto">
         {CASE_STUDIES.map((cs, i) => (
           <Strip
             key={cs.slug}
             cs={cs}
             index={i}
             isActive={i === active}
-            onSelect={() => setActive(i)}
-            onNext={() => setActive((active + 1) % CASE_STUDIES.length)}
+            isHovered={i === hoveredIndex}
+            onSelect={() => selectStrip(i)}
+            onNext={advanceStrip}
+            onHoverStart={() => hoverStrip(i)}
+            onHoverEnd={() => hoverStrip(null)}
           />
         ))}
       </div>
