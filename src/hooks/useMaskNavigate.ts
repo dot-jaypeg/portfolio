@@ -6,10 +6,19 @@ import { useNavigate } from 'react-router-dom'
 // moving between sections on the homepage, instead of React Router's
 // default instant swap. Falls back to a plain navigate if PageMask
 // isn't mounted for some reason.
+//
+// `onNavigated`, if given, fires right after `navigate()` -- for a
+// caller that needs to do something once the new route exists (e.g.
+// AllWork's "Back" link polling for the Journey chapter it wants to
+// land on), without that caller having to duplicate the
+// __maskTransition-or-plain-jump branch itself.
 export function useMaskNavigate() {
   const navigate = useNavigate()
-  return (to: string) => {
-    const jump = () => navigate(to)
+  return (to: string, onNavigated?: () => void) => {
+    const jump = () => {
+      navigate(to)
+      onNavigated?.()
+    }
     if (window.__maskTransition) {
       window.__maskTransition(jump)
     } else {

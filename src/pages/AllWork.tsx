@@ -4,15 +4,17 @@ import { CASE_STUDIES } from '../data/caseStudies'
 import { Cursor } from '../components/Cursor'
 import { Grain } from '../components/Grain'
 import { useMaskNavigate } from '../hooks/useMaskNavigate'
+import { getChapterScrollOffset } from '../lib/journeyScroll'
 
 const pad = (num: number) => String(num).padStart(2, '0')
 
 // Filmstrip/accordion gallery -- every case study (including the still-
 // placeholder 06-10 entries the featured Journey chapters skip) as one
-// row of strips, all visible at once, with the active one expanding via
-// an animated `flex` value rather than a real width change. `div`, not
-// `button`, for each strip -- the active one needs its own real <button>
-// nested inside for "next", and interactive elements can't nest.
+// row of strips, all visible at once, with the active/expanded one
+// growing via an animated `flex` value rather than a real width change.
+// `div`, not `button`, for each strip -- the active one needs its own
+// real <button> nested inside for "next", and interactive elements
+// can't nest.
 function Strip({
   cs,
   index,
@@ -26,6 +28,21 @@ function Strip({
   onSelect: () => void
   onNext: () => void
 }) {
+  const [isHovered, setIsHovered] = useState(false)
+  // Hovering widens a strip and shows its photo fully, the same way
+  // clicking does -- but the full title/category/Next content block
+  // below only appears once a strip is genuinely ACTIVE (clicked), not
+  // merely hovered. Showing that block (and its Next button) on pure
+  // hover would let clicking Next while hovering a strip OTHER than the
+  // real active one silently advance an index you're not even looking
+  // at. Touch devices have no hover at all, so tapping (which fires
+  // onSelect directly) is unaffected by any of this either way.
+  const expanded = isActive || isHovered
+  // Each case study's own brand color, same field/fallback WorkPanel
+  // uses on the homepage -- color-coordinating the category label here
+  // too instead of a flat site-wide teal.
+  const accent = cs.accent ?? '#618c82'
+
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
@@ -39,10 +56,12 @@ function Strip({
       tabIndex={0}
       onClick={onSelect}
       onKeyDown={handleKeyDown}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       data-cursor={isActive ? undefined : 'View'}
       style={{
-        flex: isActive ? '8 8 0%' : '1 1 0%',
-        minWidth: isActive ? 280 : 56,
+        flex: expanded ? '8 8 0%' : '1 1 0%',
+        minWidth: expanded ? 280 : 56,
       }}
       className="group relative h-full shrink-0 cursor-pointer overflow-hidden border-r border-cream/10 text-left transition-[flex] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] last:border-r-0 focus-visible:outline-none"
     >
@@ -60,15 +79,17 @@ function Strip({
       )}
       <div
         className={`pointer-events-none absolute inset-0 bg-ink transition-opacity duration-500 ${
-          isActive ? 'opacity-0' : 'opacity-55 group-hover:opacity-25'
+          expanded ? 'opacity-0' : 'opacity-55 group-hover:opacity-25'
         }`}
       />
-      {/* The inactive-state dark overlay above is what kept its own text
-          legible -- switching it off on the active panel to actually show
-          the photo left this copy block sitting directly on top of
-          whatever the image's own content is, unreadable against a busy
-          shot like the stickers. A dedicated bottom scrim (active only)
-          fixes that without dimming the photo everywhere else. */}
+      {/* The collapsed-state dark overlay above is what kept its own text
+          legible -- switching it off once active to actually show the
+          photo left this copy block sitting directly on top of whatever
+          the image's own content is, unreadable against a busy shot
+          like the stickers. A dedicated bottom scrim (active only) fixes
+          that without dimming the photo everywhere else. Tied to
+          `isActive`, not `expanded` -- there's no text block to protect
+          here on a merely-hovered, not-yet-active strip. */}
       {isActive && (
         <>
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
@@ -80,9 +101,9 @@ function Strip({
         </>
       )}
 
-      {/* top-20, not top-6 -- the fixed header's logo/(Close) links sit
+      {/* top-20, not top-6 -- the fixed header's logo/[Back] links sit
           in these exact corners, and this label collided directly with
-          "(Close)" for whichever strip happens to be rightmost. */}
+          "[Back]" for whichever strip happens to be rightmost. */}
       <span className="font-body pointer-events-none absolute top-20 left-6 text-xs tracking-[0.22em] text-cream/70 uppercase">
         {pad(index + 1)}
       </span>
@@ -95,8 +116,11 @@ function Strip({
 
       {isActive && (
         <div className="pointer-events-none absolute inset-x-6 bottom-8 md:inset-x-10 md:bottom-12">
-          <p className="font-body mb-3 flex items-center gap-2 text-xs tracking-[0.22em] text-teal uppercase">
-            <span className="h-px w-6 bg-teal" />
+          <p
+            style={{ color: accent }}
+            className="font-body mb-3 flex items-center gap-2 text-xs tracking-[0.22em] uppercase"
+          >
+            <span style={{ backgroundColor: accent }} className="h-px w-6" />
             {cs.category.split('//')[0].trim()}
           </p>
           <h2 className="font-display text-[6vw] leading-[0.9] font-bold tracking-[-0.04em] text-cream uppercase md:text-[3vw]">
@@ -134,6 +158,29 @@ export function AllWork() {
     e.preventDefault()
     maskNavigate('/')
   }
+  // "Back" specifically returns to the Work section, not just the top
+  // of the homepage -- a fresh "/" mount always replays the Preloader
+  // splash + CinematicIntro from scratch, so the Journey chapter this
+  // needs to scroll to isn't ready the instant navigate() returns.
+  // Polling (rAF, no existing wait-loop utility in this codebase to
+  // reuse) for both the chapter offset AND the Preloader having
+  // actually finished (body's scroll lock lifting) is what makes this
+  // land correctly instead of firing into a half-initialized page.
+  const goBackToWork = (e: { preventDefault: () => void }) => {
+    e.preventDefault()
+    maskNavigate('/', () => {
+      const tryScroll = () => {
+        const offset = getChapterScrollOffset(0)
+        const preloaderDone = document.body.style.overflow !== 'hidden'
+        if (offset != null && preloaderDone) {
+          window.__lenis?.scrollTo(offset, { immediate: true })
+        } else {
+          requestAnimationFrame(tryScroll)
+        }
+      }
+      requestAnimationFrame(tryScroll)
+    })
+  }
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-ink">
@@ -151,10 +198,10 @@ export function AllWork() {
         </Link>
         <Link
           to="/"
-          onClick={goHome}
+          onClick={goBackToWork}
           className="font-body text-xs tracking-[0.22em] text-cream/60 uppercase transition-colors hover:text-cream"
         >
-          [Close]
+          [Back]
         </Link>
       </header>
 
