@@ -10,6 +10,10 @@ export function useMaskNavigate() {
   const navigate = useNavigate()
   return (to: string) => {
     const jump = () => navigate(to)
-    window.__maskTransition ? window.__maskTransition(jump) : jump()
+    if (window.__maskTransition) {
+      window.__maskTransition(jump)
+    } else {
+      jump()
+    }
   }
 }

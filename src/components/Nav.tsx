@@ -89,7 +89,11 @@ export function Nav() {
         // 1.5s after the real scroll had already landed).
         requestAnimationFrame(() => ScrollTrigger.update())
       }
-      window.__maskTransition ? window.__maskTransition(jump) : jump()
+      if (window.__maskTransition) {
+        window.__maskTransition(jump)
+      } else {
+        jump()
+      }
     }
 
   return (

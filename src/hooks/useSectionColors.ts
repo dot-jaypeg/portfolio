@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { gsap, ScrollTrigger } from '../lib/gsap'
 import { JOURNEY_CHAPTERS } from '../data/journeyChapters'
-import { SCENES } from '../components/CinematicIntro'
+import { SCENES } from '../data/scenes'
 
 // Contact's crossfade below is the only ORIGINAL reason this file
 // existed -- it's a genuine vertical top edge to crossfade off of. Work

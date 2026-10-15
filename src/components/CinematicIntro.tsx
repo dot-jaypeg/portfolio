@@ -1,33 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap, SplitText } from '../lib/gsap'
 import introPhoto from '../assets/images/intro/IMG_8143.jpg'
-
-export const SCENES = [
-  {
-    eyebrow: '01 — Intro',
-    headline: 'Hello.',
-    bg: '#161616',
-    fg: '#fffff0',
-  },
-  {
-    eyebrow: '02 — Expertise',
-    headline: 'Branding & Identity',
-    bg: '#fffff0',
-    fg: '#161616',
-  },
-  {
-    eyebrow: '03 — Expertise',
-    headline: 'Digital & Motion',
-    bg: '#fffff0',
-    fg: '#161616',
-  },
-  {
-    eyebrow: '04 — Who',
-    headline: 'Jayden Ramirez',
-    bg: '#dd5547',
-    fg: '#fffff0',
-  },
-]
+import { SCENES } from '../data/scenes'
 
 export function CinematicIntro() {
   const containerRef = useRef<HTMLDivElement>(null)
