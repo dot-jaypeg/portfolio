@@ -48,6 +48,18 @@ body {
   background-color: var(--color-ink);
 }
 
+html {
+  /* The real scrolling element in standards mode is <html>, not
+     <body> -- body's own overflow-x: hidden below doesn't stop it from
+     being horizontally scrollable. CinematicIntro's horizontally
+     pinned scene track (each panel w-screen, laid out side by side for
+     the scroll-jack reveal) was leaking a few dozen px of extra width
+     into html's own scrollWidth through GSAP's pin-spacer wrapper,
+     letting a stray horizontal swipe on mobile scroll into blank
+     space past the site's real content. */
+  overflow-x: hidden;
+}
+
 body {
   font-family: var(--font-body);
   color: var(--color-cream);
