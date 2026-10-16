@@ -101,7 +101,16 @@ function Strip({
         {pad(index + 1)}
       </span>
 
-      {!isActive && (
+      {/* Only on hover, not for every collapsed strip at once -- now
+          that the title caption lives in one page-level overlay (see
+          AllWork) instead of inside the active strip, every OTHER
+          collapsed strip showing its own title here at all times meant
+          this label and the global caption text constantly overlapped
+          each other (the caption can run well past the strip at the
+          left edge). Gating it to a hover peek keeps the identifying
+          label available without it permanently fighting the caption
+          for the same screen space. */}
+      {!isActive && isHovered && (
         <span className="font-body pointer-events-none absolute bottom-6 left-6 origin-bottom-left translate-y-0 [writing-mode:vertical-rl] whitespace-nowrap text-xs tracking-[0.3em] text-cream/70 uppercase">
           {cs.title}
         </span>
