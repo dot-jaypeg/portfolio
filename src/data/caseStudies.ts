@@ -3,6 +3,11 @@ import afiImg from '../assets/images/projects/afi-marketing-campaign.jpg'
 import resonanceImg from '../assets/images/projects/ui-design-for-resonance.jpg'
 import nsuImg from '../assets/images/projects/nikkei-student-union.jpg'
 import fetchImg from '../assets/images/projects/fetch-doggy-deli.jpg'
+import urbanSeoulImg from '../assets/images/projects/urbanseoul.jpg'
+import jadeSwordImg from '../assets/images/projects/jade-sword.jpg'
+import bagguImg from '../assets/images/projects/baggu.jpg'
+import chichaImg from '../assets/images/projects/chicha.jpg'
+import protocolOfBetrayalImg from '../assets/images/projects/star-wars.jpg'
 
 export interface CaseStudy {
   slug: string
@@ -29,8 +34,7 @@ export interface CaseStudy {
   // mark in WorkPanel with THIS project's own palette instead of the
   // site's default teal/red alternation, so each case study is
   // color-coordinated to its actual brand/work rather than an arbitrary
-  // index-based rotation. Falls back to the site's teal when absent
-  // (the still-placeholder case-06..10 entries).
+  // index-based rotation. Falls back to the site's teal when absent.
   accent?: string
 }
 
@@ -95,43 +99,56 @@ export const CASE_STUDIES: CaseStudy[] = [
       'Brand identity and packaging for a doggy deli, built to feel as playful as the product itself.',
   },
   {
-    slug: 'case-06',
-    title: 'Case Study 06',
-    category: 'Editorial',
-    client: 'Work',
+    slug: 'urban-seoul',
+    title: 'Urban Seoul',
+    category: 'Branding & Advertising',
+    client: 'Urban Seoul',
+    image: urbanSeoulImg,
+    accent: '#4f6f93',
     description:
-      'Layout and art direction for a print-first story, where the grid has to hold up as well on paper as it does on screen.',
+      'A full campaign for a streetwear pop-up event -- bus-stop ads, signage, event tickets, and merch all carrying the same bold, hand-lettered identity.',
   },
   {
-    slug: 'case-07',
-    title: 'Case Study 07',
-    category: 'Web',
-    client: 'Work',
+    slug: 'jade-sword',
+    title: 'Jade Sword',
+    category: 'Character Illustration',
+    client: 'Personal Project',
+    image: jadeSwordImg,
+    accent: '#2f9e8f',
     description:
-      'A site built to make a small team feel like a studio, from first scroll to final contact form.',
+      'Character illustration and key art built around a glowing jade blade, rendered for a published Steam title.',
   },
   {
-    slug: 'case-08',
-    title: 'Case Study 08',
-    category: 'Packaging',
-    client: 'Work',
+    slug: 'baggu',
+    title: 'Baggu Surface Patterns',
+    category: 'Surface Pattern Design',
+    client: 'Baggu',
+    image: bagguImg,
+    accent: '#8b5cf6',
     description:
-      'Structural and surface design for a product line meant to be picked up, not just looked at.',
+      'A set of playful, trend-driven surface patterns designed for Baggu\'s tote and pouch lineup.',
   },
   {
-    slug: 'case-09',
-    title: 'Case Study 09',
-    category: 'Photography',
-    client: 'Work',
+    slug: 'chi-cha',
+    title: 'Chi-Cha Beverage Campaign',
+    category: 'Digital Marketing',
+    client: 'Chi-Cha',
+    image: chichaImg,
+    accent: '#e391a8',
     description:
-      'A shoot built around one clear mood, carried consistently across every frame that made the final cut.',
+      'A retro-arcade-themed digital push for Chi-Cha -- display ads, social posts, and a direct mailer all built around one playful visual world.',
   },
   {
-    slug: 'case-10',
-    title: 'Case Study 10',
-    category: 'Social',
-    client: 'Work',
+    slug: 'protocol-of-betrayal',
+    title: 'Protocol of Betrayal',
+    category: '3D & Motion',
+    client: 'Personal Project',
+    image: protocolOfBetrayalImg,
+    accent: '#c0453a',
+    // Source is a 16:9 still with the character off-center to the
+    // right -- centering it (the default) crops half of him out.
+    imagePosition: 'right center',
     description:
-      'A content system flexible enough to post daily without ever losing the brand\'s shape.',
+      'A Star Wars-inspired cinematic short, built in Unreal Engine from lighting and environment to the final animated sequence.',
   },
 ]
