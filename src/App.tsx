@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { AllWork } from './pages/AllWork'
+import { Gallery } from './pages/Gallery'
+import { ProjectDetail } from './pages/ProjectDetail'
 import { PageMask } from './components/PageMask'
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/work" element={<AllWork />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/gallery/:slug" element={<ProjectDetail />} />
       </Routes>
     </>
   )

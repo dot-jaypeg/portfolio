@@ -120,6 +120,18 @@ export function Nav() {
               Work
             </Link>
           </li>
+          <li>
+            <Link
+              to="/gallery"
+              onClick={(e) => {
+                e.preventDefault()
+                maskNavigate('/gallery')
+              }}
+              className={NAV_LINK_CLASS}
+            >
+              Gallery
+            </Link>
+          </li>
           {SECTION_LINKS.map((link) => (
             <li key={link.href}>
               <a
