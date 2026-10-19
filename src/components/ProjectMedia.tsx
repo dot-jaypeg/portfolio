@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import type { ProjectImage } from '../data/projects'
 
-// Shared by GalleryThumb and ProjectDetail -- one place that knows how
-// to render any of the three media types, reserve its layout space via
+// Shared by MoodboardCanvas and ProjectDetail -- one place that knows
+// how to render any of the three media types, reserve its layout space via
 // aspect-ratio (no CLS once it loads), and blur-up from a soft
 // placeholder to the sharp asset. `src` is optional: every seed project
 // is missing one right now, so this also doubles as the dashed
@@ -11,12 +11,19 @@ import type { ProjectImage } from '../data/projects'
 export function ProjectMedia({
   media,
   priority = false,
+  decorative = false,
 }: {
   media: ProjectImage
   // Hero images are already in the viewport the instant the page
   // mounts -- lazy-loading those would just delay them for no reason,
   // so the detail page's hero passes this to load eagerly instead.
   priority?: boolean
+  // MoodboardCanvas's tiles aren't a gallery of individually meaningful
+  // photos -- they're decorative filler (see Gallery.tsx), so forcing
+  // real alt text on them would make a screen reader announce dozens
+  // of near-duplicate descriptions for content that conveys nothing.
+  // The canvas itself is also aria-hidden; this covers the img tag too.
+  decorative?: boolean
 }) {
   const [loaded, setLoaded] = useState(false)
   const aspectRatio = `${media.width} / ${media.height}`
@@ -58,7 +65,7 @@ export function ProjectMedia({
       ) : (
         <img
           src={media.src}
-          alt={media.alt}
+          alt={decorative ? '' : media.alt}
           className={mediaClassName}
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"
