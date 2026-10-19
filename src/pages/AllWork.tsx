@@ -1,10 +1,8 @@
 import { useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { Link } from 'react-router-dom'
 import { CASE_STUDIES } from '../data/caseStudies'
 import { Cursor } from '../components/Cursor'
 import { Grain } from '../components/Grain'
-import { useMaskNavigate } from '../hooks/useMaskNavigate'
-import { getChapterScrollOffset } from '../lib/journeyScroll'
+import { Nav } from '../components/Nav'
 import { gsap, Flip } from '../lib/gsap'
 
 const pad = (num: number) => String(num).padStart(2, '0')
@@ -100,9 +98,9 @@ function Strip({
         </>
       )}
 
-      {/* top-20, not top-6 -- the fixed header's logo/[Back] links sit
-          in these exact corners, and this label collided directly with
-          "[Back]" for whichever strip happens to be rightmost. */}
+      {/* top-20, not top-6 -- the fixed Nav sits in these exact corners,
+          and this label collided directly with its links for whichever
+          strip happens to be leftmost/rightmost. */}
       <span className="font-body pointer-events-none absolute top-20 left-6 text-xs tracking-[0.22em] text-cream/70 uppercase">
         {pad(index + 1)}
       </span>
@@ -266,61 +264,11 @@ export function AllWork() {
     setHoveredIndex(i)
   }
 
-  const maskNavigate = useMaskNavigate()
-  // Same curtain-wipe transition as the homepage's own Nav jumps, so
-  // leaving this page feels consistent with arriving at it -- without
-  // this, a plain Link back to "/" would swap instantly while the
-  // outward trip (from Nav's "Work" link) covers/uncovers smoothly.
-  const goHome = (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    maskNavigate('/')
-  }
-  // "Back" specifically returns to the Work section, not just the top
-  // of the homepage -- a fresh "/" mount always replays the Preloader
-  // splash + CinematicIntro from scratch, so the Journey chapter this
-  // needs to scroll to isn't ready the instant navigate() returns.
-  // Polling (rAF, no existing wait-loop utility in this codebase to
-  // reuse) for both the chapter offset AND the Preloader having
-  // actually finished (body's scroll lock lifting) is what makes this
-  // land correctly instead of firing into a half-initialized page.
-  const goBackToWork = (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    maskNavigate('/', () => {
-      const tryScroll = () => {
-        const offset = getChapterScrollOffset(0)
-        const preloaderDone = document.body.style.overflow !== 'hidden'
-        if (offset != null && preloaderDone) {
-          window.__lenis?.scrollTo(offset, { immediate: true })
-        } else {
-          requestAnimationFrame(tryScroll)
-        }
-      }
-      requestAnimationFrame(tryScroll)
-    })
-  }
-
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-ink">
       <Cursor />
       <Grain />
-
-      <header className="fixed inset-x-0 top-0 z-20 flex items-center justify-between px-6 py-6 md:px-10">
-        <Link
-          to="/"
-          onClick={goHome}
-          data-cursor="Home"
-          className="font-display text-2xl font-bold tracking-[-0.06em] text-cream italic md:text-3xl"
-        >
-          .jaypeg
-        </Link>
-        <Link
-          to="/"
-          onClick={goBackToWork}
-          className="font-body text-xs tracking-[0.22em] text-cream/60 uppercase transition-colors hover:text-cream"
-        >
-          [Back]
-        </Link>
-      </header>
+      <Nav />
 
       {/* overflow-x-auto, not hidden -- each strip's own min-width (56px
           idle, 280px expanded) can add up to more than the viewport on a

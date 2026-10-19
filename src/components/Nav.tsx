@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { ScrollTrigger } from '../lib/gsap'
 import { getChapterScrollOffset } from '../lib/journeyScroll'
 import { WORK_COUNT } from '../data/journeyChapters'
@@ -37,8 +37,56 @@ const CHAPTER_INDEX: Record<string, number> = {
 const NAV_LINK_CLASS =
   "font-body relative text-xs tracking-[0.14em] text-[var(--nav-fg)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-teal after:transition-transform after:duration-300 after:content-[''] hover:text-teal hover:after:scale-x-100"
 
+// True once Home's own sections actually exist and are safe to jump
+// to -- `#top`/Journey's chapters are GSAP-pinned, so their offsets
+// only resolve correctly once JourneyDesktop's ScrollTrigger has set
+// up (getChapterScrollOffset returns null until then); Contact is a
+// plain, never-pinned section, so it just needs to exist in the DOM.
+const isSectionReady = (href: string) =>
+  href in CHAPTER_INDEX ? getChapterScrollOffset(CHAPTER_INDEX[href]) != null : !!document.querySelector(href)
+
 export function Nav() {
   const maskNavigate = useMaskNavigate()
+  const { pathname } = useLocation()
+
+  const scrollToSection = (href: string) => {
+    // #top is GSAP-pinned for its scroll-jacked scene sequence, so once
+    // you've scrolled past it, its own element settles at the frozen
+    // end-of-pin position in the doc flow (the last scene), not y=0 --
+    // scrolling "to the element" would land on that last frame instead
+    // of back at "Hello.". Going straight to the top of the document
+    // sidesteps that entirely.
+    if (href === '#top') {
+      window.__lenis?.scrollTo(0, { immediate: true })
+    } else if (href in CHAPTER_INDEX && getChapterScrollOffset(CHAPTER_INDEX[href]) != null) {
+      window.__lenis?.scrollTo(getChapterScrollOffset(CHAPTER_INDEX[href])!, {
+        immediate: true,
+      })
+    } else {
+      const target = document.querySelector(href)
+      if (target) window.__lenis?.scrollTo(target as HTMLElement, { immediate: true })
+    }
+    // A real bug this jump can trigger: landing exactly on a
+    // ScrollTrigger's own progress:0 boundary can be a no-perceptible-
+    // change event from GSAP's own point of view if that trigger had
+    // never been active before and was already reporting progress:0 by
+    // default -- confirmed directly (a MutationObserver on --nav-fg
+    // showed zero writes for ~1.8s after such a jump, stuck showing
+    // whatever color the PREVIOUS section left behind, until Journey's
+    // own auto-advance loop eventually nudged the scroll position and
+    // incidentally triggered a real update). Forcing a global recompute
+    // makes every active trigger's onUpdate fire immediately regardless
+    // of whether GSAP thinks anything changed -- but only AFTER a
+    // frame, not synchronously here: Lenis's own `scrollTo(...,
+    // {immediate:true})` still applies the actual scroll position on
+    // its own next animation-frame tick even though it skips the
+    // smooth-scroll animation, so calling this synchronously recomputed
+    // against the STALE pre-jump position and did nothing (confirmed
+    // directly -- nav-fg was still stuck 1.5s after the real scroll had
+    // already landed).
+    requestAnimationFrame(() => ScrollTrigger.update())
+  }
+
   const handleClick =
     (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault()
@@ -48,47 +96,35 @@ export function Nav() {
       // clicking About while auto-advance was active didn't navigate
       // anywhere, it just kept crawling through Work instead.
       window.__markAutoAdvanceInput?.()
+
+      // Nav now also renders on /work and /gallery, which have no
+      // "#top"/"#about"/"#contact" DOM at all (and on /gallery, no
+      // Lenis instance either) -- jumping straight to scrollToSection
+      // there would silently do nothing. Navigate home first and poll
+      // (rAF, same pattern AllWork's old "Back" link used) until the
+      // Preloader has actually finished AND the target section itself
+      // is ready, then jump -- firing into a half-initialized homepage
+      // either lands on the wrong offset or does nothing at all.
+      if (pathname !== '/') {
+        maskNavigate('/', () => {
+          const tryScroll = () => {
+            const preloaderDone = document.body.style.overflow !== 'hidden'
+            if (preloaderDone && isSectionReady(href)) {
+              scrollToSection(href)
+            } else {
+              requestAnimationFrame(tryScroll)
+            }
+          }
+          requestAnimationFrame(tryScroll)
+        })
+        return
+      }
+
       // Nav jumps cover the screen and jump instantly underneath rather
       // than smooth-scrolling past everything in between -- scrolling
       // "Home" from deep in the Journey track used to visibly crawl
       // backwards through every chapter it had already shown.
-      const jump = () => {
-        // #top is GSAP-pinned for its scroll-jacked scene sequence, so
-        // once you've scrolled past it, its own element settles at the
-        // frozen end-of-pin position in the doc flow (the last scene),
-        // not y=0 -- scrolling "to the element" would land on that last
-        // frame instead of back at "Hello.". Going straight to the top
-        // of the document sidesteps that entirely.
-        if (href === '#top') {
-          window.__lenis?.scrollTo(0, { immediate: true })
-        } else if (href in CHAPTER_INDEX && getChapterScrollOffset(CHAPTER_INDEX[href]) != null) {
-          window.__lenis?.scrollTo(getChapterScrollOffset(CHAPTER_INDEX[href])!, {
-            immediate: true,
-          })
-        } else {
-          const target = document.querySelector(href)
-          if (target) window.__lenis?.scrollTo(target as HTMLElement, { immediate: true })
-        }
-        // A real bug this jump can trigger: landing exactly on a
-        // ScrollTrigger's own progress:0 boundary can be a no-perceptible-
-        // change event from GSAP's own point of view if that trigger had
-        // never been active before and was already reporting progress:0
-        // by default -- confirmed directly (a MutationObserver on
-        // --nav-fg showed zero writes for ~1.8s after such a jump, stuck
-        // showing whatever color the PREVIOUS section left behind, until
-        // Journey's own auto-advance loop eventually nudged the scroll
-        // position and incidentally triggered a real update). Forcing a
-        // global recompute makes every active trigger's onUpdate fire
-        // immediately regardless of whether GSAP thinks anything changed
-        // -- but only AFTER a frame, not synchronously here: Lenis's own
-        // `scrollTo(..., {immediate:true})` still applies the actual
-        // scroll position on its own next animation-frame tick even
-        // though it skips the smooth-scroll animation, so calling this
-        // synchronously recomputed against the STALE pre-jump position
-        // and did nothing (confirmed directly -- nav-fg was still stuck
-        // 1.5s after the real scroll had already landed).
-        requestAnimationFrame(() => ScrollTrigger.update())
-      }
+      const jump = () => scrollToSection(href)
       if (window.__maskTransition) {
         window.__maskTransition(jump)
       } else {
