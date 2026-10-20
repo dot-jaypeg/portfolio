@@ -18,8 +18,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/work" element={<AllWork />} />
+        <Route path="/work/:slug" element={<ProjectDetail />} />
         <Route path="/gallery" element={<Gallery />} />
-        <Route path="/gallery/:slug" element={<ProjectDetail />} />
       </Routes>
     </>
   )
