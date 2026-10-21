@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { Cursor } from '../components/Cursor'
 import { Grain } from '../components/Grain'
 import { Nav } from '../components/Nav'
@@ -25,12 +26,20 @@ export function AllWork() {
       <Cursor />
       <Grain />
 
-      {/* A backdrop for Nav, not a Nav change -- Nav itself is shared
-          across every route, so this stays scoped to this page as its
-          own layer sitting just behind it (z-40 vs Nav's z-50) instead
-          of touching the shared component. */}
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-40 h-24 bg-gradient-to-b from-ink/80 to-transparent backdrop-blur-md md:h-28" />
-      <Nav />
+      {/* Ink nav text on this page, not a Nav change -- Nav itself is
+          shared across every route (Home/Gallery both still want
+          cream), so this recolors it by overriding the two CSS
+          variables its own text actually resolves through, scoped to a
+          wrapper around just Nav (not Contact, further down, which
+          needs to stay on the real --fg/--bg tokens to stay dark). The
+          links/sound toggle already read `--nav-fg`; the logo is a
+          hardcoded `text-cream` utility, which only responds to this
+          because `--color-cream` is itself `var(--fg)` -- overriding
+          the narrower, derived variable here instead of `--fg` itself
+          is what keeps this from also recoloring anything else. */}
+      <div style={{ '--nav-fg': '#161616', '--color-cream': '#161616' } as CSSProperties}>
+        <Nav />
+      </div>
 
       {/* No visible intro block per the brief -- this exists purely so
           the page has a real heading for assistive tech. */}

@@ -40,7 +40,14 @@ export function Contact() {
   return (
     <footer
       id="contact"
-      className="flex min-h-screen flex-col justify-between px-6 pt-28 pb-12 md:px-10 md:pt-36 md:pb-16"
+      // Explicit bg-ink, not just relying on the page's own background
+      // (which this never set before) -- doesn't change anything on
+      // the homepage (html/body already default to ink there), but
+      // confirmed directly this was a real bug on /work: that page's
+      // own wrapper is bg-cream now, and Contact's text is hardcoded
+      // cream, so without its own dark background here the footer was
+      // rendering fully invisible -- cream text on a cream backdrop.
+      className="flex min-h-screen flex-col justify-between bg-ink px-6 pt-28 pb-12 md:px-10 md:pt-36 md:pb-16"
     >
       <TaglineReveal />
 

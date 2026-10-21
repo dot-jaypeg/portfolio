@@ -64,6 +64,17 @@ export function ProjectCard({
             <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-ink/60">
               {PLACEHOLDER_BLURB}
             </p>
+            {/* Same pill treatment as ExpertisePills/the Download Resume
+                link (rounded-full border, invert-on-hover) -- the one
+                established "button" look sitewide -- just recolored for
+                this page's light theme (border-ink, inverts to a solid
+                ink fill instead of cream). A <span>, not a nested
+                <button>/<a>: the whole card above is already one Link,
+                and interactive elements can't nest -- this is a visual
+                affordance, not a second click target. */}
+            <span className="mt-8 inline-block rounded-full border border-ink/20 px-6 py-3 text-xs tracking-wider text-ink/70 uppercase transition-colors duration-300 group-hover:border-ink group-hover:bg-ink group-hover:text-cream">
+              View Project
+            </span>
           </div>
           <span className="font-body text-xs tracking-[0.22em] text-ink/40 uppercase">
             {cs.category}
