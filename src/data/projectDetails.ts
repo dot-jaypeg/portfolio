@@ -1,11 +1,17 @@
 import contraMoodboard from '../assets/images/projects/detail/contra-coffee-sticker-pack/moodboard.jpg'
+import contraLogoMark from '../assets/images/projects/detail/contra-coffee-sticker-pack/logo-mark.png'
 import sketchGoldRush from '../assets/images/projects/detail/contra-coffee-sticker-pack/sketch-gold-rush.png'
 import sketchKuyaLatte from '../assets/images/projects/detail/contra-coffee-sticker-pack/sketch-kuya-latte.png'
 import sketchStrawberryFields from '../assets/images/projects/detail/contra-coffee-sticker-pack/sketch-strawberry-fields.png'
-import stickerSheet from '../assets/images/projects/detail/contra-coffee-sticker-pack/sticker-sheet.jpg'
-import stickersDiecut from '../assets/images/projects/detail/contra-coffee-sticker-pack/stickers-diecut.jpg'
+import finalStickerGoldRush from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-sticker-gold-rush.png'
+import finalStickerKuyaLatte from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-sticker-kuya-latte.png'
+import finalStickerStrawberryFields from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-sticker-strawberry-fields.png'
+import finalCast1 from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-cast-1.png'
+import finalCast2 from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-cast-2.png'
+import finalCast3 from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-cast-3.png'
 import waterBottleMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/water-bottle-mockup.jpg'
 import tshirtMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/tshirt-mockup.jpg'
+import keychainMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/keychain-mockup.jpg'
 
 import showBoston2 from '../assets/images/projects/detail/afi-marketing-campaign/show-boston-2.jpg'
 import showPhilly from '../assets/images/projects/detail/afi-marketing-campaign/show-philly.jpg'
@@ -47,6 +53,8 @@ import chichaPackagingMockup from '../assets/images/projects/detail/chi-cha/pack
 
 import protocolOfBetrayalImg from '../assets/images/projects/star-wars.jpg'
 
+import type { ImageGridLayout } from '../components/ImageGrid'
+
 export interface ProjectImage {
   // Omit `src` (and width/height) to render a dashed placeholder box
   // instead -- for a chapter whose real asset hasn't been supplied
@@ -61,8 +69,18 @@ export interface ProjectImage {
 export interface ProjectChapter {
   label: string
   text: string
-  layout: 'full-bleed' | 'two-up' | 'trio' | 'contained'
+  layout: ImageGridLayout
   images: ProjectImage[]
+  // A second image block within the same chapter, for a deliverable
+  // that reads better as two distinct groupings (e.g. finished
+  // stickers, then the wider illustrated cast) rather than one mixed
+  // grid or a second chapter that repeats the same label's copy.
+  extraImages?: { layout: ImageGridLayout; images: ProjectImage[] }
+  // False drops ImageGrid's rounded bg-cream/5 card backdrop for this
+  // chapter's images -- for transparent-background cutouts (sketches,
+  // sticker renders) where that backdrop would show as an unwanted
+  // grey box around the art. Defaults to true.
+  imagesOnCard?: boolean
 }
 
 export interface ProjectLinks {
@@ -81,8 +99,16 @@ export interface ProjectDetailData {
   heroLead: string
   heroBold?: string
   heroTagline: string
+  // Overrides the hero image's CSS object-position independently of
+  // CASE_STUDIES' own `imagePosition` -- that field also drives the
+  // homepage WorkPanel crop, so reusing it here would recrop that too.
+  // Defaults to `project.imagePosition ?? 'center'` when unset.
+  heroImagePosition?: string
   tags: string[]
   intro: string
+  // An optional small mark (a logo, a wordmark) rendered centered
+  // between the intro and the first chapter.
+  brandMark?: { src: string; alt: string }
   links?: ProjectLinks
   // Optional concrete number/credit -- omitted everywhere for now since
   // none of these are verified yet (see the per-project ask list this
@@ -95,10 +121,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   'contra-coffee-sticker-pack': {
     heroLead: 'A cohesive Y2K merch collection for',
     heroTagline:
-      ', spanning a reusable glass growler, apparel, and a drink-inspired sticker pack designed for Chapman students.',
+      ', spanning a reusable glass growler, apparel, and a drink-inspired sticker pack designed for Contra lovers.',
+    // The cover photo is a tall shot of stickers spread across a table --
+    // centering it (the default) pushes the visible crop down toward
+    // the lower, sparser half. Biasing toward the top keeps more of the
+    // actual sticker faces in frame.
+    heroImagePosition: 'center 20%',
     tags: ['Illustration', 'Character Design', 'Merchandise', 'Branding'],
     intro:
-      'Contra’s brand leans into community, so this collection was built around their core audience of Chapman students. One visual system — a teal-and-orange palette, a speech bubble motif, and an early-2000s sensibility pulled in part from Peach Riot — carries across every piece, built to feel nostalgic and collectible, and to line up with Contra’s upcoming brand refresh.',
+      'Contra’s brand leans into community, so this collection was built around their core audience of Contra lovers. One visual system — a teal-and-orange palette, a speech bubble motif, and an early-2000s sensibility pulled in part from Peach Riot — carries across every piece, built to feel nostalgic and collectible, and to line up with Contra’s upcoming brand refresh.',
+    brandMark: { src: contraLogoMark, alt: 'Contra Coffee & Tea icon' },
     links: {
       featuredOn: [
         { label: 'Instagram Post', href: 'https://www.instagram.com/p/DYU0v_kNiai/?hl=en' },
@@ -112,7 +144,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         label: 'Mood & Reference',
         text: 'The system started as a mood board pulling from Peach Riot and early-2000s character design — the reference point for the palette, the linework, and the playful sensibility the whole drop had to carry.',
-        layout: 'contained',
+        layout: 'full-bleed',
         images: [
           {
             src: contraMoodboard,
@@ -126,6 +158,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Character Studies',
         text: 'Each sticker personifies one of Contra’s signature drinks — Gold Rush, Kuya Latte, Strawberry Fields — so every character had to capture the personality behind the name on its own, since the pack sells each piece individually rather than as a sheet.',
         layout: 'trio',
+        imagesOnCard: false,
         images: [
           {
             src: sketchGoldRush,
@@ -149,40 +182,57 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'The Sticker Pack',
-        text: 'The final three-piece pack went from flat sheet to die-cut print, each character keeping its own shape and palette pulled straight from Contra’s in-store signage.',
-        layout: 'two-up',
+        text: 'The final three-piece pack went from pencil study to polished sticker, while a wider cast of Contra regulars rounded out the same illustration style.',
+        layout: 'trio',
+        imagesOnCard: false,
         images: [
           {
-            src: stickerSheet,
-            alt: 'Contra Coffee & Tea sticker sheet with die-cut character illustrations',
-            width: 2000,
-            height: 1125,
+            src: finalStickerGoldRush,
+            alt: 'Final Gold Rush sticker design',
+            width: 1200,
+            height: 1200,
           },
           {
-            src: stickersDiecut,
-            alt: 'Final die-cut Contra Coffee stickers',
-            width: 1500,
-            height: 2000,
+            src: finalStickerKuyaLatte,
+            alt: 'Final Kuya Latte sticker design',
+            width: 1200,
+            height: 1199,
           },
-        ],
-      },
-      {
-        label: 'Reusable Growler',
-        text: 'The same character work extended onto a 32oz reusable glass growler, built to survive real use — a bag, a counter, a to-go cup — at a much smaller scale without losing the linework.',
-        layout: 'contained',
-        images: [
           {
-            src: waterBottleMockup,
-            alt: 'Contra Coffee sticker applied to a reusable glass growler',
-            width: 1600,
-            height: 1600,
+            src: finalStickerStrawberryFields,
+            alt: 'Final Strawberry Fields sticker design',
+            width: 1200,
+            height: 1039,
           },
         ],
+        extraImages: {
+          layout: 'trio',
+          images: [
+            {
+              src: finalCast1,
+              alt: 'Final character illustration: MC Squared',
+              width: 1200,
+              height: 1200,
+            },
+            {
+              src: finalCast2,
+              alt: 'Final character illustrations: Lucky Cat, Gold Rush, and That Orange Stuff',
+              width: 1200,
+              height: 1200,
+            },
+            {
+              src: finalCast3,
+              alt: 'Final character illustrations: Strawberry Fields and Kuya Latte',
+              width: 1200,
+              height: 1200,
+            },
+          ],
+        },
       },
       {
         label: 'Apparel & Bonus Merch',
-        text: 'A speech-bubble wordmark and the same character illustrations carried onto apparel — the drop’s bonus tier also covers a glass cup, totes, hats, and hoodies, all reading as one collection.',
-        layout: 'contained',
+        text: 'A speech-bubble wordmark and the same character illustrations carried onto apparel and a keychain — the drop’s bonus tier also covers a glass cup, totes, hats, and hoodies, all reading as one collection.',
+        layout: 'two-up',
         images: [
           {
             src: tshirtMockup,
@@ -190,7 +240,24 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             width: 2000,
             height: 1333,
           },
+          {
+            src: keychainMockup,
+            alt: 'MC Squared acrylic keychain with dice charms',
+            width: 2000,
+            height: 1125,
+          },
         ],
+        extraImages: {
+          layout: 'full-page',
+          images: [
+            {
+              src: waterBottleMockup,
+              alt: 'Contra Coffee stickers applied to reusable glass growlers',
+              width: 1600,
+              height: 1600,
+            },
+          ],
+        },
       },
     ],
   },

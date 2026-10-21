@@ -38,8 +38,17 @@ export function ProjectChapter({ chapter }: { chapter: ProjectChapterData }) {
         </p>
       </div>
       <div data-reveal>
-        <ImageGrid layout={chapter.layout} images={chapter.images} />
+        <ImageGrid layout={chapter.layout} images={chapter.images} card={chapter.imagesOnCard ?? true} />
       </div>
+      {chapter.extraImages && (
+        <div data-reveal className="mt-10">
+          <ImageGrid
+            layout={chapter.extraImages.layout}
+            images={chapter.extraImages.images}
+            card={chapter.imagesOnCard ?? true}
+          />
+        </div>
+      )}
     </section>
   )
 }

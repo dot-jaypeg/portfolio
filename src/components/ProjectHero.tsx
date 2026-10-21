@@ -36,7 +36,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
             ref={imgRef}
             src={project.image}
             alt={`${project.title} lead image`}
-            style={{ objectPosition: project.imagePosition ?? 'center' }}
+            style={{ objectPosition: detail.heroImagePosition ?? project.imagePosition ?? 'center' }}
             className="h-full w-full object-cover"
             loading="eager"
             decoding="async"
@@ -60,39 +60,28 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
         </p>
 
         {links && (links.site || (links.featuredOn && links.featuredOn.length > 0)) && (
-          <div className="mt-10 flex flex-wrap gap-x-16 gap-y-6 border-t border-cream/10 pt-6">
+          <div className="mt-10 flex flex-wrap gap-4 border-t border-cream/10 pt-8">
             {links.site && (
-              <div>
-                <p className="font-body mb-2 text-xs tracking-[0.22em] text-cream/40 uppercase">Visit Site</p>
-                <a
-                  href={links.site}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-body text-sm text-cream/70 transition-colors hover:text-cream"
-                >
-                  {project.title}
-                </a>
-              </div>
+              <a
+                href={links.site}
+                target="_blank"
+                rel="noreferrer"
+                className="font-body rounded-full border border-cream/20 px-6 py-3 text-xs tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
+              >
+                Visit Site
+              </a>
             )}
-            {links.featuredOn && links.featuredOn.length > 0 && (
-              <div>
-                <p className="font-body mb-2 text-xs tracking-[0.22em] text-cream/40 uppercase">Featured On</p>
-                <ul className="space-y-1">
-                  {links.featuredOn.map((f) => (
-                    <li key={f.href}>
-                      <a
-                        href={f.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="font-body text-sm text-cream/70 transition-colors hover:text-cream"
-                      >
-                        {f.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            {links.featuredOn?.map((f) => (
+              <a
+                key={f.href}
+                href={f.href}
+                target="_blank"
+                rel="noreferrer"
+                className="font-body rounded-full border border-cream/20 px-6 py-3 text-xs tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
+              >
+                {f.label}
+              </a>
+            ))}
           </div>
         )}
       </div>
