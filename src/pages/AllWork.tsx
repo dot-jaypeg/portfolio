@@ -21,7 +21,7 @@ export function AllWork() {
   )
 
   return (
-    <div className="bg-ink">
+    <div className="bg-cream">
       <Cursor />
       <Grain />
 

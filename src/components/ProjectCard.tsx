@@ -46,26 +46,26 @@ export function ProjectCard({
       // confirmed directly that it was `relative`, silently killing the
       // pin entirely. Keeping them in separate, mutually exclusive
       // branches avoids relying on that order at all.
-      className={stacked ? 'sticky top-0 h-dvh w-full bg-ink' : 'relative h-auto w-full bg-ink'}
+      className={stacked ? 'sticky top-0 h-dvh w-full bg-cream' : 'relative h-auto w-full bg-cream'}
     >
       <Link
         to={`/work/${cs.slug}`}
         onClick={goToProject}
-        className="group flex h-full flex-col items-center transition-colors duration-500 hover:bg-cream focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-teal md:flex-row"
+        className="group flex h-full flex-col items-center focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-teal md:flex-row"
       >
         <div className="flex w-full flex-1 flex-col justify-between gap-6 px-8 py-10 md:w-1/2 md:px-16 md:py-16 lg:px-24">
-          <span className="font-body text-xs tracking-[0.22em] text-cream/40 uppercase transition-colors duration-500 group-hover:text-ink/40">
+          <span className="font-body text-xs tracking-[0.22em] text-ink/40 uppercase">
             {String(index + 1).padStart(2, '0')}
           </span>
           <div>
-            <h2 className="font-display text-4xl leading-[0.95] font-bold tracking-[-0.04em] text-cream uppercase transition-colors duration-500 group-hover:text-ink md:text-5xl lg:text-6xl">
+            <h2 className="font-display text-4xl leading-[0.95] font-bold tracking-[-0.04em] text-ink uppercase md:text-5xl lg:text-6xl">
               {cs.title}
             </h2>
-            <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-cream/60 transition-colors duration-500 group-hover:text-ink/60">
+            <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-ink/60">
               {PLACEHOLDER_BLURB}
             </p>
           </div>
-          <span className="font-body text-xs tracking-[0.22em] text-cream/40 uppercase transition-colors duration-500 group-hover:text-ink/40">
+          <span className="font-body text-xs tracking-[0.22em] text-ink/40 uppercase">
             {cs.category}
           </span>
         </div>
@@ -90,8 +90,8 @@ export function ProjectCard({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center border border-dashed border-cream/15">
-                <span className="font-body px-4 text-center text-[10px] tracking-[0.22em] text-cream/25 uppercase">
+              <div className="flex h-full w-full items-center justify-center border border-dashed border-ink/15">
+                <span className="font-body px-4 text-center text-[10px] tracking-[0.22em] text-ink/25 uppercase">
                   [ placeholder image ]
                 </span>
               </div>
@@ -100,15 +100,19 @@ export function ProjectCard({
         </div>
       </Link>
 
-      {/* The outgoing card's "soft white wash" -- fades in on top of
-          THIS card's own content as the next one rises to cover it. Its
-          own eventual opacity 1 is what keeps it from ever bleeding
-          through once settled (see ProjectStack for why that matters:
-          the next card's root fades in from 0 over this same card, so
-          anything this wash doesn't fully hide would otherwise show
-          through indefinitely once the handoff finishes, not just
-          during it). */}
-      {stacked && <div ref={washRef} className="pointer-events-none absolute inset-0 bg-cream opacity-0" />}
+      {/* The outgoing card's recede-wash -- fades in on top of THIS
+          card's own content as the next one rises to cover it. Ink, not
+          cream: now that the page's own base is cream-on-ink text (not
+          the original dark theme this was designed against), a cream
+          wash over an already-cream card would be invisible. The wash
+          needs to match the TEXT color, not the background -- that's
+          what makes the title visually sink into an increasingly
+          same-toned veil as it recedes, while the backdrop (the
+          opposite tone) visibly shifts underneath; that pairing is what
+          read as "fading out" in the original dark-theme version (cream
+          wash over cream text, against an ink backdrop), so flipping
+          both keeps the same effect legible in this one. */}
+      {stacked && <div ref={washRef} className="pointer-events-none absolute inset-0 bg-ink opacity-0" />}
     </section>
   )
 }
