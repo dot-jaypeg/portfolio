@@ -4,80 +4,82 @@ import { ProjectCard } from './ProjectCard'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { gsap, ScrollTrigger } from '../lib/gsap'
 
-// Layered sticky card stack modeled on advancedmarketers.co/specialties
-// -- read directly from its shipped specialties-scroll.js, not guessed
-// from watching it scroll (see conversation for the exact numbers this
-// is based on, and where this deliberately diverges from it).
+// Sticky card stack, pinning mechanic only borrowed from
+// advancedmarketers.co/specialties (confirmed directly from its own
+// shipped JS *and* CSS: every card is `position: sticky; top: 0` with
+// an ascending z-index, under one shared parent, which is the entire
+// reason later cards cover earlier ones with no JS required for that
+// part at all -- GSAP only adds polish on top). Everything else here
+// -- the soft white wash, the title/blurb crossfade, the thumbnail
+// tilt-and-blur entrance -- is NOT in that reference (its own CSS
+// comment literally says "the rows never fade"); this is this site's
+// own direction, built fresh rather than ported.
 //
-// The covering effect itself needs zero JavaScript: every card is
-// `position: sticky; top: 0; height: 100dvh` with an ascending
-// z-index, all as siblings under this one shared container. Scrolled
-// past, each one just stays pinned at the same spot and the next one
-// (higher z-index) paints over it -- that's the whole mechanic, and
-// it's why the page still reads correctly without JS. GSAP only adds
-// the scale-down/dim/corner-radius polish on top, scrubbed to how far
-// the NEXT card has travelled from the bottom of the viewport (progress
-// 0) to the top (progress 1) -- exactly the reference's own progress
-// calculation, just expressed as a ScrollTrigger instead of a hand-
-// rolled rAF loop.
+// How the crossfade is actually composited: each card's own section
+// opacity fades in from 0 as it arrives (not just its wash) -- so for
+// the handoff's whole duration, you're seeing a literal blend of the
+// outgoing card (fading toward solid cream under its wash) and the
+// incoming one (fading up from transparent), which is what makes both
+// titles genuinely visible together rather than one hard-cutting over
+// the other.
 export function ProjectStack() {
   const prefersReducedMotion = usePrefersReducedMotion()
   const containerRef = useRef<HTMLDivElement>(null)
   const cardEls = useRef<(HTMLElement | null)[]>([])
-  const dimEls = useRef<(HTMLDivElement | null)[]>([])
-  const clipEls = useRef<(HTMLDivElement | null)[]>([])
+  const washEls = useRef<(HTMLDivElement | null)[]>([])
+  const mediaEls = useRef<(HTMLDivElement | null)[]>([])
 
   useLayoutEffect(() => {
     if (prefersReducedMotion || !containerRef.current) return
 
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia()
-      mm.add(
-        { isDesktop: '(min-width: 768px)', isMobile: '(max-width: 767px)' },
-        (context) => {
-          const { isDesktop } = context.conditions as { isDesktop: boolean }
-          // Smaller shift and a shorter transition window on mobile --
-          // not a shorter CARD (still a full 100dvh, per the brief),
-          // just a quicker cover/recede once the next one starts
-          // entering, via a later ScrollTrigger `start`.
-          const scaleFloor = isDesktop ? 0.95 : 0.97
-          const dimOpacity = isDesktop ? 0.18 : 0.12
-          const cornerRadius = isDesktop ? 28 : 16
-          const start = isDesktop ? 'top bottom' : 'top 70%'
+      mm.add({ isDesktop: '(min-width: 768px)' }, (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean }
+        // Mobile keeps the stack (per direct request -- the reference
+        // itself disables it below 768px, this site doesn't), just
+        // with a shorter handoff and a lighter tilt/blur.
+        const handoffVh = isDesktop ? 0.75 : 0.5
+        const tiltDeg = isDesktop ? 12 : 6
+        const blurPx = isDesktop ? 10 : 5
 
-          cardEls.current.forEach((card, i) => {
-            const next = cardEls.current[i + 1]
-            if (!card || !next) return
-            const dim = dimEls.current[i]
-            const clip = clipEls.current[i]
-            const scrollTrigger = { trigger: next, start, end: 'top top', scrub: true }
+        for (let i = 1; i < cardEls.current.length; i++) {
+          const card = cardEls.current[i]
+          const prevWash = washEls.current[i - 1]
+          const media = mediaEls.current[i]
+          if (!card) continue
 
-            gsap.fromTo(card, { scale: 1 }, { scale: scaleFloor, ease: 'none', scrollTrigger })
-            if (dim) {
-              gsap.fromTo(dim, { opacity: 0 }, { opacity: dimOpacity, ease: 'none', scrollTrigger })
-            }
-            if (clip) {
-              gsap.fromTo(
-                clip,
-                { clipPath: 'inset(0px round 0px)' },
-                { clipPath: `inset(0px round ${cornerRadius}px)`, ease: 'none', scrollTrigger },
-              )
-            }
-          })
+          // scrub: a number (not `true`), for the lagged "catches up"
+          // smoothing the brief asks for ("smooth easing") -- a straight
+          // 1:1 scrub (what the reference itself uses) tracks the
+          // scrollbar exactly, which reads as mechanical rather than
+          // smooth once there's a multi-part crossfade riding on it.
+          const scrollTrigger = {
+            trigger: card,
+            start: 'top bottom',
+            end: () => `+=${window.innerHeight * handoffVh}`,
+            scrub: 0.6,
+          }
 
-          // matchMedia's own per-breakpoint cleanup -- these tweens'
-          // ScrollTriggers get killed automatically whenever the
-          // breakpoint changes or the context reverts.
-          return () => undefined
-        },
-      )
+          gsap.fromTo(card, { autoAlpha: 0 }, { autoAlpha: 1, ease: 'none', scrollTrigger })
+          if (prevWash) {
+            gsap.fromTo(prevWash, { opacity: 0 }, { opacity: 1, ease: 'none', scrollTrigger })
+          }
+          if (media) {
+            gsap.fromTo(
+              media,
+              { rotateX: tiltDeg, scale: 1.06, filter: `blur(${blurPx}px)` },
+              { rotateX: 0, scale: 1, filter: 'blur(0px)', ease: 'none', scrollTrigger },
+            )
+          }
+        }
+      })
     }, containerRef)
 
-    // Images don't affect any card's height here (each is a fixed
-    // 100dvh regardless of its own image's aspect ratio), so there's no
-    // layout-shift risk from them loading late -- this is just a
-    // defensive recompute for anything else that might affect page
-    // height (fonts, etc.), per the brief.
+    // Each card's height is a fixed 100dvh regardless of its own image's
+    // aspect ratio, so image loads can't shift any pin position here --
+    // this is just a defensive recompute for anything else that might
+    // affect page height (fonts, etc.), per the brief.
     const refreshId = requestAnimationFrame(() => ScrollTrigger.refresh())
 
     return () => {
@@ -93,15 +95,16 @@ export function ProjectStack() {
           key={cs.slug}
           cs={cs}
           index={i}
+          aspect={i % 2 === 0 ? '4/3' : '3/2'}
           stacked={!prefersReducedMotion}
           cardRef={(el) => {
             cardEls.current[i] = el
           }}
-          dimRef={(el) => {
-            dimEls.current[i] = el
+          washRef={(el) => {
+            washEls.current[i] = el
           }}
-          clipRef={(el) => {
-            clipEls.current[i] = el
+          mediaRef={(el) => {
+            mediaEls.current[i] = el
           }}
         />
       ))}

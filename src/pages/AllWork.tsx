@@ -24,6 +24,12 @@ export function AllWork() {
     <div className="bg-ink">
       <Cursor />
       <Grain />
+
+      {/* A backdrop for Nav, not a Nav change -- Nav itself is shared
+          across every route, so this stays scoped to this page as its
+          own layer sitting just behind it (z-40 vs Nav's z-50) instead
+          of touching the shared component. */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-40 h-24 bg-gradient-to-b from-ink/80 to-transparent backdrop-blur-md md:h-28" />
       <Nav />
 
       {/* No visible intro block per the brief -- this exists purely so

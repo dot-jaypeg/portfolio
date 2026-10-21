@@ -50,20 +50,30 @@ body {
 
 html {
   /* The real scrolling element in standards mode is <html>, not
-     <body> -- body's own overflow-x: hidden below doesn't stop it from
-     being horizontally scrollable. CinematicIntro's horizontally
-     pinned scene track (each panel w-screen, laid out side by side for
-     the scroll-jack reveal) was leaking a few dozen px of extra width
-     into html's own scrollWidth through GSAP's pin-spacer wrapper,
-     letting a stray horizontal swipe on mobile scroll into blank
-     space past the site's real content. */
+     <body>. This used to be the fix for a real mobile horizontal-leak
+     bug that was originally (and wrongly) attributed to CinematicIntro
+     -- confirmed directly that hiding its scene track didn't change
+     document.documentElement.scrollWidth at all. The actual source was
+     journeyChapters.tsx's shared chapter-panel markup: an unconditional
+     `flex` row (image column + copy column) reused as-is on mobile
+     (JourneyMobile has no pin/horizontal-scroll to make that row
+     layout make sense there), where the copy column's flex-1 refused
+     to shrink below its own text's min-content width and pushed the
+     whole panel wider than its own w-screen box. That's fixed at the
+     source now, so this is just a defensive backstop, not load-bearing
+     for that bug anymore. */
   overflow-x: hidden;
 }
 
 body {
   font-family: var(--font-body);
   color: var(--color-cream);
-  overflow-x: hidden;
+  /* Deliberately NOT overflow-x:hidden here, even as a backstop --
+     confirmed directly that giving both html and body a non-visible
+     overflow creates two nested, ambiguous scroll containers, which
+     silently breaks `position: sticky` on anything inside (Chromium
+     picks the wrong one as the sticky reference). The Work page's
+     stacked-card scroll depends on plain CSS sticky working correctly. */
 }
 
 ::selection {

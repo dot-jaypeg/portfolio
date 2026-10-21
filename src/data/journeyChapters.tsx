@@ -67,7 +67,20 @@ function WorkPanel({
   return (
     <div
       id={id}
-      className={`chapter-panel relative flex min-h-screen w-screen shrink-0 items-start gap-8 px-8 md:px-20 ${flipped ? 'flex-row-reverse' : ''}`}
+      // flex-col md:flex-row, not a bare `flex` -- this same render()
+      // output is reused UNMODIFIED on JourneyMobile (no pin, no
+      // horizontal scroll-jack there), where an unconditional flex ROW
+      // packed the 38vw image column and chapter-copy's flex-1 column
+      // side by side into a width that doesn't fit either comfortably.
+      // flex-1's default min-width:auto meant the copy column refused
+      // to shrink below its own text's min-content width instead of
+      // actually fitting the remaining space, pushing the whole panel
+      // wider than its own w-screen box -- confirmed directly as the
+      // exact source of a real, previously-misdiagnosed horizontal-
+      // scroll-leak bug (the earlier "fix" for it, removing overflow-x
+      // from html+body, broke position:sticky elsewhere; this is the
+      // actual root cause instead, so that revert can stick).
+      className={`chapter-panel relative flex min-h-screen w-screen shrink-0 flex-col items-start gap-8 px-8 md:flex-row md:px-20 ${flipped ? 'md:flex-row-reverse' : ''}`}
     >
       <div className="relative w-[38vw] max-w-xl shrink-0 self-stretch overflow-hidden">
         {cs.image ? (

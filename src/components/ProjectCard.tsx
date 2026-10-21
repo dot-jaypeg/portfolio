@@ -11,20 +11,24 @@ const PLACEHOLDER_BLURB =
 export function ProjectCard({
   cs,
   index,
+  aspect,
   stacked,
   cardRef,
-  dimRef,
-  clipRef,
+  washRef,
+  mediaRef,
 }: {
   cs: CaseStudy
   index: number
+  // Liesinger's own thumbnails alternate between roughly 4:3 and 3:2 --
+  // not a uniform ratio across every project.
+  aspect: '4/3' | '3/2'
   // False under prefers-reduced-motion -- renders as a plain block in
-  // normal document flow instead of a sticky, z-indexed stack layer,
-  // and skips the dim overlay entirely (nothing to scrub it).
+  // normal flow instead of a sticky, z-indexed stack layer, and skips
+  // the wash overlay entirely (nothing left to scrub it).
   stacked: boolean
   cardRef?: (el: HTMLElement | null) => void
-  dimRef?: (el: HTMLDivElement | null) => void
-  clipRef?: (el: HTMLDivElement | null) => void
+  washRef?: (el: HTMLDivElement | null) => void
+  mediaRef?: (el: HTMLDivElement | null) => void
 }) {
   const maskNavigate = useMaskNavigate()
   const goToProject = (e: { preventDefault: () => void }) => {
@@ -36,36 +40,46 @@ export function ProjectCard({
     <section
       ref={cardRef}
       style={stacked ? { zIndex: index + 1 } : undefined}
-      className={`group relative w-full bg-ink ${stacked ? 'sticky top-0 h-dvh' : 'h-auto'}`}
+      // `sticky` and `relative` both set `position`, and Tailwind's
+      // generated CSS order (not this template's order) decides which
+      // utility wins when both are present on the same element --
+      // confirmed directly that it was `relative`, silently killing the
+      // pin entirely. Keeping them in separate, mutually exclusive
+      // branches avoids relying on that order at all.
+      className={stacked ? 'sticky top-0 h-dvh w-full bg-ink' : 'relative h-auto w-full bg-ink'}
     >
-      {/* The clip-path target -- kept as its own wrapper, separate from
-          the Link below, so GSAP can round its corners as it recedes
-          without that transform ever touching hit-testing/focus on the
-          interactive element inside it. */}
-      <div ref={clipRef} className="h-full w-full overflow-hidden">
-        <Link
-          to={`/work/${cs.slug}`}
-          onClick={goToProject}
-          className="flex h-full flex-col bg-ink transition-colors duration-500 group-hover:bg-cream focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-teal md:flex-row"
-        >
-          <div className="flex flex-1 flex-col justify-between gap-6 p-8 md:w-1/2 md:p-16">
-            <span className="font-body text-xs tracking-[0.22em] text-cream/40 uppercase transition-colors duration-500 group-hover:text-ink/40">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-            <div>
-              <h2 className="font-display text-4xl leading-[0.95] font-bold tracking-[-0.04em] text-cream uppercase transition-colors duration-500 group-hover:text-ink md:text-5xl lg:text-6xl">
-                {cs.title}
-              </h2>
-              <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-cream/60 transition-colors duration-500 group-hover:text-ink/60">
-                {PLACEHOLDER_BLURB}
-              </p>
-            </div>
-            <span className="font-body text-xs tracking-[0.22em] text-cream/40 uppercase transition-colors duration-500 group-hover:text-ink/40">
-              {cs.category}
-            </span>
+      <Link
+        to={`/work/${cs.slug}`}
+        onClick={goToProject}
+        className="group flex h-full flex-col items-center transition-colors duration-500 hover:bg-cream focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-teal md:flex-row"
+      >
+        <div className="flex w-full flex-1 flex-col justify-between gap-6 px-8 py-10 md:w-1/2 md:px-16 md:py-16 lg:px-24">
+          <span className="font-body text-xs tracking-[0.22em] text-cream/40 uppercase transition-colors duration-500 group-hover:text-ink/40">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <div>
+            <h2 className="font-display text-4xl leading-[0.95] font-bold tracking-[-0.04em] text-cream uppercase transition-colors duration-500 group-hover:text-ink md:text-5xl lg:text-6xl">
+              {cs.title}
+            </h2>
+            <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-cream/60 transition-colors duration-500 group-hover:text-ink/60">
+              {PLACEHOLDER_BLURB}
+            </p>
           </div>
+          <span className="font-body text-xs tracking-[0.22em] text-cream/40 uppercase transition-colors duration-500 group-hover:text-ink/40">
+            {cs.category}
+          </span>
+        </div>
 
-          <div className="relative min-h-0 flex-1 md:w-1/2">
+        {/* Liesinger-matched thumbnail sizing: a bounded, centered box
+            (not full-bleed-to-edges like the previous stack build) --
+            `perspective` lives here, on media's PARENT, so GSAP's rotateX
+            on media itself (see ProjectStack) actually reads as a tilt in
+            3D space instead of a flat skew. */}
+        <div
+          className="flex w-full flex-1 items-center justify-center px-8 py-6 md:w-1/2 md:px-16 md:py-16 lg:px-24"
+          style={{ perspective: '1400px' }}
+        >
+          <div ref={mediaRef} className="w-full max-w-xl overflow-hidden" style={{ aspectRatio: aspect }}>
             {cs.image ? (
               <img
                 src={cs.image}
@@ -83,13 +97,18 @@ export function ProjectCard({
               </div>
             )}
           </div>
-        </Link>
-      </div>
+        </div>
+      </Link>
 
-      {/* Stands in for the reference's filter:brightness() darken --
-          restricted to transform/opacity/clip-path here, so this is a
-          plain opacity-scrubbed black layer instead of a CSS filter. */}
-      {stacked && <div ref={dimRef} className="pointer-events-none absolute inset-0 bg-black opacity-0" />}
+      {/* The outgoing card's "soft white wash" -- fades in on top of
+          THIS card's own content as the next one rises to cover it. Its
+          own eventual opacity 1 is what keeps it from ever bleeding
+          through once settled (see ProjectStack for why that matters:
+          the next card's root fades in from 0 over this same card, so
+          anything this wash doesn't fully hide would otherwise show
+          through indefinitely once the handoff finishes, not just
+          during it). */}
+      {stacked && <div ref={washRef} className="pointer-events-none absolute inset-0 bg-cream opacity-0" />}
     </section>
   )
 }
