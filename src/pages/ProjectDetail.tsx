@@ -57,8 +57,10 @@ export function ProjectDetail() {
       <main>
         <ProjectHero project={project} detail={detail} />
 
-        <div className="mx-auto max-w-3xl px-6 pt-4 md:px-10 md:pt-6">
-          <p className="font-body text-base leading-relaxed text-cream/70 md:text-lg">{detail.intro}</p>
+        <div className="px-6 pt-4 pb-4 md:px-10 md:pt-6">
+          <p className="font-display max-w-[90rem] text-2xl leading-[1.2] font-normal text-cream/80 md:text-4xl lg:text-5xl">
+            {detail.intro}
+          </p>
         </div>
 
         {detail.chapters.map((chapter) => (

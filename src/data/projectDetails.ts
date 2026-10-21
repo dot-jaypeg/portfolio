@@ -42,10 +42,13 @@ import chichaPackagingMockup from '../assets/images/projects/detail/chi-cha/pack
 import protocolOfBetrayalImg from '../assets/images/projects/star-wars.jpg'
 
 export interface ProjectImage {
-  src: string
+  // Omit `src` (and width/height) to render a dashed placeholder box
+  // instead -- for a chapter whose real asset hasn't been supplied
+  // yet. `alt` doubles as that box's own label in that case.
+  src?: string
   alt: string
-  width: number
-  height: number
+  width?: number
+  height?: number
   caption?: string
 }
 
@@ -456,6 +459,12 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           },
         ],
       },
+      {
+        label: 'In Production',
+        text: 'Placeholder chapter — add a product shot of the pattern printed on an actual tote or pouch once one exists.',
+        layout: 'contained',
+        images: [{ alt: 'Add a product photo of the printed tote or pouch' }],
+      },
     ],
   },
 
@@ -545,6 +554,18 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             height: 899,
           },
         ],
+      },
+      {
+        label: 'Environment & Lighting',
+        text: 'Placeholder chapter — add a render or screenshot of the environment build and lighting setup once you have one.',
+        layout: 'contained',
+        images: [{ alt: 'Add an environment or lighting render' }],
+      },
+      {
+        label: 'Character Animation',
+        text: 'Placeholder chapter — add an animation still, turntable, or breakdown shot once you have one.',
+        layout: 'contained',
+        images: [{ alt: 'Add a character animation still' }],
       },
     ],
   },

@@ -30,10 +30,11 @@ export function ProjectChapter({ chapter }: { chapter: ProjectChapterData }) {
   }, [prefersReducedMotion])
 
   return (
-    <section ref={sectionRef} className="py-14 md:py-20">
-      <div data-reveal className="mx-auto max-w-3xl px-6 md:px-10">
-        <p className="font-body text-sm leading-relaxed text-cream/80 md:text-base">
-          <strong className="text-cream">{chapter.label}.</strong> {chapter.text}
+    <section ref={sectionRef} className="py-20 md:py-32">
+      <div data-reveal className="px-6 md:px-10">
+        <p className="font-body mb-5 text-xs tracking-[0.22em] text-cream/40 uppercase">{chapter.label}</p>
+        <p className="font-display max-w-[90rem] text-2xl leading-[1.2] font-normal text-cream md:text-4xl lg:text-5xl">
+          {chapter.text}
         </p>
       </div>
       <div data-reveal>

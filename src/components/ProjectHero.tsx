@@ -4,10 +4,14 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import type { CaseStudy } from '../data/caseStudies'
 import type { ProjectDetailData } from '../data/projectDetails'
 
+// Media comes first, full-bleed, with no text overlaid on it -- the
+// nav is already `fixed`/transparent (see Nav.tsx), so it simply
+// floats on top of this the same way it does on littletroop.com's own
+// case studies. The statement H1, tags, and links row all sit below
+// it, not over it.
 export function ProjectHero({ project, detail }: { project: CaseStudy; detail: ProjectDetailData }) {
   const imgRef = useRef<HTMLImageElement>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
-  const accent = project.accent ?? '#618c82'
   const heroBold = detail.heroBold ?? project.client
   const links = detail.links
 
@@ -18,61 +22,16 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
       gsap.fromTo(
         el,
         { opacity: 0, scale: 1.06 },
-        { opacity: 1, scale: 1, duration: 1.3, ease: 'power3.out', delay: 0.15 },
+        { opacity: 1, scale: 1, duration: 1.4, ease: 'power3.out', delay: 0.1 },
       )
     })
     return () => ctx.revert()
   }, [prefersReducedMotion])
 
   return (
-    <header className="pt-32 pb-10 md:pt-40 md:pb-14">
-      <div className="px-6 md:px-10">
-        <p
-          style={{ color: accent }}
-          className="font-body mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs tracking-[0.22em] uppercase"
-        >
-          {detail.tags.map((tag, i) => (
-            <span key={tag} className="flex items-center gap-2">
-              {i > 0 && <span className="text-cream/25">/</span>}
-              {tag}
-            </span>
-          ))}
-        </p>
-
-        <h1 className="font-display max-w-4xl text-3xl leading-[1.15] font-bold tracking-[-0.02em] text-cream md:text-5xl lg:text-6xl">
-          {detail.heroLead} <strong className="font-bold">{heroBold}</strong>
-          {detail.heroTagline}
-        </h1>
-
-        {links && (links.site || (links.featuredOn && links.featuredOn.length > 0)) && (
-          <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-2">
-            {links.site && (
-              <a
-                href={links.site}
-                target="_blank"
-                rel="noreferrer"
-                className="font-body text-xs tracking-[0.2em] text-cream/60 uppercase transition-colors hover:text-cream"
-              >
-                Visit Site {'→'}
-              </a>
-            )}
-            {links.featuredOn?.map((f) => (
-              <a
-                key={f.href}
-                href={f.href}
-                target="_blank"
-                rel="noreferrer"
-                className="font-body text-xs tracking-[0.2em] text-cream/60 uppercase transition-colors hover:text-cream"
-              >
-                Featured On {'—'} {f.label}
-              </a>
-            ))}
-          </div>
-        )}
-      </div>
-
+    <header>
       {project.image && (
-        <div className="mt-10 w-full overflow-hidden bg-cream/5 md:mt-14" style={{ aspectRatio: '16 / 9' }}>
+        <div className="h-[85vh] w-full overflow-hidden bg-cream/5">
           <img
             ref={imgRef}
             src={project.image}
@@ -84,6 +43,59 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
           />
         </div>
       )}
+
+      <div className="px-6 pt-10 pb-10 md:px-10 md:pt-14 md:pb-14">
+        <p className="font-display max-w-[90rem] text-2xl leading-[1.2] font-normal text-cream md:text-4xl lg:text-5xl">
+          {detail.heroLead} <strong className="font-bold">{heroBold}</strong>
+          {detail.heroTagline}
+        </p>
+
+        <p className="font-body mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs tracking-[0.22em] text-cream/40 uppercase">
+          {detail.tags.map((tag, i) => (
+            <span key={tag} className="flex items-center gap-2">
+              {i > 0 && <span className="text-cream/20">/</span>}
+              {tag}
+            </span>
+          ))}
+        </p>
+
+        {links && (links.site || (links.featuredOn && links.featuredOn.length > 0)) && (
+          <div className="mt-10 flex flex-wrap gap-x-16 gap-y-6 border-t border-cream/10 pt-6">
+            {links.site && (
+              <div>
+                <p className="font-body mb-2 text-xs tracking-[0.22em] text-cream/40 uppercase">Visit Site</p>
+                <a
+                  href={links.site}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-body text-sm text-cream/70 transition-colors hover:text-cream"
+                >
+                  {project.title}
+                </a>
+              </div>
+            )}
+            {links.featuredOn && links.featuredOn.length > 0 && (
+              <div>
+                <p className="font-body mb-2 text-xs tracking-[0.22em] text-cream/40 uppercase">Featured On</p>
+                <ul className="space-y-1">
+                  {links.featuredOn.map((f) => (
+                    <li key={f.href}>
+                      <a
+                        href={f.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-body text-sm text-cream/70 transition-colors hover:text-cream"
+                      >
+                        {f.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </header>
   )
 }
