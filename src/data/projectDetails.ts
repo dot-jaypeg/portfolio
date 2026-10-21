@@ -1,5 +1,11 @@
+import contraMoodboard from '../assets/images/projects/detail/contra-coffee-sticker-pack/moodboard.jpg'
+import sketchGoldRush from '../assets/images/projects/detail/contra-coffee-sticker-pack/sketch-gold-rush.png'
+import sketchKuyaLatte from '../assets/images/projects/detail/contra-coffee-sticker-pack/sketch-kuya-latte.png'
+import sketchStrawberryFields from '../assets/images/projects/detail/contra-coffee-sticker-pack/sketch-strawberry-fields.png'
 import stickerSheet from '../assets/images/projects/detail/contra-coffee-sticker-pack/sticker-sheet.jpg'
+import stickersDiecut from '../assets/images/projects/detail/contra-coffee-sticker-pack/stickers-diecut.jpg'
 import waterBottleMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/water-bottle-mockup.jpg'
+import tshirtMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/tshirt-mockup.jpg'
 
 import showBoston2 from '../assets/images/projects/detail/afi-marketing-campaign/show-boston-2.jpg'
 import showPhilly from '../assets/images/projects/detail/afi-marketing-campaign/show-philly.jpg'
@@ -55,7 +61,7 @@ export interface ProjectImage {
 export interface ProjectChapter {
   label: string
   text: string
-  layout: 'full-bleed' | 'two-up' | 'contained'
+  layout: 'full-bleed' | 'two-up' | 'trio' | 'contained'
   images: ProjectImage[]
 }
 
@@ -87,37 +93,102 @@ export interface ProjectDetailData {
 
 export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   'contra-coffee-sticker-pack': {
-    heroLead: 'Sticker illustration for',
+    heroLead: 'A cohesive Y2K merch collection for',
     heroTagline:
-      ', a collectible pack built to carry the shop’s voice onto cups, laptops, and water bottles.',
-    tags: ['Illustration', 'Brand Extension', 'Merchandise'],
+      ', spanning a reusable glass growler, apparel, and a drink-inspired sticker pack designed for Chapman students.',
+    tags: ['Illustration', 'Character Design', 'Merchandise', 'Branding'],
     intro:
-      'Contra Coffee & Tea wanted stickers that felt like an extension of the shop, not a logo on vinyl. The pack leans on the brand’s existing characters and palette, built to be given away, traded, and stuck wherever customers land.',
+      'Contra’s brand leans into community, so this collection was built around their core audience of Chapman students. One visual system — a teal-and-orange palette, a speech bubble motif, and an early-2000s sensibility pulled in part from Peach Riot — carries across every piece, built to feel nostalgic and collectible, and to line up with Contra’s upcoming brand refresh.',
+    links: {
+      featuredOn: [
+        { label: 'Instagram Post', href: 'https://www.instagram.com/p/DYU0v_kNiai/?hl=en' },
+        {
+          label: 'Instagram Highlight',
+          href: 'https://www.instagram.com/stories/highlights/18089602946612492/?hl=en',
+        },
+      ],
+    },
     chapters: [
       {
-        label: 'The Sticker Sheet',
-        text: 'Each character got its own die-cut shape and a palette pulled straight from Contra’s in-store signage, so the sheet reads as one family even spread across a counter.',
+        label: 'Mood & Reference',
+        text: 'The system started as a mood board pulling from Peach Riot and early-2000s character design — the reference point for the palette, the linework, and the playful sensibility the whole drop had to carry.',
         layout: 'contained',
+        images: [
+          {
+            src: contraMoodboard,
+            alt: 'Mood board referencing Peach Riot and Y2K character design for the Contra merch drop',
+            width: 1800,
+            height: 1440,
+          },
+        ],
+      },
+      {
+        label: 'Character Studies',
+        text: 'Each sticker personifies one of Contra’s signature drinks — Gold Rush, Kuya Latte, Strawberry Fields — so every character had to capture the personality behind the name on its own, since the pack sells each piece individually rather than as a sheet.',
+        layout: 'trio',
+        images: [
+          {
+            src: sketchGoldRush,
+            alt: 'Character sketch for the Gold Rush sticker',
+            width: 1200,
+            height: 1200,
+          },
+          {
+            src: sketchKuyaLatte,
+            alt: 'Character sketch for the Kuya Latte sticker',
+            width: 1200,
+            height: 1200,
+          },
+          {
+            src: sketchStrawberryFields,
+            alt: 'Character sketch for the Strawberry Fields sticker',
+            width: 1200,
+            height: 1200,
+          },
+        ],
+      },
+      {
+        label: 'The Sticker Pack',
+        text: 'The final three-piece pack went from flat sheet to die-cut print, each character keeping its own shape and palette pulled straight from Contra’s in-store signage.',
+        layout: 'two-up',
         images: [
           {
             src: stickerSheet,
             alt: 'Contra Coffee & Tea sticker sheet with die-cut character illustrations',
             width: 2000,
             height: 1125,
-            caption: 'Above: the full sticker sheet, ready for die-cutting.',
+          },
+          {
+            src: stickersDiecut,
+            alt: 'Final die-cut Contra Coffee stickers',
+            width: 1500,
+            height: 2000,
           },
         ],
       },
       {
-        label: 'In the Wild',
-        text: 'The stickers were built to survive real use — a water bottle, a laptop lid, a to-go cup — holding up at small sizes without losing the linework.',
+        label: 'Reusable Growler',
+        text: 'The same character work extended onto a 32oz reusable glass growler, built to survive real use — a bag, a counter, a to-go cup — at a much smaller scale without losing the linework.',
         layout: 'contained',
         images: [
           {
             src: waterBottleMockup,
-            alt: 'Contra Coffee sticker applied to a water bottle',
+            alt: 'Contra Coffee sticker applied to a reusable glass growler',
             width: 1600,
             height: 1600,
+          },
+        ],
+      },
+      {
+        label: 'Apparel & Bonus Merch',
+        text: 'A speech-bubble wordmark and the same character illustrations carried onto apparel — the drop’s bonus tier also covers a glass cup, totes, hats, and hoodies, all reading as one collection.',
+        layout: 'contained',
+        images: [
+          {
+            src: tshirtMockup,
+            alt: 'Contra Coffee & Tea t-shirt with speech bubble logo and character illustration',
+            width: 2000,
+            height: 1333,
           },
         ],
       },

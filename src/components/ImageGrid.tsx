@@ -46,7 +46,13 @@ function Figure({ image, rounded }: { image: ProjectImage; rounded: boolean }) {
 // the littletroop.com reference actually uses (confirmed directly:
 // even their "full width" poster grids are gapped rounded cards, not
 // true edge-to-edge bleed -- only their lead photography bleeds).
-export function ImageGrid({ layout, images }: { layout: 'full-bleed' | 'two-up' | 'contained'; images: ProjectImage[] }) {
+export function ImageGrid({
+  layout,
+  images,
+}: {
+  layout: 'full-bleed' | 'two-up' | 'trio' | 'contained'
+  images: ProjectImage[]
+}) {
   if (images.length === 0) return null
 
   if (layout === 'contained') {
@@ -61,6 +67,16 @@ export function ImageGrid({ layout, images }: { layout: 'full-bleed' | 'two-up' 
     return (
       <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-2 md:gap-10 md:px-10">
         {images.slice(0, 2).map((image, i) => (
+          <Figure key={`${image.alt}-${i}`} image={image} rounded />
+        ))}
+      </div>
+    )
+  }
+
+  if (layout === 'trio') {
+    return (
+      <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-3 md:gap-8 md:px-10">
+        {images.slice(0, 3).map((image, i) => (
           <Figure key={`${image.alt}-${i}`} image={image} rounded />
         ))}
       </div>
