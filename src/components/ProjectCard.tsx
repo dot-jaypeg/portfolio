@@ -51,7 +51,7 @@ export function ProjectCard({
       <Link
         to={`/work/${cs.slug}`}
         onClick={goToProject}
-        className="group flex h-full flex-col items-center focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-teal md:flex-row"
+        className="flex h-full flex-col items-center focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-teal md:flex-row"
       >
         <div className="flex w-full flex-1 flex-col justify-between gap-6 px-8 py-10 md:w-1/2 md:px-16 md:py-16 lg:px-24">
           <span className="font-body text-xs tracking-[0.22em] text-ink/40 uppercase">
@@ -71,8 +71,14 @@ export function ProjectCard({
                 ink fill instead of cream). A <span>, not a nested
                 <button>/<a>: the whole card above is already one Link,
                 and interactive elements can't nest -- this is a visual
-                affordance, not a second click target. */}
-            <span className="mt-8 inline-block rounded-full border border-ink/20 px-6 py-3 text-xs tracking-wider text-ink/70 uppercase transition-colors duration-300 group-hover:border-ink group-hover:bg-ink group-hover:text-cream">
+                affordance, not a second click target.
+                `hover:`, not `group-hover:` -- this should only invert
+                when the cursor is actually over the pill itself, not
+                anywhere on the card (the card has no other hover effect
+                of its own to piggyback on; a plain :hover on this
+                element is exactly scoped to its own box regardless of
+                where in the ancestor Link the cursor is). */}
+            <span className="mt-8 inline-block rounded-full border border-ink/20 px-6 py-3 text-xs tracking-wider text-ink/70 uppercase transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-cream">
               View Project
             </span>
           </div>
