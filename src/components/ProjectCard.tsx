@@ -14,8 +14,6 @@ export function ProjectCard({
   aspect,
   stacked,
   cardRef,
-  washRef,
-  mediaRef,
 }: {
   cs: CaseStudy
   index: number
@@ -23,12 +21,9 @@ export function ProjectCard({
   // not a uniform ratio across every project.
   aspect: '4/3' | '3/2'
   // False under prefers-reduced-motion -- renders as a plain block in
-  // normal flow instead of a sticky, z-indexed stack layer, and skips
-  // the wash overlay entirely (nothing left to scrub it).
+  // normal flow instead of a sticky, z-indexed stack layer.
   stacked: boolean
   cardRef?: (el: HTMLElement | null) => void
-  washRef?: (el: HTMLDivElement | null) => void
-  mediaRef?: (el: HTMLDivElement | null) => void
 }) {
   const maskNavigate = useMaskNavigate()
   const goToProject = (e: { preventDefault: () => void }) => {
@@ -46,6 +41,11 @@ export function ProjectCard({
       // confirmed directly that it was `relative`, silently killing the
       // pin entirely. Keeping them in separate, mutually exclusive
       // branches avoids relying on that order at all.
+      //
+      // That sticky + ascending z-index is the ENTIRE mechanic now --
+      // no GSAP, no fade, no crossfade. Per direct request, the wash/
+      // entrance-fade/thumbnail tilt-blur polish layer that used to sit
+      // on top of this was removed entirely: cards just overlap.
       className={stacked ? 'sticky top-0 h-dvh w-full bg-cream' : 'relative h-auto w-full bg-cream'}
     >
       <Link
@@ -71,15 +71,9 @@ export function ProjectCard({
         </div>
 
         {/* Liesinger-matched thumbnail sizing: a bounded, centered box
-            (not full-bleed-to-edges like the previous stack build) --
-            `perspective` lives here, on media's PARENT, so GSAP's rotateX
-            on media itself (see ProjectStack) actually reads as a tilt in
-            3D space instead of a flat skew. */}
-        <div
-          className="flex w-full flex-1 items-center justify-center px-8 py-6 md:w-1/2 md:px-16 md:py-16 lg:px-24"
-          style={{ perspective: '1400px' }}
-        >
-          <div ref={mediaRef} className="w-full max-w-xl overflow-hidden" style={{ aspectRatio: aspect }}>
+            (not full-bleed-to-edges). */}
+        <div className="flex w-full flex-1 items-center justify-center px-8 py-6 md:w-1/2 md:px-16 md:py-16 lg:px-24">
+          <div className="w-full max-w-xl overflow-hidden" style={{ aspectRatio: aspect }}>
             {cs.image ? (
               <img
                 src={cs.image}
@@ -99,20 +93,6 @@ export function ProjectCard({
           </div>
         </div>
       </Link>
-
-      {/* The outgoing card's recede-wash -- fades in on top of THIS
-          card's own content as the next one rises to cover it. Ink, not
-          cream: now that the page's own base is cream-on-ink text (not
-          the original dark theme this was designed against), a cream
-          wash over an already-cream card would be invisible. The wash
-          needs to match the TEXT color, not the background -- that's
-          what makes the title visually sink into an increasingly
-          same-toned veil as it recedes, while the backdrop (the
-          opposite tone) visibly shifts underneath; that pairing is what
-          read as "fading out" in the original dark-theme version (cream
-          wash over cream text, against an ink backdrop), so flipping
-          both keeps the same effect legible in this one. */}
-      {stacked && <div ref={washRef} className="pointer-events-none absolute inset-0 bg-ink opacity-0" />}
     </section>
   )
 }
