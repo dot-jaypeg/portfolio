@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type CSSProperties } from 'react'
 import { gsap } from '../lib/gsap'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import type { CaseStudy } from '../data/caseStudies'
@@ -14,6 +14,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
   const prefersReducedMotion = usePrefersReducedMotion()
   const heroBold = detail.heroBold ?? project.client
   const links = detail.links
+  const accent = project.accent ?? '#618c82'
 
   useEffect(() => {
     const el = imgRef.current
@@ -50,23 +51,31 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
           {detail.heroTagline}
         </p>
 
-        <p className="font-geist mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium tracking-[0.22em] text-cream/40 uppercase">
+        <p
+          style={{ color: accent }}
+          className="font-geist mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium tracking-[0.22em] uppercase"
+        >
           {detail.tags.map((tag, i) => (
             <span key={tag} className="flex items-center gap-2">
-              {i > 0 && <span className="text-cream/20">/</span>}
+              {i > 0 && (
+                <span style={{ color: accent }} className="opacity-40">
+                  /
+                </span>
+              )}
               {tag}
             </span>
           ))}
         </p>
 
         {links && (links.site || (links.featuredOn && links.featuredOn.length > 0)) && (
-          <div className="mt-10 flex flex-wrap gap-4 border-t border-cream/10 pt-8">
+          <div style={{ borderColor: `${accent}33` }} className="mt-10 flex flex-wrap gap-4 border-t pt-8">
             {links.site && (
               <a
                 href={links.site}
                 target="_blank"
                 rel="noreferrer"
-                className="font-geist rounded-full border border-cream/20 px-6 py-3 text-xs font-medium tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
+                style={{ '--pill-accent': accent, borderColor: `${accent}66`, color: accent } as CSSProperties}
+                className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
               >
                 Visit Site
               </a>
@@ -77,7 +86,8 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
                 href={f.href}
                 target="_blank"
                 rel="noreferrer"
-                className="font-geist rounded-full border border-cream/20 px-6 py-3 text-xs font-medium tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
+                style={{ '--pill-accent': accent, borderColor: `${accent}66`, color: accent } as CSSProperties}
+                className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
               >
                 {f.label}
               </a>

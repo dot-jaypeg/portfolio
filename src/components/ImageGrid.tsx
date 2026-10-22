@@ -141,8 +141,12 @@ export function ImageGrid({
   if (layout === 'full-page') {
     const image = images[0]
     const hasImage = Boolean(image.src)
+    // No top margin -- unlike the other layouts, full-page images are
+    // meant to butt up flush against whatever's above/below them (see
+    // ProjectChapter, which also skips its own gap between consecutive
+    // full-page `moreImages` blocks).
     return (
-      <div className="mt-6 w-full">
+      <div className="w-full">
         <figure>
           <div className={`${tall ? 'h-[150vh]' : 'h-[92vh]'} w-full overflow-hidden bg-cream/5`}>
             {hasImage ? (

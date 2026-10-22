@@ -48,6 +48,8 @@ export function ProjectDetail() {
     )
   }
 
+  const accent = project.accent ?? '#618c82'
+
   return (
     <div className="min-h-screen bg-ink">
       <Cursor />
@@ -58,13 +60,13 @@ export function ProjectDetail() {
         <ProjectHero project={project} detail={detail} />
 
         <div className="px-6 pt-4 pb-4 md:px-10 md:pt-6">
-          <p className="font-geist max-w-[90rem] text-2xl leading-[1.2] font-light text-cream/80 md:text-4xl lg:text-5xl">
+          <p className="font-geist max-w-2xl text-base leading-relaxed font-light text-cream/70 md:text-lg">
             {detail.intro}
           </p>
         </div>
 
         {detail.brandMark && (
-          <div className="flex justify-center px-6 py-20 md:py-32">
+          <div className="flex justify-center px-6 py-10 md:py-16">
             <img
               src={detail.brandMark.src}
               alt={detail.brandMark.alt}
@@ -76,7 +78,7 @@ export function ProjectDetail() {
         )}
 
         {detail.chapters.map((chapter, i) => (
-          <ProjectChapter key={i} chapter={chapter} />
+          <ProjectChapter key={i} chapter={chapter} accent={accent} />
         ))}
 
         <MoreProjects currentSlug={project.slug} />

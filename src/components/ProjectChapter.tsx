@@ -4,7 +4,7 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import type { ProjectChapter as ProjectChapterData } from '../data/projectDetails'
 import { ImageGrid } from './ImageGrid'
 
-export function ProjectChapter({ chapter }: { chapter: ProjectChapterData }) {
+export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterData; accent: string }) {
   const sectionRef = useRef<HTMLElement>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
   const paragraphs = chapter.text ? (Array.isArray(chapter.text) ? chapter.text : [chapter.text]) : []
@@ -32,11 +32,11 @@ export function ProjectChapter({ chapter }: { chapter: ProjectChapterData }) {
   }, [prefersReducedMotion])
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-32">
+    <section ref={sectionRef} className="py-10 md:py-16">
       {(chapter.label || paragraphs.length > 0) && (
         <div data-reveal className="px-6 md:px-10">
           {chapter.label && (
-            <p className="font-geist mb-5 text-xs font-medium tracking-[-0.02em] text-cream/40 uppercase">
+            <p style={{ color: accent }} className="font-geist mb-5 text-xs font-medium tracking-[-0.02em] uppercase">
               {chapter.label}
             </p>
           )}
@@ -54,7 +54,7 @@ export function ProjectChapter({ chapter }: { chapter: ProjectChapterData }) {
         <ImageGrid layout={chapter.layout} images={chapter.images} card={card} tall={chapter.tall} />
       </div>
       {chapter.moreImages?.map((block, i) => (
-        <div data-reveal key={i} className="mt-10">
+        <div data-reveal key={i} className={block.layout === 'full-page' ? '' : 'mt-10'}>
           <ImageGrid layout={block.layout} images={block.images} card={card} tall={block.tall} />
         </div>
       ))}
