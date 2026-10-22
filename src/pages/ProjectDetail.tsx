@@ -60,7 +60,7 @@ export function ProjectDetail() {
         <ProjectHero project={project} detail={detail} />
 
         <div className="px-6 pt-4 pb-4 md:px-10 md:pt-6">
-          <p className="font-geist max-w-[90rem] text-xl leading-relaxed font-light text-cream/70 md:text-2xl lg:text-3xl">
+          <p className="font-geist max-w-[90rem] text-lg leading-relaxed font-light tracking-tight text-cream/70 md:text-xl lg:text-2xl">
             {detail.intro}
           </p>
         </div>

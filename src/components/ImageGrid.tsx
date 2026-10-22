@@ -11,12 +11,33 @@ export type ImageGridLayout = 'full-bleed' | 'full-page' | 'two-up' | 'trio' | '
 // a transparent-background cutout (a sticker render, a logo mark)
 // where that backdrop would show as an unwanted grey box around the
 // art instead of just the art sitting on the page.
-function Figure({ image, rounded, card }: { image: ProjectImage; rounded: boolean; card: boolean }) {
+//
+// `tilt`, only meaningful with `interactive`, alternates the hover
+// rotation's direction so a row of stickers doesn't all lean the same
+// way -- a literal class per direction, not a computed one, since
+// Tailwind needs the full utility name present in source text.
+const TILT_CLASS = { left: 'hover:-rotate-3', right: 'hover:rotate-3' } as const
+
+function Figure({
+  image,
+  rounded,
+  card,
+  interactive,
+  tilt = 'right',
+}: {
+  image: ProjectImage
+  rounded: boolean
+  card: boolean
+  // Subtle scale + tilt on hover -- opt-in, for a cluster of sticker
+  // cutouts specifically, not every image on the site.
+  interactive?: boolean
+  tilt?: 'left' | 'right'
+}) {
   const hasImage = Boolean(image.src)
   return (
     <figure>
       <div
-        className={card ? `overflow-hidden bg-cream/5 ${rounded ? 'rounded-2xl' : ''}` : 'overflow-hidden'}
+        className={`${card ? `overflow-hidden bg-cream/5 ${rounded ? 'rounded-2xl' : ''}` : 'overflow-hidden'} ${interactive ? `transition-transform duration-300 ease-out hover:scale-110 ${TILT_CLASS[tilt]}` : ''}`}
         style={{ aspectRatio: hasImage ? `${image.width} / ${image.height}` : '4 / 3' }}
       >
         {hasImage ? (
@@ -131,7 +152,7 @@ export function ImageGrid({
             key={`${image.alt}-${i}`}
             className={`${CLUSTER_SIZE_CLASS[image.size ?? 'md']} ${CLUSTER_OFFSET_CLASS[i % CLUSTER_OFFSET_CLASS.length]}`}
           >
-            <Figure image={image} rounded card={card} />
+            <Figure image={image} rounded card={card} interactive tilt={i % 2 === 0 ? 'right' : 'left'} />
           </div>
         ))}
       </div>

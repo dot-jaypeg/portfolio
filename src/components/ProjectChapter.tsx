@@ -24,7 +24,11 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
         scrollTrigger: {
           trigger: el,
           start: 'top 82%',
-          toggleActions: 'play none none reverse',
+          // Symmetric in both directions -- replays the reveal every
+          // time the section re-enters view, scrolling down OR back up
+          // (not just a one-time play that silently stays revealed
+          // forever once you've scrolled past it once).
+          toggleActions: 'play reverse play reverse',
         },
       })
     }, el)
@@ -43,7 +47,7 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           {paragraphs.map((paragraph, i) => (
             <p
               key={i}
-              className={`font-geist max-w-[90rem] text-xl leading-relaxed font-light text-cream md:text-2xl lg:text-3xl ${i > 0 ? 'mt-6' : ''}`}
+              className={`font-geist max-w-[90rem] text-lg leading-relaxed font-light tracking-tight text-cream md:text-xl lg:text-2xl ${i > 0 ? 'mt-6' : ''}`}
             >
               {paragraph}
             </p>

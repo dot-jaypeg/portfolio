@@ -32,7 +32,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
   return (
     <header>
       {project.image && (
-        <div className="h-[85vh] w-full overflow-hidden bg-cream/5">
+        <div className="h-screen w-full overflow-hidden bg-cream/5">
           <img
             ref={imgRef}
             src={project.image}
@@ -46,7 +46,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
       )}
 
       <div className="px-6 pt-10 pb-10 md:px-10 md:pt-14 md:pb-14">
-        <p className="font-geist max-w-[90rem] text-2xl leading-[1.2] font-light text-cream md:text-4xl lg:text-5xl">
+        <p className="font-geist max-w-[90rem] text-2xl leading-[1.2] font-light tracking-tighter text-cream md:text-4xl lg:text-5xl">
           {detail.heroLead} <strong className="font-medium">{heroBold}</strong>
           {detail.heroTagline}
         </p>
