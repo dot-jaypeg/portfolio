@@ -1,6 +1,7 @@
 import { useEffect, useRef, type CSSProperties } from 'react'
 import { gsap } from '../lib/gsap'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import { useScrollParallax } from '../hooks/useScrollParallax'
 import type { CaseStudy } from '../data/caseStudies'
 import type { ProjectDetailData } from '../data/projectDetails'
 
@@ -10,6 +11,8 @@ import type { ProjectDetailData } from '../data/projectDetails'
 // case studies. The statement H1, tags, and links row all sit below
 // it, not over it.
 export function ProjectHero({ project, detail }: { project: CaseStudy; detail: ProjectDetailData }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
   const heroBold = detail.heroBold ?? project.client
@@ -29,19 +32,26 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
     return () => ctx.revert()
   }, [prefersReducedMotion])
 
+  // Same subtle drift every full-page image on this page gets (see
+  // ImageGrid's FullPageMedia) -- the hero is full-page too, just its
+  // own component instead of going through ImageGrid.
+  useScrollParallax(containerRef, wrapperRef, 10)
+
   return (
     <header>
       {project.image && (
-        <div className="h-screen w-full overflow-hidden bg-cream/5">
-          <img
-            ref={imgRef}
-            src={project.image}
-            alt={`${project.title} lead image`}
-            style={{ objectPosition: detail.heroImagePosition ?? project.imagePosition ?? 'center' }}
-            className="h-full w-full object-cover"
-            loading="eager"
-            decoding="async"
-          />
+        <div ref={containerRef} className="relative h-screen w-full overflow-hidden bg-cream/5">
+          <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
+            <img
+              ref={imgRef}
+              src={project.image}
+              alt={`${project.title} lead image`}
+              style={{ objectPosition: detail.heroImagePosition ?? project.imagePosition ?? 'center' }}
+              className="h-full w-full object-cover"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
         </div>
       )}
 

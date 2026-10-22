@@ -472,7 +472,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         label: 'HUD & Interface',
         text: 'The HUD had to surface rank, health, ammo, and ability cooldowns at a glance without crowding the frame — color-coded enhancement states let players read their own build mid-fight.',
-        layout: 'full-bleed',
+        layout: 'contained',
         images: [
           {
             src: hud1,
@@ -485,12 +485,14 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         label: 'Game Over & Victory Screens',
         text: 'Both screens are built around the same audio-reactive waveform that runs through the rest of the game — the world still reacting to sound even after the match ends.',
-        layout: 'full-page',
+        layout: 'contained',
         images: [
           {
             video: matchEndLoop,
             videoMode: 'loop',
             alt: 'Resonance match-end screen background, audio-reactive waveform',
+            width: 1280,
+            height: 720,
           },
         ],
       },

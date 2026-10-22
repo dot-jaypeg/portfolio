@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import type { ProjectImage } from '../data/projectDetails'
+import { useScrollParallax } from '../hooks/useScrollParallax'
 
 export type ImageGridLayout = 'full-bleed' | 'full-page' | 'two-up' | 'trio' | 'cluster' | 'contained'
 
@@ -91,6 +92,37 @@ function Media({ image, className }: { image: ProjectImage; className: string })
     <div className="flex h-full w-full items-center justify-center border border-dashed border-cream/15">
       <span className="font-body px-6 text-center text-[10px] tracking-[0.22em] text-cream/30 uppercase">{image.alt}</span>
     </div>
+  )
+}
+
+// The `full-page` treatment, with a subtle parallax drift -- the
+// media sits in an oversized (130%), absolutely-positioned wrapper so
+// a vertical `yPercent` swing always has slack to move within without
+// ever revealing an empty edge. Animates the wrapper, not the <img>/
+// <video> directly, so this stays agnostic to whichever media type
+// `Media` actually renders (including the ones that manage their own
+// ref internally, like AutoplayInViewVideo).
+function FullPageMedia({ image, tall }: { image: ProjectImage; tall: boolean }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  useScrollParallax(containerRef, wrapperRef, 10)
+
+  return (
+    <figure>
+      <div
+        ref={containerRef}
+        className={`relative ${tall ? 'h-[150vh]' : 'h-[92vh]'} w-full overflow-hidden bg-cream/5`}
+      >
+        <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
+          <Media image={image} className="h-full w-full object-cover" />
+        </div>
+      </div>
+      {image.caption && (
+        <figcaption className="font-body mx-auto mt-4 max-w-xl px-6 text-center text-xs tracking-[0.08em] text-cream/40 md:px-0">
+          {image.caption}
+        </figcaption>
+      )}
+    </figure>
   )
 }
 
@@ -231,23 +263,13 @@ export function ImageGrid({
   }
 
   if (layout === 'full-page') {
-    const image = images[0]
     // No top margin -- unlike the other layouts, full-page images are
     // meant to butt up flush against whatever's above/below them (see
     // ProjectChapter, which also skips its own gap between consecutive
     // full-page `moreImages` blocks).
     return (
       <div className="w-full">
-        <figure>
-          <div className={`${tall ? 'h-[150vh]' : 'h-[92vh]'} w-full overflow-hidden bg-cream/5`}>
-            <Media image={image} className="h-full w-full object-cover" />
-          </div>
-          {image.caption && (
-            <figcaption className="font-body mx-auto mt-4 max-w-xl px-6 text-center text-xs tracking-[0.08em] text-cream/40 md:px-0">
-              {image.caption}
-            </figcaption>
-          )}
-        </figure>
+        <FullPageMedia image={images[0]} tall={tall} />
       </div>
     )
   }
