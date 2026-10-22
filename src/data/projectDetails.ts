@@ -17,6 +17,7 @@ import showBoston2 from '../assets/images/projects/detail/afi-marketing-campaign
 import showPhilly from '../assets/images/projects/detail/afi-marketing-campaign/show-philly.jpg'
 import showBoston1 from '../assets/images/projects/detail/afi-marketing-campaign/show-boston-1.jpg'
 import visionCards from '../assets/images/projects/detail/afi-marketing-campaign/vision-cards.jpg'
+import showFullStage from '../assets/images/projects/detail/afi-marketing-campaign/show-full-stage.jpg'
 
 import resonancePoster from '../assets/images/projects/detail/ui-design-for-resonance/poster.jpg'
 import splash1 from '../assets/images/projects/detail/ui-design-for-resonance/splash-1.jpg'
@@ -25,6 +26,7 @@ import splash2 from '../assets/images/projects/detail/ui-design-for-resonance/sp
 import boardHoodie from '../assets/images/projects/detail/nikkei-student-union/board-hoodie.jpg'
 import springFront from '../assets/images/projects/detail/nikkei-student-union/spring-merch-front.jpg'
 import springBack from '../assets/images/projects/detail/nikkei-student-union/spring-merch-back.jpg'
+import nsuLifestyleTee from '../assets/images/projects/detail/nikkei-student-union/lifestyle-tee.jpg'
 
 import packaging1 from '../assets/images/projects/detail/fetch-doggy-deli/packaging-1.jpg'
 import packaging2 from '../assets/images/projects/detail/fetch-doggy-deli/packaging-2.jpg'
@@ -298,13 +300,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         label: 'On Tour',
         text: 'Coverage followed the tour from city to city, shot to double as recap content and raw material for the next stop’s promo.',
-        layout: 'full-bleed',
+        layout: 'full-page',
         images: [
           {
             src: showBoston2,
             alt: 'AFI performing live in Boston, 2025',
-            width: 2000,
-            height: 1333,
           },
         ],
       },
@@ -340,6 +340,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           },
         ],
       },
+      {
+        // No label -- closing on the full stage shot, pure imagery.
+        layout: 'full-page',
+        images: [
+          {
+            src: showFullStage,
+            alt: 'AFI performing live on stage with full band and backdrop',
+          },
+        ],
+      },
     ],
   },
 
@@ -365,20 +375,23 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Splash Screens',
-        text: 'Splash and loading states got the same treatment as the core UI — considered, not an afterthought.',
-        layout: 'two-up',
+        text: 'Splash and loading states got the same treatment as the core UI — considered, not an afterthought, and immersive enough to hold the screen on their own.',
+        layout: 'full-page',
         images: [
           {
             src: splash1,
             alt: 'Resonance splash screen, first variant',
-            width: 2000,
-            height: 1125,
           },
+        ],
+        moreImages: [
           {
-            src: splash2,
-            alt: 'Resonance splash screen, second variant',
-            width: 2000,
-            height: 1125,
+            layout: 'full-page',
+            images: [
+              {
+                src: splash2,
+                alt: 'Resonance splash screen, second variant',
+              },
+            ],
           },
         ],
       },
@@ -425,6 +438,17 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           },
         ],
       },
+      {
+        // No label -- closing on a lifestyle shot of the shirt in wear.
+        layout: 'full-page',
+        tall: true,
+        images: [
+          {
+            src: nsuLifestyleTee,
+            alt: 'Model holding up an NSU t-shirt with embroidered logo',
+          },
+        ],
+      },
     ],
   },
 
@@ -459,13 +483,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         label: 'On the Road',
         text: 'The identity had to survive being wrapped around a full-size vehicle without losing any of its detail.',
-        layout: 'full-bleed',
+        layout: 'full-page',
         images: [
           {
             src: fetchTruck,
             alt: 'fetch! doggy deli delivery truck with full brand wrap',
-            width: 2000,
-            height: 1389,
           },
         ],
       },
@@ -515,13 +537,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         label: 'On-Site Signage',
         text: 'Signage carried the identity from print into the physical space of the pop-up.',
-        layout: 'full-bleed',
+        layout: 'full-page',
         images: [
           {
             src: usSignage1,
             alt: 'Urban Seoul on-site event signage',
-            width: 2000,
-            height: 1389,
           },
         ],
       },
@@ -570,32 +590,32 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         label: 'Key Art',
         text: 'The final key art, built around the glow of the blade as the single light source driving the whole composition.',
-        layout: 'full-bleed',
+        layout: 'full-page',
         images: [
           {
             src: jadeKeyArt,
             alt: 'Jade Sword final key art, character with glowing blade',
-            width: 2000,
-            height: 1333,
           },
         ],
       },
       {
         label: 'Expanded Studies',
         text: 'Supporting studies pushed the character and pose further before the final render locked in.',
-        layout: 'two-up',
+        layout: 'cluster',
         images: [
           {
             src: jadeExpanded1,
             alt: 'Jade Sword character study, variant one',
             width: 2000,
             height: 1333,
+            size: 'lg',
           },
           {
             src: jadeExpanded2,
             alt: 'Jade Sword character study, variant two',
             width: 2000,
             height: 1333,
+            size: 'lg',
           },
         ],
       },
@@ -679,19 +699,22 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         label: 'Direct Mailer & Packaging',
         text: 'The campaign closed the loop with a physical mailer and a packaging mockup, keeping the same voice off-screen.',
-        layout: 'two-up',
+        layout: 'full-page',
         images: [
           {
             src: chichaMailer,
             alt: 'Chi-Cha direct mailer design',
-            width: 2000,
-            height: 1466,
           },
+        ],
+        moreImages: [
           {
-            src: chichaPackagingMockup,
-            alt: 'Chi-Cha blueberry packaging mockup',
-            width: 2000,
-            height: 1466,
+            layout: 'full-page',
+            images: [
+              {
+                src: chichaPackagingMockup,
+                alt: 'Chi-Cha blueberry packaging mockup',
+              },
+            ],
           },
         ],
       },
