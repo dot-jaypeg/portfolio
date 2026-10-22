@@ -16,6 +16,25 @@
   font-display: swap;
 }
 
+/* Scoped to the project detail pages only (see ProjectHero/
+   ProjectChapter/ProjectDetail) -- the rest of the site keeps Alte
+   Haas Grotesk via --font-display/--font-body. */
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Mutable theme roles -- GSAP animates these two directly (see
      useSectionColors) to crossfade the whole page between sections.
@@ -36,6 +55,7 @@
 @theme {
   --font-display: 'Alte Haas Grotesk', system-ui, sans-serif;
   --font-body: 'Alte Haas Grotesk', system-ui, sans-serif;
+  --font-geist: 'Geist', system-ui, sans-serif;
 
   --color-ink: var(--bg);
   --color-cream: var(--fg);

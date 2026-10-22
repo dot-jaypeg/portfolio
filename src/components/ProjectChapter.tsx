@@ -7,7 +7,7 @@ import { ImageGrid } from './ImageGrid'
 export function ProjectChapter({ chapter }: { chapter: ProjectChapterData }) {
   const sectionRef = useRef<HTMLElement>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
-  const paragraphs = Array.isArray(chapter.text) ? chapter.text : [chapter.text]
+  const paragraphs = chapter.text ? (Array.isArray(chapter.text) ? chapter.text : [chapter.text]) : []
   const card = chapter.imagesOnCard ?? true
 
   useEffect(() => {
@@ -33,19 +33,23 @@ export function ProjectChapter({ chapter }: { chapter: ProjectChapterData }) {
 
   return (
     <section ref={sectionRef} className="py-20 md:py-32">
-      <div data-reveal className="px-6 md:px-10">
-        {chapter.label && (
-          <p className="font-body mb-5 text-xs tracking-[-0.02em] text-cream/40 uppercase">{chapter.label}</p>
-        )}
-        {paragraphs.map((paragraph, i) => (
-          <p
-            key={i}
-            className={`font-display max-w-[90rem] text-2xl leading-[1.2] font-normal text-cream md:text-4xl lg:text-5xl ${i > 0 ? 'mt-6' : ''}`}
-          >
-            {paragraph}
-          </p>
-        ))}
-      </div>
+      {(chapter.label || paragraphs.length > 0) && (
+        <div data-reveal className="px-6 md:px-10">
+          {chapter.label && (
+            <p className="font-geist mb-5 text-xs font-medium tracking-[-0.02em] text-cream/40 uppercase">
+              {chapter.label}
+            </p>
+          )}
+          {paragraphs.map((paragraph, i) => (
+            <p
+              key={i}
+              className={`font-geist max-w-[90rem] text-2xl leading-[1.2] font-light text-cream md:text-4xl lg:text-5xl ${i > 0 ? 'mt-6' : ''}`}
+            >
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      )}
       <div data-reveal>
         <ImageGrid layout={chapter.layout} images={chapter.images} card={card} tall={chapter.tall} />
       </div>

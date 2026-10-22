@@ -45,12 +45,12 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
       )}
 
       <div className="px-6 pt-10 pb-10 md:px-10 md:pt-14 md:pb-14">
-        <p className="font-display max-w-[90rem] text-2xl leading-[1.2] font-normal text-cream md:text-4xl lg:text-5xl">
-          {detail.heroLead} <strong className="font-bold">{heroBold}</strong>
+        <p className="font-geist max-w-[90rem] text-2xl leading-[1.2] font-light text-cream md:text-4xl lg:text-5xl">
+          {detail.heroLead} <strong className="font-medium">{heroBold}</strong>
           {detail.heroTagline}
         </p>
 
-        <p className="font-body mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs tracking-[0.22em] text-cream/40 uppercase">
+        <p className="font-geist mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium tracking-[0.22em] text-cream/40 uppercase">
           {detail.tags.map((tag, i) => (
             <span key={tag} className="flex items-center gap-2">
               {i > 0 && <span className="text-cream/20">/</span>}
@@ -66,7 +66,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
                 href={links.site}
                 target="_blank"
                 rel="noreferrer"
-                className="font-body rounded-full border border-cream/20 px-6 py-3 text-xs tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
+                className="font-geist rounded-full border border-cream/20 px-6 py-3 text-xs font-medium tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
               >
                 Visit Site
               </a>
@@ -77,7 +77,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
                 href={f.href}
                 target="_blank"
                 rel="noreferrer"
-                className="font-body rounded-full border border-cream/20 px-6 py-3 text-xs tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
+                className="font-geist rounded-full border border-cream/20 px-6 py-3 text-xs font-medium tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
               >
                 {f.label}
               </a>

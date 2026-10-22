@@ -58,17 +58,17 @@ export function ProjectDetail() {
         <ProjectHero project={project} detail={detail} />
 
         <div className="px-6 pt-4 pb-4 md:px-10 md:pt-6">
-          <p className="font-display max-w-[90rem] text-2xl leading-[1.2] font-normal text-cream/80 md:text-4xl lg:text-5xl">
+          <p className="font-geist max-w-[90rem] text-2xl leading-[1.2] font-light text-cream/80 md:text-4xl lg:text-5xl">
             {detail.intro}
           </p>
         </div>
 
         {detail.brandMark && (
-          <div className="flex justify-center px-6 py-16 md:py-24">
+          <div className="flex justify-center px-6 py-20 md:py-32">
             <img
               src={detail.brandMark.src}
               alt={detail.brandMark.alt}
-              className="h-48 w-auto opacity-80 invert md:h-80"
+              className="h-72 w-auto opacity-80 invert md:h-[32rem]"
               loading="lazy"
               decoding="async"
             />

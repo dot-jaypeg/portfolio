@@ -83,11 +83,12 @@ export interface ProjectImageBlock {
 
 export interface ProjectChapter extends ProjectImageBlock {
   // Omit for a chapter meant to read as pure imagery with no eyebrow
-  // label above its copy (still takes `text`).
+  // label above its copy.
   label?: string
   // A single paragraph, or several -- rendered as separate <p>s, with
-  // the label (if any) only ever sitting above the first.
-  text: string | string[]
+  // the label (if any) only ever sitting above the first. Omit
+  // alongside `label` for a chapter that's pure imagery, no copy at all.
+  text?: string | string[]
   moreImages?: ProjectImageBlock[]
   // False drops ImageGrid's rounded bg-cream/5 card backdrop for this
   // chapter's images -- for transparent-background cutouts (sketches,
@@ -250,10 +251,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
       },
       {
-        // No label -- per direct request, this chapter runs as pure
-        // imagery without an eyebrow header above it.
-        text: 'A speech-bubble wordmark and the same character illustrations carried onto apparel and a keychain — the drop’s bonus tier also covers a glass cup, totes, hats, and hoodies, all reading as one collection.',
+        // No label and no copy -- per direct request, this chapter runs
+        // as pure imagery.
         layout: 'full-page',
+        tall: true,
         images: [
           {
             src: tshirtMockup,
@@ -263,6 +264,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         moreImages: [
           {
             layout: 'full-page',
+            tall: true,
             images: [
               {
                 src: keychainMockup,
