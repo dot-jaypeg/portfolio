@@ -23,7 +23,7 @@ import resonancePoster from '../assets/images/projects/detail/ui-design-for-reso
 import splash1 from '../assets/images/projects/detail/ui-design-for-resonance/splash-1.jpg'
 import splash2 from '../assets/images/projects/detail/ui-design-for-resonance/splash-2.jpg'
 import resonanceTrailer from '../assets/images/projects/detail/ui-design-for-resonance/trailer.mp4'
-import resonanceGameplayLoop from '../assets/images/projects/detail/ui-design-for-resonance/gameplay-loop.mp4'
+import resonanceRunAlpha from '../assets/images/projects/detail/ui-design-for-resonance/run-alpha.webm'
 import resonanceTrailerPoster from '../assets/images/projects/detail/ui-design-for-resonance/trailer-poster.jpg'
 import logoConcept1 from '../assets/images/projects/detail/ui-design-for-resonance/logo-concept-1.jpg'
 import logoConcept2 from '../assets/images/projects/detail/ui-design-for-resonance/logo-concept-2.jpg'
@@ -31,7 +31,6 @@ import gameIcon from '../assets/images/projects/detail/ui-design-for-resonance/g
 import fontSpecimen from '../assets/images/projects/detail/ui-design-for-resonance/font-specimen.png'
 import weaponSkinKatto from '../assets/images/projects/detail/ui-design-for-resonance/weapon-skin-katto.jpg'
 import hud1 from '../assets/images/projects/detail/ui-design-for-resonance/hud-1.jpg'
-import billboards from '../assets/images/projects/detail/ui-design-for-resonance/billboards.jpg'
 import matchEndLoop from '../assets/images/projects/detail/ui-design-for-resonance/match-end-loop.mp4'
 
 import boardHoodie from '../assets/images/projects/detail/nikkei-student-union/board-hoodie.jpg'
@@ -407,11 +406,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             height: 2000,
           },
           {
-            video: resonanceGameplayLoop,
+            video: resonanceRunAlpha,
             videoMode: 'loop',
-            alt: 'Resonance gameplay footage, looping',
-            width: 1280,
-            height: 720,
+            alt: 'Resonance character running, transparent background',
+            width: 960,
+            height: 540,
           },
         ],
       },
@@ -428,21 +427,21 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'Resonance wordmark concept, variant one',
             width: 1600,
             height: 1067,
-            size: 'xl',
+            size: 'lg',
           },
           {
             src: gameIcon,
             alt: 'Resonance game icon',
             width: 1200,
             height: 800,
-            size: 'sm',
+            size: 'lg',
           },
           {
             src: logoConcept2,
             alt: 'Resonance wordmark concept, variant two',
             width: 1600,
             height: 1112,
-            size: 'xl',
+            size: 'lg',
           },
         ],
         moreImages: [
@@ -458,7 +457,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             ],
           },
           {
-            layout: 'contained',
+            layout: 'full-bleed',
             images: [
               {
                 src: weaponSkinKatto,
@@ -480,17 +479,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'Resonance in-game HUD, magenta health variant',
             width: 2000,
             height: 1117,
-          },
-        ],
-      },
-      {
-        label: 'In-Game Advertising',
-        text: 'Billboards and posters scattered through the arena carry the same in-universe sponsor energy, turning the environment itself into part of the broadcast.',
-        layout: 'full-page',
-        images: [
-          {
-            src: billboards,
-            alt: 'In-game billboards and posters inside the Resonance arena',
           },
         ],
       },
