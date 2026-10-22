@@ -66,11 +66,11 @@ export function ProjectDetail() {
         </div>
 
         {detail.brandMark && (
-          <div className="flex justify-center px-6 py-10 md:py-16">
+          <div className="flex justify-center px-6 py-4 md:py-6">
             <img
               src={detail.brandMark.src}
               alt={detail.brandMark.alt}
-              className="h-72 w-auto opacity-80 invert md:h-[32rem]"
+              className="h-48 w-auto opacity-80 invert md:h-96"
               loading="lazy"
               decoding="async"
             />
