@@ -64,18 +64,31 @@ export interface ProjectImage {
   width?: number
   height?: number
   caption?: string
+  // `cluster` layout only -- how wide this image renders relative to
+  // the others in the same free-wrapping group. Defaults to 'md'.
+  size?: 'sm' | 'md' | 'lg' | 'xl'
 }
 
-export interface ProjectChapter {
-  label: string
-  text: string
+// One image block: a layout plus the images it renders. A chapter's
+// primary block is its own `layout`/`images`/`tall`; `moreImages` adds
+// further blocks in sequence below it, for a chapter that needs more
+// than one distinct grouping (e.g. a run of full-page product shots).
+export interface ProjectImageBlock {
   layout: ImageGridLayout
   images: ProjectImage[]
-  // A second image block within the same chapter, for a deliverable
-  // that reads better as two distinct groupings (e.g. finished
-  // stickers, then the wider illustrated cast) rather than one mixed
-  // grid or a second chapter that repeats the same label's copy.
-  extraImages?: { layout: ImageGridLayout; images: ProjectImage[] }
+  // `full-page` only -- use a taller-than-viewport box, for a square
+  // or portrait source a plain viewport-height crop cuts too hard.
+  tall?: boolean
+}
+
+export interface ProjectChapter extends ProjectImageBlock {
+  // Omit for a chapter meant to read as pure imagery with no eyebrow
+  // label above its copy (still takes `text`).
+  label?: string
+  // A single paragraph, or several -- rendered as separate <p>s, with
+  // the label (if any) only ever sitting above the first.
+  text: string | string[]
+  moreImages?: ProjectImageBlock[]
   // False drops ImageGrid's rounded bg-cream/5 card backdrop for this
   // chapter's images -- for transparent-background cutouts (sketches,
   // sticker renders) where that backdrop would show as an unwanted
@@ -119,9 +132,8 @@ export interface ProjectDetailData {
 
 export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   'contra-coffee-sticker-pack': {
-    heroLead: 'A cohesive Y2K merch collection for',
-    heroTagline:
-      ', spanning a reusable glass growler, apparel, and a drink-inspired sticker pack designed for Contra lovers.',
+    heroLead: 'A cohesive collection for',
+    heroTagline: ' designed to function as their Spring Y2K Merch Drop.',
     // The cover photo is a tall shot of stickers spread across a table --
     // centering it (the default) pushes the visible crop down toward
     // the lower, sparser half. Biasing toward the top keeps more of the
@@ -129,7 +141,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     heroImagePosition: 'center 20%',
     tags: ['Illustration', 'Character Design', 'Merchandise', 'Branding'],
     intro:
-      'Contra’s brand leans into community, so this collection was built around their core audience of Contra lovers. One visual system — a teal-and-orange palette, a speech bubble motif, and an early-2000s sensibility pulled in part from Peach Riot — carries across every piece, built to feel nostalgic and collectible, and to line up with Contra’s upcoming brand refresh.',
+      'Contra reimagines the café with signature coffee and tea on draft, served in a minimalist space made for studying, unwinding, and browsing Resident Vinyl’s record collection. Community drives the brand, so this collection was designed for the people who love it most.',
     brandMark: { src: contraLogoMark, alt: 'Contra Coffee & Tea icon' },
     links: {
       featuredOn: [
@@ -142,8 +154,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     },
     chapters: [
       {
-        label: 'Mood & Reference',
-        text: 'The system started as a mood board pulling from Peach Riot and early-2000s character design — the reference point for the palette, the linework, and the playful sensibility the whole drop had to carry.',
+        label: 'Ideation',
+        text: 'Inspired by bold colors, organic free-flowing sketchwork, and retro motifs, these stickers were designed to resonate subtly while still achieving that Y2K aesthetic. What makes Contra unique is that their drinks are served on tap, so the collection highlights their fun menu by focusing on the drinks themselves. The concept draws from blind boxes, specifically Peach Riot, where the creator used each series to promote their own music. In the same spirit, Contra’s drinks are personified as a band of playful characters. Peach Riot perfectly represents the Y2K retro style, which made it the ideal reference for the collection.',
         layout: 'full-bleed',
         images: [
           {
@@ -155,9 +167,9 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
       },
       {
-        label: 'Character Studies',
-        text: 'Each sticker personifies one of Contra’s signature drinks — Gold Rush, Kuya Latte, Strawberry Fields — so every character had to capture the personality behind the name on its own, since the pack sells each piece individually rather than as a sheet.',
-        layout: 'trio',
+        label: 'Character Concepting',
+        text: 'Early concepts drew on a retro, school sketchbook style, with each drink playing the electric guitar. Picking which drinks to personify was tricky, so Contra shared their most popular orders to avoid bias. The final lineup balanced drinks that were fun to draw with ones that deserved more attention. Initial sketches began with Kuya Latte (ube latte), Gold Rush (Vietnamese coffee), and Strawberry Fields (strawberry matcha latte).',
+        layout: 'cluster',
         imagesOnCard: false,
         images: [
           {
@@ -165,25 +177,32 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'Character sketch for the Gold Rush sticker',
             width: 1200,
             height: 1200,
+            size: 'lg',
           },
           {
             src: sketchKuyaLatte,
             alt: 'Character sketch for the Kuya Latte sticker',
             width: 1200,
             height: 1200,
+            size: 'lg',
           },
           {
             src: sketchStrawberryFields,
             alt: 'Character sketch for the Strawberry Fields sticker',
             width: 1200,
             height: 1200,
+            size: 'lg',
           },
         ],
       },
       {
         label: 'The Sticker Pack',
-        text: 'The final three-piece pack went from pencil study to polished sticker, while a wider cast of Contra regulars rounded out the same illustration style.',
-        layout: 'trio',
+        text: [
+          'Old manga from the early 2000s, like Soul Eater, shaped the Y2K look of the stickers. The first set of three featured only the heads of Kuya, Gold Rush, and Strawberry Fields, with each design drawn from the drink’s meaning, its typical customers, and its overall look.',
+          'Kuya means “older brother” in Tagalog, and with the drink’s deep purple color, a monotone palette and a nonchalant expression best fit his personality. Gold Rush, a Vietnamese latte meant to wake you up, became a spunky baddie, and sparkles were added later to bring out the gold in its name. Strawberry Fields, with the drink’s pastel, pretty look, became a cottage-core soft girl whose strawberry pigtails, inspired by Strawberry Shortcake, set her apart from a regular matcha.',
+          'For the full-body designs, more drinks from the taplist joined the band. Lucky Cat (mango kumquat green tea) became a nekomimi-inspired character, and That Orange Stuff (vanilla oat milk Thai tea) took after the soft style of Strawberry Fields. To balance out Strawberry Fields, MC² (matcha espresso) was added as her opposite, designed as a nerdy but stylish schoolboy.',
+        ],
+        layout: 'cluster',
         imagesOnCard: false,
         images: [
           {
@@ -191,73 +210,77 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'Final Gold Rush sticker design',
             width: 1200,
             height: 1200,
+            size: 'md',
           },
           {
             src: finalStickerKuyaLatte,
             alt: 'Final Kuya Latte sticker design',
             width: 1200,
             height: 1199,
+            size: 'md',
           },
           {
             src: finalStickerStrawberryFields,
             alt: 'Final Strawberry Fields sticker design',
             width: 1200,
             height: 1039,
+            size: 'md',
+          },
+          {
+            src: finalCast1,
+            alt: 'Final character illustration: MC Squared',
+            width: 1200,
+            height: 1200,
+            size: 'xl',
+          },
+          {
+            src: finalCast2,
+            alt: 'Final character illustrations: Lucky Cat, Gold Rush, and That Orange Stuff',
+            width: 1200,
+            height: 1200,
+            size: 'xl',
+          },
+          {
+            src: finalCast3,
+            alt: 'Final character illustrations: Strawberry Fields and Kuya Latte',
+            width: 1200,
+            height: 1200,
+            size: 'xl',
           },
         ],
-        extraImages: {
-          layout: 'trio',
-          images: [
-            {
-              src: finalCast1,
-              alt: 'Final character illustration: MC Squared',
-              width: 1200,
-              height: 1200,
-            },
-            {
-              src: finalCast2,
-              alt: 'Final character illustrations: Lucky Cat, Gold Rush, and That Orange Stuff',
-              width: 1200,
-              height: 1200,
-            },
-            {
-              src: finalCast3,
-              alt: 'Final character illustrations: Strawberry Fields and Kuya Latte',
-              width: 1200,
-              height: 1200,
-            },
-          ],
-        },
       },
       {
-        label: 'Apparel & Bonus Merch',
+        // No label -- per direct request, this chapter runs as pure
+        // imagery without an eyebrow header above it.
         text: 'A speech-bubble wordmark and the same character illustrations carried onto apparel and a keychain — the drop’s bonus tier also covers a glass cup, totes, hats, and hoodies, all reading as one collection.',
-        layout: 'two-up',
+        layout: 'full-page',
         images: [
           {
             src: tshirtMockup,
             alt: 'Contra Coffee & Tea t-shirt with speech bubble logo and character illustration',
-            width: 2000,
-            height: 1333,
-          },
-          {
-            src: keychainMockup,
-            alt: 'MC Squared acrylic keychain with dice charms',
-            width: 2000,
-            height: 1125,
           },
         ],
-        extraImages: {
-          layout: 'full-page',
-          images: [
-            {
-              src: waterBottleMockup,
-              alt: 'Contra Coffee stickers applied to reusable glass growlers',
-              width: 1600,
-              height: 1600,
-            },
-          ],
-        },
+        moreImages: [
+          {
+            layout: 'full-page',
+            images: [
+              {
+                src: keychainMockup,
+                alt: 'MC Squared acrylic keychain with dice charms',
+              },
+            ],
+          },
+          {
+            layout: 'full-page',
+            tall: true,
+            images: [
+              {
+                src: waterBottleMockup,
+                alt: 'Contra Coffee stickers applied to reusable glass growlers',
+              },
+            ],
+          },
+        ],
       },
     ],
   },

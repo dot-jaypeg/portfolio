@@ -7,6 +7,8 @@ import { ImageGrid } from './ImageGrid'
 export function ProjectChapter({ chapter }: { chapter: ProjectChapterData }) {
   const sectionRef = useRef<HTMLElement>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
+  const paragraphs = Array.isArray(chapter.text) ? chapter.text : [chapter.text]
+  const card = chapter.imagesOnCard ?? true
 
   useEffect(() => {
     const el = sectionRef.current
@@ -32,23 +34,26 @@ export function ProjectChapter({ chapter }: { chapter: ProjectChapterData }) {
   return (
     <section ref={sectionRef} className="py-20 md:py-32">
       <div data-reveal className="px-6 md:px-10">
-        <p className="font-body mb-5 text-xs tracking-[0.22em] text-cream/40 uppercase">{chapter.label}</p>
-        <p className="font-display max-w-[90rem] text-2xl leading-[1.2] font-normal text-cream md:text-4xl lg:text-5xl">
-          {chapter.text}
-        </p>
+        {chapter.label && (
+          <p className="font-body mb-5 text-xs tracking-[-0.02em] text-cream/40 uppercase">{chapter.label}</p>
+        )}
+        {paragraphs.map((paragraph, i) => (
+          <p
+            key={i}
+            className={`font-display max-w-[90rem] text-2xl leading-[1.2] font-normal text-cream md:text-4xl lg:text-5xl ${i > 0 ? 'mt-6' : ''}`}
+          >
+            {paragraph}
+          </p>
+        ))}
       </div>
       <div data-reveal>
-        <ImageGrid layout={chapter.layout} images={chapter.images} card={chapter.imagesOnCard ?? true} />
+        <ImageGrid layout={chapter.layout} images={chapter.images} card={card} tall={chapter.tall} />
       </div>
-      {chapter.extraImages && (
-        <div data-reveal className="mt-10">
-          <ImageGrid
-            layout={chapter.extraImages.layout}
-            images={chapter.extraImages.images}
-            card={chapter.imagesOnCard ?? true}
-          />
+      {chapter.moreImages?.map((block, i) => (
+        <div data-reveal key={i} className="mt-10">
+          <ImageGrid layout={block.layout} images={block.images} card={card} tall={block.tall} />
         </div>
-      )}
+      ))}
     </section>
   )
 }

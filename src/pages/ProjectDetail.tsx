@@ -64,19 +64,19 @@ export function ProjectDetail() {
         </div>
 
         {detail.brandMark && (
-          <div className="flex justify-center px-6 py-14 md:py-20">
+          <div className="flex justify-center px-6 py-16 md:py-24">
             <img
               src={detail.brandMark.src}
               alt={detail.brandMark.alt}
-              className="h-20 w-auto opacity-80 invert md:h-28"
+              className="h-48 w-auto opacity-80 invert md:h-80"
               loading="lazy"
               decoding="async"
             />
           </div>
         )}
 
-        {detail.chapters.map((chapter) => (
-          <ProjectChapter key={chapter.label} chapter={chapter} />
+        {detail.chapters.map((chapter, i) => (
+          <ProjectChapter key={i} chapter={chapter} />
         ))}
 
         <MoreProjects currentSlug={project.slug} />
