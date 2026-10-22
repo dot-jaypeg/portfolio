@@ -22,6 +22,17 @@ import showFullStage from '../assets/images/projects/detail/afi-marketing-campai
 import resonancePoster from '../assets/images/projects/detail/ui-design-for-resonance/poster.jpg'
 import splash1 from '../assets/images/projects/detail/ui-design-for-resonance/splash-1.jpg'
 import splash2 from '../assets/images/projects/detail/ui-design-for-resonance/splash-2.jpg'
+import resonanceTrailer from '../assets/images/projects/detail/ui-design-for-resonance/trailer.mp4'
+import resonanceTrailerPoster from '../assets/images/projects/detail/ui-design-for-resonance/trailer-poster.jpg'
+import logoConcept1 from '../assets/images/projects/detail/ui-design-for-resonance/logo-concept-1.jpg'
+import logoConcept2 from '../assets/images/projects/detail/ui-design-for-resonance/logo-concept-2.jpg'
+import gameIcon from '../assets/images/projects/detail/ui-design-for-resonance/game-icon.jpg'
+import fontSpecimen from '../assets/images/projects/detail/ui-design-for-resonance/font-specimen.png'
+import weaponSkinKatto from '../assets/images/projects/detail/ui-design-for-resonance/weapon-skin-katto.jpg'
+import hud1 from '../assets/images/projects/detail/ui-design-for-resonance/hud-1.jpg'
+import hud2 from '../assets/images/projects/detail/ui-design-for-resonance/hud-2.jpg'
+import billboards from '../assets/images/projects/detail/ui-design-for-resonance/billboards.jpg'
+import matchEndLoop from '../assets/images/projects/detail/ui-design-for-resonance/match-end-loop.mp4'
 
 import boardHoodie from '../assets/images/projects/detail/nikkei-student-union/board-hoodie.jpg'
 import springFront from '../assets/images/projects/detail/nikkei-student-union/spring-merch-front.jpg'
@@ -62,6 +73,14 @@ export interface ProjectImage {
   // instead -- for a chapter whose real asset hasn't been supplied
   // yet. `alt` doubles as that box's own label in that case.
   src?: string
+  // Set instead of `src` to render a <video> in this slot. `videoMode`
+  // 'loop' autoplays muted/looped with no controls (ambient UI or
+  // environment footage); the default, 'controls', is a plain
+  // user-initiated player with `poster` as its thumbnail -- for an
+  // actual trailer, which shouldn't autoplay or autodownload.
+  video?: string
+  videoMode?: 'controls' | 'loop'
+  poster?: string
   alt: string
   width?: number
   height?: number
@@ -354,15 +373,28 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   },
 
   'ui-design-for-resonance': {
-    heroLead: 'Interface design for',
-    heroTagline: ', built to make a dense, data-heavy product feel simple enough to actually use.',
-    tags: ['UI/UX', 'HUD Design', 'Branding'],
+    heroLead: 'Branding, UI, and HUD design for',
+    heroBold: 'Resonance',
+    heroTagline: ', a 12-player cyberpunk arena shooter where the environment reacts to sound in real time.',
+    tags: ['Branding', 'UI/UX', 'HUD Design', 'Game Art'],
     intro:
-      'Resonance needed an interface that could hold a lot of information — live data, controls, status — without overwhelming the person using it. The system starts with one clear mark and a restrained palette, then carries that calm into every screen.',
+      'Corporations run Resonance’s arenas, pitting fighters against each other to stress-test experimental weapons and augments in front of a live audience — weapons R&D disguised as spectator sport, broadcast for entertainment. Built by a small student team in about three months for a university capstone, then submitted to IEEE GameSIG 2026.',
     chapters: [
       {
-        label: 'Key Art & Poster',
-        text: 'The poster set the visual language first: one mark, one palette, enough restraint to carry straight into the UI itself.',
+        label: 'Gameplay Trailer',
+        text: 'Every match comes down to the Overdrive — a high-stakes ability that can turn a fight around, best saved for when it counts. Stay in the lead too long, though, and a spotlight turns you into the target: the whole lobby’s bounty.',
+        layout: 'full-page',
+        images: [
+          {
+            video: resonanceTrailer,
+            poster: resonanceTrailerPoster,
+            alt: 'Resonance gameplay trailer, submitted to IEEE GameSIG 2026',
+          },
+        ],
+      },
+      {
+        label: 'The World',
+        text: 'Two medium-sized maps support three modes apiece — Arena, Polarity, and Synthesis — each built around the same economy, so skill and loadouts carry across all of them instead of resetting per mode.',
         layout: 'contained',
         images: [
           {
@@ -370,6 +402,58 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'Resonance key art poster',
             width: 1125,
             height: 2000,
+          },
+        ],
+      },
+      {
+        label: 'Brand Identity',
+        text: [
+          'The wordmark went through several passes before landing on its final glitch-edged look — the same mark that carried straight into the game’s icon.',
+          'That identity extended into the world itself: Azonix became the display type running through menus and HUD, and in-universe sponsors like Katto got their own weapon-skin branding, reinforcing the sponsor-driven, broadcast-for-entertainment premise.',
+        ],
+        layout: 'trio',
+        images: [
+          {
+            src: logoConcept1,
+            alt: 'Resonance wordmark concept, variant one',
+            width: 1600,
+            height: 1067,
+          },
+          {
+            src: logoConcept2,
+            alt: 'Resonance wordmark concept, variant two',
+            width: 1600,
+            height: 1112,
+          },
+          {
+            src: gameIcon,
+            alt: 'Resonance game icon',
+            width: 1200,
+            height: 800,
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'full-bleed',
+            images: [
+              {
+                src: fontSpecimen,
+                alt: 'Azonix display typeface specimen, full alphabet and numerals',
+                width: 2000,
+                height: 1250,
+              },
+            ],
+          },
+          {
+            layout: 'contained',
+            images: [
+              {
+                src: weaponSkinKatto,
+                alt: 'Katto sponsor weapon skin branding',
+                width: 2000,
+                height: 1333,
+              },
+            ],
           },
         ],
       },
@@ -392,6 +476,48 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
                 alt: 'Resonance splash screen, second variant',
               },
             ],
+          },
+        ],
+      },
+      {
+        label: 'HUD & Interface',
+        text: 'The HUD had to surface rank, health, ammo, and ability cooldowns at a glance without crowding the frame — color-coded enhancement states let players read their own build mid-fight.',
+        layout: 'two-up',
+        images: [
+          {
+            src: hud1,
+            alt: 'Resonance in-game HUD, magenta health variant',
+            width: 2000,
+            height: 1117,
+          },
+          {
+            src: hud2,
+            alt: 'Resonance in-game HUD, green health variant',
+            width: 2000,
+            height: 1117,
+          },
+        ],
+      },
+      {
+        label: 'In-Game Advertising',
+        text: 'Billboards and posters scattered through the arena carry the same in-universe sponsor energy, turning the environment itself into part of the broadcast.',
+        layout: 'full-page',
+        images: [
+          {
+            src: billboards,
+            alt: 'In-game billboards and posters inside the Resonance arena',
+          },
+        ],
+      },
+      {
+        label: 'Game Over & Victory Screens',
+        text: 'Both screens are built around the same audio-reactive waveform that runs through the rest of the game — the world still reacting to sound even after the match ends.',
+        layout: 'full-page',
+        images: [
+          {
+            video: matchEndLoop,
+            videoMode: 'loop',
+            alt: 'Resonance match-end screen background, audio-reactive waveform',
           },
         ],
       },

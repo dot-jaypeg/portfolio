@@ -2,11 +2,55 @@ import type { ProjectImage } from '../data/projectDetails'
 
 export type ImageGridLayout = 'full-bleed' | 'full-page' | 'two-up' | 'trio' | 'cluster' | 'contained'
 
-// Images with no `src` are a deliberate placeholder -- the project
-// hasn't supplied that asset yet. Renders the same dashed-box
-// convention ProjectCard already uses for a missing cover, with
-// `alt` doing double duty as the box's own label text.
+// Renders whichever of `video`/`src` the entry actually has, or the
+// dashed placeholder box when it has neither -- for a chapter whose
+// real asset hasn't been supplied yet. `alt` doubles as that box's own
+// label text in that case.
 //
+// `videoMode: 'loop'` is a silent, autoplaying background loop (no
+// controls) -- for ambient UI/environment footage. The default,
+// 'controls', is a plain user-initiated player with a poster frame --
+// for an actual trailer, which shouldn't autoplay or autodownload.
+function Media({ image, className }: { image: ProjectImage; className: string }) {
+  if (image.video) {
+    if (image.videoMode === 'loop') {
+      return (
+        <video
+          src={image.video}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-label={image.alt}
+          className={className}
+        />
+      )
+    }
+    return (
+      <video src={image.video} poster={image.poster} controls preload="none" aria-label={image.alt} className={className} />
+    )
+  }
+  if (image.src) {
+    return (
+      <img
+        src={image.src}
+        alt={image.alt}
+        width={image.width}
+        height={image.height}
+        loading="lazy"
+        decoding="async"
+        className={className}
+      />
+    )
+  }
+  return (
+    <div className="flex h-full w-full items-center justify-center border border-dashed border-cream/15">
+      <span className="font-body px-6 text-center text-[10px] tracking-[0.22em] text-cream/30 uppercase">{image.alt}</span>
+    </div>
+  )
+}
+
 // `card` false drops the rounded bg-cream/5 backdrop entirely -- for
 // a transparent-background cutout (a sticker render, a logo mark)
 // where that backdrop would show as an unwanted grey box around the
@@ -33,30 +77,14 @@ function Figure({
   interactive?: boolean
   tilt?: 'left' | 'right'
 }) {
-  const hasImage = Boolean(image.src)
+  const hasMedia = Boolean(image.src || image.video)
   return (
     <figure>
       <div
         className={`${card ? `overflow-hidden bg-cream/5 ${rounded ? 'rounded-2xl' : ''}` : 'overflow-hidden'} ${interactive ? `transition-transform duration-300 ease-out hover:scale-110 ${TILT_CLASS[tilt]}` : ''}`}
-        style={{ aspectRatio: hasImage ? `${image.width} / ${image.height}` : '4 / 3' }}
+        style={{ aspectRatio: hasMedia ? `${image.width} / ${image.height}` : '4 / 3' }}
       >
-        {hasImage ? (
-          <img
-            src={image.src}
-            alt={image.alt}
-            width={image.width}
-            height={image.height}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center border border-dashed border-cream/15">
-            <span className="font-body px-6 text-center text-[10px] tracking-[0.22em] text-cream/30 uppercase">
-              {image.alt}
-            </span>
-          </div>
-        )}
+        <Media image={image} className="h-full w-full object-cover" />
       </div>
       {image.caption && (
         <figcaption className="font-body mx-auto mt-4 max-w-xl px-6 text-center text-xs tracking-[0.08em] text-cream/40 md:px-0">
@@ -161,7 +189,6 @@ export function ImageGrid({
 
   if (layout === 'full-page') {
     const image = images[0]
-    const hasImage = Boolean(image.src)
     // No top margin -- unlike the other layouts, full-page images are
     // meant to butt up flush against whatever's above/below them (see
     // ProjectChapter, which also skips its own gap between consecutive
@@ -170,21 +197,7 @@ export function ImageGrid({
       <div className="w-full">
         <figure>
           <div className={`${tall ? 'h-[150vh]' : 'h-[92vh]'} w-full overflow-hidden bg-cream/5`}>
-            {hasImage ? (
-              <img
-                src={image.src}
-                alt={image.alt}
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center border border-dashed border-cream/15">
-                <span className="font-body px-6 text-center text-[10px] tracking-[0.22em] text-cream/30 uppercase">
-                  {image.alt}
-                </span>
-              </div>
-            )}
+            <Media image={image} className="h-full w-full object-cover" />
           </div>
           {image.caption && (
             <figcaption className="font-body mx-auto mt-4 max-w-xl px-6 text-center text-xs tracking-[0.08em] text-cream/40 md:px-0">
