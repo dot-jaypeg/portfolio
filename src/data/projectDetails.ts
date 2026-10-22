@@ -23,6 +23,7 @@ import resonancePoster from '../assets/images/projects/detail/ui-design-for-reso
 import splash1 from '../assets/images/projects/detail/ui-design-for-resonance/splash-1.jpg'
 import splash2 from '../assets/images/projects/detail/ui-design-for-resonance/splash-2.jpg'
 import resonanceTrailer from '../assets/images/projects/detail/ui-design-for-resonance/trailer.mp4'
+import resonanceGameplayLoop from '../assets/images/projects/detail/ui-design-for-resonance/gameplay-loop.mp4'
 import resonanceTrailerPoster from '../assets/images/projects/detail/ui-design-for-resonance/trailer-poster.jpg'
 import logoConcept1 from '../assets/images/projects/detail/ui-design-for-resonance/logo-concept-1.jpg'
 import logoConcept2 from '../assets/images/projects/detail/ui-design-for-resonance/logo-concept-2.jpg'
@@ -30,7 +31,6 @@ import gameIcon from '../assets/images/projects/detail/ui-design-for-resonance/g
 import fontSpecimen from '../assets/images/projects/detail/ui-design-for-resonance/font-specimen.png'
 import weaponSkinKatto from '../assets/images/projects/detail/ui-design-for-resonance/weapon-skin-katto.jpg'
 import hud1 from '../assets/images/projects/detail/ui-design-for-resonance/hud-1.jpg'
-import hud2 from '../assets/images/projects/detail/ui-design-for-resonance/hud-2.jpg'
 import billboards from '../assets/images/projects/detail/ui-design-for-resonance/billboards.jpg'
 import matchEndLoop from '../assets/images/projects/detail/ui-design-for-resonance/match-end-loop.mp4'
 
@@ -75,11 +75,12 @@ export interface ProjectImage {
   src?: string
   // Set instead of `src` to render a <video> in this slot. `videoMode`
   // 'loop' autoplays muted/looped with no controls (ambient UI or
-  // environment footage); the default, 'controls', is a plain
-  // user-initiated player with `poster` as its thumbnail -- for an
-  // actual trailer, which shouldn't autoplay or autodownload.
+  // environment footage); 'autoplay' plays once scrolled into view,
+  // pauses once scrolled out, starting muted but keeping controls so
+  // a visitor can unmute; the default, 'controls', is a plain
+  // user-initiated player with `poster` as its thumbnail.
   video?: string
-  videoMode?: 'controls' | 'loop'
+  videoMode?: 'controls' | 'loop' | 'autoplay'
   poster?: string
   alt: string
   width?: number
@@ -373,9 +374,9 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   },
 
   'ui-design-for-resonance': {
-    heroLead: 'Branding, UI, and HUD design for',
+    heroLead: 'Twelve fighters. One arena that listens. Branding, UI, and HUD design for',
     heroBold: 'Resonance',
-    heroTagline: ', a 12-player cyberpunk arena shooter where the environment reacts to sound in real time.',
+    heroTagline: '.',
     tags: ['Branding', 'UI/UX', 'HUD Design', 'Game Art'],
     intro:
       'Corporations run Resonance’s arenas, pitting fighters against each other to stress-test experimental weapons and augments in front of a live audience — weapons R&D disguised as spectator sport, broadcast for entertainment. Built by a small student team in about three months for a university capstone, then submitted to IEEE GameSIG 2026.',
@@ -387,6 +388,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         images: [
           {
             video: resonanceTrailer,
+            videoMode: 'autoplay',
             poster: resonanceTrailerPoster,
             alt: 'Resonance gameplay trailer, submitted to IEEE GameSIG 2026',
           },
@@ -395,13 +397,21 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         label: 'The World',
         text: 'Two medium-sized maps support three modes apiece — Arena, Polarity, and Synthesis — each built around the same economy, so skill and loadouts carry across all of them instead of resetting per mode.',
-        layout: 'contained',
+        layout: 'two-up',
+        imagesOnCard: false,
         images: [
           {
             src: resonancePoster,
             alt: 'Resonance key art poster',
             width: 1125,
             height: 2000,
+          },
+          {
+            video: resonanceGameplayLoop,
+            videoMode: 'loop',
+            alt: 'Resonance gameplay footage, looping',
+            width: 1280,
+            height: 720,
           },
         ],
       },
@@ -411,25 +421,28 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           'The wordmark went through several passes before landing on its final glitch-edged look — the same mark that carried straight into the game’s icon.',
           'That identity extended into the world itself: Azonix became the display type running through menus and HUD, and in-universe sponsors like Katto got their own weapon-skin branding, reinforcing the sponsor-driven, broadcast-for-entertainment premise.',
         ],
-        layout: 'trio',
+        layout: 'cluster',
         images: [
           {
             src: logoConcept1,
             alt: 'Resonance wordmark concept, variant one',
             width: 1600,
             height: 1067,
-          },
-          {
-            src: logoConcept2,
-            alt: 'Resonance wordmark concept, variant two',
-            width: 1600,
-            height: 1112,
+            size: 'xl',
           },
           {
             src: gameIcon,
             alt: 'Resonance game icon',
             width: 1200,
             height: 800,
+            size: 'sm',
+          },
+          {
+            src: logoConcept2,
+            alt: 'Resonance wordmark concept, variant two',
+            width: 1600,
+            height: 1112,
+            size: 'xl',
           },
         ],
         moreImages: [
@@ -458,41 +471,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
       },
       {
-        label: 'Splash Screens',
-        text: 'Splash and loading states got the same treatment as the core UI — considered, not an afterthought, and immersive enough to hold the screen on their own.',
-        layout: 'full-page',
-        images: [
-          {
-            src: splash1,
-            alt: 'Resonance splash screen, first variant',
-          },
-        ],
-        moreImages: [
-          {
-            layout: 'full-page',
-            images: [
-              {
-                src: splash2,
-                alt: 'Resonance splash screen, second variant',
-              },
-            ],
-          },
-        ],
-      },
-      {
         label: 'HUD & Interface',
         text: 'The HUD had to surface rank, health, ammo, and ability cooldowns at a glance without crowding the frame — color-coded enhancement states let players read their own build mid-fight.',
-        layout: 'two-up',
+        layout: 'full-bleed',
         images: [
           {
             src: hud1,
             alt: 'Resonance in-game HUD, magenta health variant',
-            width: 2000,
-            height: 1117,
-          },
-          {
-            src: hud2,
-            alt: 'Resonance in-game HUD, green health variant',
             width: 2000,
             height: 1117,
           },
@@ -518,6 +503,27 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             video: matchEndLoop,
             videoMode: 'loop',
             alt: 'Resonance match-end screen background, audio-reactive waveform',
+          },
+        ],
+      },
+      {
+        label: 'Splash Screens',
+        layout: 'full-page',
+        images: [
+          {
+            src: splash1,
+            alt: 'Resonance splash screen, first variant',
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'full-page',
+            images: [
+              {
+                src: splash2,
+                alt: 'Resonance splash screen, second variant',
+              },
+            ],
           },
         ],
       },
@@ -717,6 +723,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Key Art',
         text: 'The final key art, built around the glow of the blade as the single light source driving the whole composition.',
         layout: 'full-page',
+        tall: true,
         images: [
           {
             src: jadeKeyArt,

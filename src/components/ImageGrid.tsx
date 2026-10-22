@@ -1,6 +1,45 @@
+import { useEffect, useRef } from 'react'
 import type { ProjectImage } from '../data/projectDetails'
 
 export type ImageGridLayout = 'full-bleed' | 'full-page' | 'two-up' | 'trio' | 'cluster' | 'contained'
+
+// Plays once its container scrolls into view, pauses once it scrolls
+// back out -- starts muted (autoplay triggered by scroll, not a real
+// user gesture, so browsers won't allow it unmuted), but keeps native
+// controls so a visitor can unmute or scrub manually.
+function AutoplayInViewVideo({ image, className }: { image: ProjectImage; className: string }) {
+  const ref = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.play().catch(() => {})
+        } else {
+          el.pause()
+        }
+      },
+      { threshold: 0.5 },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <video
+      ref={ref}
+      src={image.video}
+      poster={image.poster}
+      controls
+      muted
+      preload="metadata"
+      aria-label={image.alt}
+      className={className}
+    />
+  )
+}
 
 // Renders whichever of `video`/`src` the entry actually has, or the
 // dashed placeholder box when it has neither -- for a chapter whose
@@ -8,9 +47,10 @@ export type ImageGridLayout = 'full-bleed' | 'full-page' | 'two-up' | 'trio' | '
 // label text in that case.
 //
 // `videoMode: 'loop'` is a silent, autoplaying background loop (no
-// controls) -- for ambient UI/environment footage. The default,
-// 'controls', is a plain user-initiated player with a poster frame --
-// for an actual trailer, which shouldn't autoplay or autodownload.
+// controls) -- for ambient UI/environment footage. `'autoplay'` plays
+// once scrolled into view (see AutoplayInViewVideo above). The
+// default, 'controls', is a plain user-initiated player with a poster
+// frame -- for an actual trailer, which shouldn't autodownload.
 function Media({ image, className }: { image: ProjectImage; className: string }) {
   if (image.video) {
     if (image.videoMode === 'loop') {
@@ -26,6 +66,9 @@ function Media({ image, className }: { image: ProjectImage; className: string })
           className={className}
         />
       )
+    }
+    if (image.videoMode === 'autoplay') {
+      return <AutoplayInViewVideo image={image} className={className} />
     }
     return (
       <video src={image.video} poster={image.poster} controls preload="none" aria-label={image.alt} className={className} />

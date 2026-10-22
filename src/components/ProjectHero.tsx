@@ -67,33 +67,38 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
           ))}
         </p>
 
-        {links && (links.site || (links.featuredOn && links.featuredOn.length > 0)) && (
-          <div style={{ borderColor: `${accent}33` }} className="mt-10 flex flex-wrap gap-4 border-t pt-8">
-            {links.site && (
-              <a
-                href={links.site}
-                target="_blank"
-                rel="noreferrer"
-                style={{ '--pill-accent': accent, borderColor: `${accent}66`, color: accent } as CSSProperties}
-                className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
-              >
-                Visit Site
-              </a>
-            )}
-            {links.featuredOn?.map((f) => (
-              <a
-                key={f.href}
-                href={f.href}
-                target="_blank"
-                rel="noreferrer"
-                style={{ '--pill-accent': accent, borderColor: `${accent}66`, color: accent } as CSSProperties}
-                className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
-              >
-                {f.label}
-              </a>
-            ))}
-          </div>
-        )}
+        {/* Always renders, not just when there are links -- this is the
+            divider between the hero block and whatever comes next
+            (the intro paragraph), not just a rule above the pills. */}
+        <div style={{ borderColor: `${accent}33` }} className="mt-10 border-t pt-8">
+          {links && (links.site || (links.featuredOn && links.featuredOn.length > 0)) && (
+            <div className="flex flex-wrap gap-4">
+              {links.site && (
+                <a
+                  href={links.site}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ '--pill-accent': accent, borderColor: `${accent}66`, color: accent } as CSSProperties}
+                  className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
+                >
+                  Visit Site
+                </a>
+              )}
+              {links.featuredOn?.map((f) => (
+                <a
+                  key={f.href}
+                  href={f.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ '--pill-accent': accent, borderColor: `${accent}66`, color: accent } as CSSProperties}
+                  className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
+                >
+                  {f.label}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </header>
   )
