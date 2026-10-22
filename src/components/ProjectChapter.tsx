@@ -43,7 +43,7 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           {paragraphs.map((paragraph, i) => (
             <p
               key={i}
-              className={`font-geist max-w-3xl text-xl leading-relaxed font-light text-cream md:text-2xl lg:text-3xl ${i > 0 ? 'mt-6' : ''}`}
+              className={`font-geist max-w-[90rem] text-xl leading-relaxed font-light text-cream md:text-2xl lg:text-3xl ${i > 0 ? 'mt-6' : ''}`}
             >
               {paragraph}
             </p>
