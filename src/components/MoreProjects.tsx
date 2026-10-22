@@ -40,7 +40,7 @@ export function MoreProjects({ currentSlug }: { currentSlug: string }) {
                   alt={`${p.title} cover`}
                   loading="lazy"
                   decoding="async"
-                  style={{ objectPosition: p.imagePosition ?? 'center' }}
+                  style={{ objectPosition: p.moreWorkImagePosition ?? p.imagePosition ?? 'center' }}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               )}

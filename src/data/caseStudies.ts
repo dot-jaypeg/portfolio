@@ -30,6 +30,15 @@ export interface CaseStudy {
   // A wide/off-center source photo can need this to keep the meaningful
   // subject in frame once object-cover crops it into the 4:5 box.
   imagePosition?: string
+  // Optional object-position override just for the "More Work" grid at
+  // the bottom of a project detail page (see MoreProjects.tsx), whose
+  // thumbnail box is a different aspect ratio (4:3) than wherever else
+  // `imagePosition` applies -- the same source crop that's right for
+  // one box can clip the wrong thing in the other (confirmed directly:
+  // Resonance needs its character kept in frame elsewhere but its
+  // wordmark kept in frame here, which the one shared value can't do
+  // for both at once). Falls back to `imagePosition ?? 'center'`.
+  moreWorkImagePosition?: string
   // Optional hex accent -- colors the category label and the pull-quote
   // mark in WorkPanel with THIS project's own palette instead of the
   // site's default teal/red alternation, so each case study is
@@ -56,6 +65,9 @@ export const CASE_STUDIES: CaseStudy[] = [
     client: 'Velvet Hammer Music',
     image: afiImg,
     accent: '#e6869a',
+    // Tall portrait shot with the face near the top -- the default
+    // vertical center crop lands on the guitar/torso instead.
+    moreWorkImagePosition: 'center top',
     description:
       'A multi-channel marketing push built to get AFI in front of the right audience at the right moment.',
   },
@@ -70,6 +82,9 @@ export const CASE_STUDIES: CaseStudy[] = [
     // character on the right -- centering it (the default) crops half
     // of each. Biasing all the way right keeps just the character.
     imagePosition: 'right center',
+    // The More Work grid's narrower 4:3 box crops even tighter -- here
+    // the wordmark is the one worth keeping in frame instead.
+    moreWorkImagePosition: 'left center',
     description:
       'Interface design for Resonance, focused on making a complex product feel simple to actually use.',
   },
