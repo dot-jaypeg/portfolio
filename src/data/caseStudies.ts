@@ -127,7 +127,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     slug: 'urban-seoul',
     title: 'urbanseoul. x New Balance Festival',
     category: 'Branding & Advertising',
-    client: 'Urban Seoul',
+    client: 'New Balance',
     image: urbanSeoulImg,
     accent: '#4f6f93',
     description:

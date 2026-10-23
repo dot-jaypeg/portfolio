@@ -630,16 +630,17 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   },
 
   'urban-seoul': {
-    heroLead: 'A full campaign for',
+    heroLead: 'Branding and campaign design for',
+    heroBold: 'urbanseoul.',
     heroTagline:
-      ', a streetwear pop-up built around one bold, hand-lettered identity carried across signage, merch, and the street itself.',
+      ', a New Balance-presented Korean R&B festival at Under the K Bridge Park in Brooklyn.',
     tags: ['Branding', 'Campaign', 'Signage', 'Merchandise'],
     intro:
-      'Urban Seoul needed a one-off event to feel like a full brand, fast — bus-stop ads and signage to pull people in, merch and tickets to give them something to leave with.',
+      'Presented by New Balance, urbanseoul. turns a one-night festival into a full lifestyle event — bus-stop ads and signage to pull people in, merch and tickets to give them something to leave with, all carrying one bold, neon-accented identity that blends New Balance’s vintage sports photography with KRNB’s sleek urban style.',
     chapters: [
       {
         label: 'Posters & Signage',
-        text: 'The hand-lettered mark anchored every touchpoint, from bus-stop posters to the signage marking the event itself.',
+        text: 'New Balance’s vintage sports photography and a neon-accented urban palette anchored every touchpoint, from bus-stop posters to the signage marking the event itself.',
         layout: 'two-up',
         images: [
           {
@@ -658,7 +659,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'On-Site Signage',
-        text: 'Signage carried the identity from print into the physical space of the pop-up.',
+        text: 'Signage carried the identity from print into the physical space of the festival grounds at Under the K Bridge Park.',
         layout: 'full-page',
         images: [
           {
@@ -669,7 +670,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Merch',
-        text: 'Merch kept the same bold lettering, built to be worn past the event.',
+        text: 'Merch kept the same neon-accented energy, built to be worn past the night of the show.',
         layout: 'two-up',
         images: [
           {
@@ -688,7 +689,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Social',
-        text: 'Social rounded out the campaign, keeping the same hand-lettered energy in a scrollable format.',
+        text: 'Social rounded out the campaign, keeping the same sneaker-culture energy in a scrollable format.',
         layout: 'contained',
         images: [
           {
