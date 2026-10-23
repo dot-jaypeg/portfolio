@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import type { CSSProperties } from 'react'
 import type { CaseStudy } from '../data/caseStudies'
 import { useMaskNavigate } from '../hooks/useMaskNavigate'
 
@@ -24,6 +25,10 @@ export function ProjectCard({
     e.preventDefault()
     maskNavigate(`/work/${cs.slug}`)
   }
+  // Same per-project hex + site-teal fallback used everywhere else this
+  // accent shows up (the homepage's own featured-work category label,
+  // every project detail page's tags/pills/chapter labels).
+  const accent = cs.accent ?? '#618c82'
 
   return (
     <section
@@ -48,7 +53,7 @@ export function ProjectCard({
         className="flex h-full flex-col items-center focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-teal md:flex-row"
       >
         <div className="flex w-full flex-1 flex-col justify-between gap-6 px-8 py-10 md:w-1/2 md:px-16 md:py-16 lg:px-24">
-          <span className="font-body text-xs tracking-[0.22em] text-cream/40 uppercase">
+          <span style={{ color: accent }} className="font-body text-xs tracking-[0.22em] uppercase">
             {String(index + 1).padStart(2, '0')}
           </span>
           <div>
@@ -58,9 +63,11 @@ export function ProjectCard({
             <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-cream/60">{cs.description}</p>
             {/* Same pill treatment as ExpertisePills/the Download Resume
                 link (rounded-full border, invert-on-hover) -- the one
-                established "button" look sitewide -- recolored for this
-                page's dark theme (border-cream, inverts to a solid
-                cream fill instead of ink). A <span>, not a nested
+                established "button" look sitewide -- recolored to this
+                project's own accent (same hex every other accent touch
+                on its detail page uses) instead of a flat cream, so
+                each card reads as color-coordinated to its own project
+                rather than one uniform look. A <span>, not a nested
                 <button>/<a>: the whole card above is already one Link,
                 and interactive elements can't nest -- this is a visual
                 affordance, not a second click target.
@@ -70,11 +77,14 @@ export function ProjectCard({
                 of its own to piggyback on; a plain :hover on this
                 element is exactly scoped to its own box regardless of
                 where in the ancestor Link the cursor is). */}
-            <span className="mt-8 inline-block rounded-full border border-cream/20 px-6 py-3 text-xs tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink">
+            <span
+              style={{ '--pill-accent': accent, borderColor: `${accent}66`, color: accent } as CSSProperties}
+              className="mt-8 inline-block rounded-full border px-6 py-3 text-xs tracking-wider uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
+            >
               View Project
             </span>
           </div>
-          <span className="font-body text-xs tracking-[0.22em] text-cream/40 uppercase">
+          <span style={{ color: accent }} className="font-body text-xs tracking-[0.22em] uppercase">
             {cs.category}
           </span>
         </div>
