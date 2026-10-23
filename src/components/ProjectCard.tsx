@@ -2,12 +2,6 @@ import { Link } from 'react-router-dom'
 import type { CaseStudy } from '../data/caseStudies'
 import { useMaskNavigate } from '../hooks/useMaskNavigate'
 
-// Placeholder pending approved copy -- see conversation. Deliberately
-// not cs.description: that field is also the homepage's real WorkPanel
-// pull-quote text for the 5 featured case studies.
-const PLACEHOLDER_BLURB =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim ad minim veniam.'
-
 export function ProjectCard({
   cs,
   index,
@@ -61,9 +55,7 @@ export function ProjectCard({
             <h2 className="font-display text-4xl leading-[0.95] font-bold tracking-[-0.04em] text-ink uppercase md:text-5xl lg:text-6xl">
               {cs.title}
             </h2>
-            <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-ink/60">
-              {PLACEHOLDER_BLURB}
-            </p>
+            <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-ink/60">{cs.description}</p>
             {/* Same pill treatment as ExpertisePills/the Download Resume
                 link (rounded-full border, invert-on-hover) -- the one
                 established "button" look sitewide -- just recolored for
@@ -97,7 +89,7 @@ export function ProjectCard({
                 alt={`${cs.title} cover`}
                 loading="lazy"
                 decoding="async"
-                style={{ objectPosition: cs.imagePosition ?? 'center' }}
+                style={{ objectPosition: cs.workImagePosition ?? cs.imagePosition ?? 'center' }}
                 className="h-full w-full object-cover"
               />
             ) : (

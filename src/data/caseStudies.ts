@@ -39,6 +39,12 @@ export interface CaseStudy {
   // wordmark kept in frame here, which the one shared value can't do
   // for both at once). Falls back to `imagePosition ?? 'center'`.
   moreWorkImagePosition?: string
+  // Optional object-position override just for the /work listing page's
+  // own thumbnail (see ProjectCard.tsx), whose box is yet another
+  // aspect ratio (alternating 4:3/3:2) than either `imagePosition` or
+  // `moreWorkImagePosition` apply to. Falls back to
+  // `imagePosition ?? 'center'`.
+  workImagePosition?: string
   // Optional hex accent -- colors the category label and the pull-quote
   // mark in WorkPanel with THIS project's own palette instead of the
   // site's default teal/red alternation, so each case study is
@@ -56,7 +62,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: contraImg,
     accent: '#9cc7b1',
     description:
-      'A playful sticker pack designed to extend Contra Coffee\'s brand voice into something collectible and shareable.',
+      'A cohesive collection for Contra Coffee & Tea designed to function as their Spring Y2K Merch Drop.',
   },
   {
     slug: 'afi-marketing-campaign',
@@ -68,8 +74,9 @@ export const CASE_STUDIES: CaseStudy[] = [
     // Tall portrait shot with the face near the top -- the default
     // vertical center crop lands on the guitar/torso instead.
     moreWorkImagePosition: 'center top',
+    workImagePosition: 'center top',
     description:
-      'A multi-channel marketing push built to get AFI in front of the right audience at the right moment.',
+      'To launch AFI’s single Holy Visions and the relaunch of their fan club, Despair Faction, new DF membership cards were paired with digital tarot cards and a collectible physical card series.',
   },
   {
     slug: 'ui-design-for-resonance',
@@ -85,8 +92,11 @@ export const CASE_STUDIES: CaseStudy[] = [
     // The More Work grid's narrower 4:3 box crops even tighter -- here
     // the wordmark is the one worth keeping in frame instead.
     moreWorkImagePosition: 'left center',
+    // Same reasoning as moreWorkImagePosition -- the /work listing's
+    // own thumbnail box should keep the wordmark in frame too.
+    workImagePosition: 'left center',
     description:
-      'Interface design for Resonance, focused on making a complex product feel simple to actually use.',
+      'Twelve fighters. One arena that listens. Branding, UI, and HUD design for Resonance.',
   },
   {
     slug: 'nikkei-student-union',
@@ -101,7 +111,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     // spare. A smaller amount leaves the whole shirt visible.
     imageParallax: 3,
     description:
-      'A visual identity built to give a student organization a stronger, more unified presence on campus.',
+      'Creative lead for Chapman University’s Nikkei Student Union, shaping the organization’s visual identity and promoting Japanese-American culture through promotional videos, custom merchandise, flyers, and social media graphics.',
   },
   {
     slug: 'fetch-doggy-deli',
@@ -111,17 +121,17 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: fetchImg,
     accent: '#45815a',
     description:
-      'Brand identity and packaging for a doggy deli, built to feel as playful as the product itself.',
+      'A dog-friendly deli food truck for SoCal parks, fetch! doggy deli is a concept built end to end, from the name and mark to packaging, menus, and a truck wrap, with a playful brand voice and natural, local ingredients made for dogs.',
   },
   {
     slug: 'urban-seoul',
-    title: 'Urban Seoul',
+    title: 'urbanseoul. x New Balance Festival',
     category: 'Branding & Advertising',
     client: 'Urban Seoul',
     image: urbanSeoulImg,
     accent: '#4f6f93',
     description:
-      'A full campaign for a streetwear pop-up event -- bus-stop ads, signage, event tickets, and merch all carrying the same bold, hand-lettered identity.',
+      'An immersive Korean R&B festival presented by New Balance at Under the K Bridge Park in Brooklyn, urbanseoul. blends New Balance’s bold, vintage sports photography with KRNB’s sleek, neon-accented urban style, turning live music and sneaker culture into one lifestyle hub.',
   },
   {
     slug: 'jade-sword',
@@ -131,7 +141,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: jadeSwordImg,
     accent: '#2f9e8f',
     description:
-      'Character illustration and key art built around a glowing jade blade, rendered for a published Steam title.',
+      'A stylized 3D jade sword inspired by Genshin Impact and ceremonial jade weapons, modeled and textured in Maya as a game-ready asset.',
   },
   {
     slug: 'baggu',
