@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react'
 import { Cursor } from '../components/Cursor'
 import { Grain } from '../components/Grain'
 import { Nav } from '../components/Nav'
@@ -22,24 +21,15 @@ export function AllWork() {
   )
 
   return (
-    <div className="bg-cream">
+    <div className="bg-ink">
       <Cursor />
       <Grain />
 
-      {/* Ink nav text on this page, not a Nav change -- Nav itself is
-          shared across every route (Home/Gallery both still want
-          cream), so this recolors it by overriding the two CSS
-          variables its own text actually resolves through, scoped to a
-          wrapper around just Nav (not Contact, further down, which
-          needs to stay on the real --fg/--bg tokens to stay dark). The
-          links/sound toggle already read `--nav-fg`; the logo is a
-          hardcoded `text-cream` utility, which only responds to this
-          because `--color-cream` is itself `var(--fg)` -- overriding
-          the narrower, derived variable here instead of `--fg` itself
-          is what keeps this from also recoloring anything else. */}
-      <div style={{ '--nav-fg': '#161616', '--color-cream': '#161616' } as CSSProperties}>
-        <Nav />
-      </div>
+      {/* No color override needed here -- Nav's default cream-on-dark
+          is already correct now that this page is dark too (it used to
+          need an ink-text override back when this page had a cream
+          background). */}
+      <Nav />
 
       {/* No visible intro block per the brief -- this exists purely so
           the page has a real heading for assistive tech. */}

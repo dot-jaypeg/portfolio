@@ -40,7 +40,7 @@ export function ProjectCard({
       // no GSAP, no fade, no crossfade. Per direct request, the wash/
       // entrance-fade/thumbnail tilt-blur polish layer that used to sit
       // on top of this was removed entirely: cards just overlap.
-      className={stacked ? 'sticky top-0 h-dvh w-full bg-cream' : 'relative h-auto w-full bg-cream'}
+      className={stacked ? 'sticky top-0 h-dvh w-full bg-ink' : 'relative h-auto w-full bg-ink'}
     >
       <Link
         to={`/work/${cs.slug}`}
@@ -48,19 +48,19 @@ export function ProjectCard({
         className="flex h-full flex-col items-center focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-teal md:flex-row"
       >
         <div className="flex w-full flex-1 flex-col justify-between gap-6 px-8 py-10 md:w-1/2 md:px-16 md:py-16 lg:px-24">
-          <span className="font-body text-xs tracking-[0.22em] text-ink/40 uppercase">
+          <span className="font-body text-xs tracking-[0.22em] text-cream/40 uppercase">
             {String(index + 1).padStart(2, '0')}
           </span>
           <div>
-            <h2 className="font-display text-4xl leading-[0.95] font-bold tracking-[-0.04em] text-ink uppercase md:text-5xl lg:text-6xl">
+            <h2 className="font-display text-4xl leading-[0.95] font-bold tracking-[-0.04em] text-cream uppercase md:text-5xl lg:text-6xl">
               {cs.title}
             </h2>
-            <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-ink/60">{cs.description}</p>
+            <p className="font-body mt-6 max-w-md text-sm leading-relaxed text-cream/60">{cs.description}</p>
             {/* Same pill treatment as ExpertisePills/the Download Resume
                 link (rounded-full border, invert-on-hover) -- the one
-                established "button" look sitewide -- just recolored for
-                this page's light theme (border-ink, inverts to a solid
-                ink fill instead of cream). A <span>, not a nested
+                established "button" look sitewide -- recolored for this
+                page's dark theme (border-cream, inverts to a solid
+                cream fill instead of ink). A <span>, not a nested
                 <button>/<a>: the whole card above is already one Link,
                 and interactive elements can't nest -- this is a visual
                 affordance, not a second click target.
@@ -70,11 +70,11 @@ export function ProjectCard({
                 of its own to piggyback on; a plain :hover on this
                 element is exactly scoped to its own box regardless of
                 where in the ancestor Link the cursor is). */}
-            <span className="mt-8 inline-block rounded-full border border-ink/20 px-6 py-3 text-xs tracking-wider text-ink/70 uppercase transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-cream">
+            <span className="mt-8 inline-block rounded-full border border-cream/20 px-6 py-3 text-xs tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink">
               View Project
             </span>
           </div>
-          <span className="font-body text-xs tracking-[0.22em] text-ink/40 uppercase">
+          <span className="font-body text-xs tracking-[0.22em] text-cream/40 uppercase">
             {cs.category}
           </span>
         </div>
@@ -93,8 +93,8 @@ export function ProjectCard({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center border border-dashed border-ink/15">
-                <span className="font-body px-4 text-center text-[10px] tracking-[0.22em] text-ink/25 uppercase">
+              <div className="flex h-full w-full items-center justify-center border border-dashed border-cream/15">
+                <span className="font-body px-4 text-center text-[10px] tracking-[0.22em] text-cream/25 uppercase">
                   [ placeholder image ]
                 </span>
               </div>
