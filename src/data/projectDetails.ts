@@ -116,6 +116,10 @@ export interface ProjectChapter extends ProjectImageBlock {
   // sticker renders) where that backdrop would show as an unwanted
   // grey box around the art. Defaults to true.
   imagesOnCard?: boolean
+  // Closed by default -- the label becomes a toggle button, and `text`
+  // renders small (a notch above the label itself) in a dropdown
+  // instead of the standard big editorial paragraph. Requires `label`.
+  collapsible?: boolean
 }
 
 export interface ProjectLinks {
@@ -177,6 +181,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     chapters: [
       {
         label: 'Ideation',
+        collapsible: true,
         text: 'Inspired by bold colors, organic free-flowing sketchwork, and retro motifs, these stickers were designed to resonate subtly while still achieving that Y2K aesthetic. What makes Contra unique is that their drinks are served on tap, so the collection highlights their fun menu by focusing on the drinks themselves. The concept draws from blind boxes, specifically Peach Riot, where the creator used each series to promote their own music. In the same spirit, Contra’s drinks are personified as a band of playful characters. Peach Riot perfectly represents the Y2K retro style, which made it the ideal reference for the collection.',
         layout: 'full-bleed',
         images: [
@@ -190,6 +195,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Character Concepting',
+        collapsible: true,
         text: 'Early concepts drew on a retro, school sketchbook style, with each drink playing the electric guitar. Picking which drinks to personify was tricky, so Contra shared their most popular orders to avoid bias. The final lineup balanced drinks that were fun to draw with ones that deserved more attention. Initial sketches began with Kuya Latte (ube latte), Gold Rush (Vietnamese coffee), and Strawberry Fields (strawberry matcha latte).',
         layout: 'cluster',
         imagesOnCard: false,
@@ -219,6 +225,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'The Sticker Pack',
+        collapsible: true,
         text: [
           'Old manga from the early 2000s, like Soul Eater, shaped the Y2K look of the stickers. The first set of three featured only the heads of Kuya, Gold Rush, and Strawberry Fields, with each design drawn from the drink’s meaning, its typical customers, and its overall look.',
           'Kuya means “older brother” in Tagalog, and with the drink’s deep purple color, a monotone palette and a nonchalant expression best fit his personality. Gold Rush, a Vietnamese latte meant to wake you up, became a spunky baddie, and sparkles were added later to bring out the gold in its name. Strawberry Fields, with the drink’s pastel, pretty look, became a cottage-core soft girl whose strawberry pigtails, inspired by Strawberry Shortcake, set her apart from a regular matcha.',

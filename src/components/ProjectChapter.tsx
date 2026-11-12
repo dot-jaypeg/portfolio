@@ -1,8 +1,73 @@
-import { useEffect, useRef } from 'react'
-import { gsap } from '../lib/gsap'
+import { useEffect, useRef, useState } from 'react'
+import { gsap, ScrollTrigger } from '../lib/gsap'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import type { ProjectChapter as ProjectChapterData } from '../data/projectDetails'
 import { ImageGrid } from './ImageGrid'
+
+// Closed by default -- click the label to reveal the copy. Body text
+// renders much smaller than the standard chapter treatment (a notch
+// above the label itself, not the usual big editorial size), since a
+// dropdown reads as a compact aside, not the chapter's own headline.
+function CollapsibleChapterText({
+  label,
+  paragraphs,
+  accent,
+}: {
+  label: string
+  paragraphs: string[]
+  accent: string
+}) {
+  const [isOpen, setIsOpen] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const prefersReducedMotion = usePrefersReducedMotion()
+
+  useEffect(() => {
+    const el = contentRef.current
+    if (!el) return
+    gsap.killTweensOf(el)
+    gsap.to(el, {
+      height: isOpen ? 'auto' : 0,
+      opacity: isOpen ? 1 : 0,
+      duration: prefersReducedMotion ? 0 : 0.45,
+      ease: 'power2.inOut',
+      // One safe refresh once the open/close settles, so every OTHER
+      // ScrollTrigger on the page (further-down chapters' own reveals)
+      // picks up the document height this just changed.
+      onComplete: () => ScrollTrigger.refresh(true),
+    })
+  }, [isOpen, prefersReducedMotion])
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen((open) => !open)}
+        aria-expanded={isOpen}
+        className="flex items-center gap-3 text-left"
+      >
+        <span style={{ color: accent }} className="font-geist text-xs font-medium tracking-[-0.02em] uppercase">
+          {label}
+        </span>
+        <span
+          style={{ color: accent }}
+          className={`text-base leading-none transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`}
+        >
+          +
+        </span>
+      </button>
+      <div ref={contentRef} className="overflow-hidden" style={{ height: 0, opacity: 0 }}>
+        {paragraphs.map((paragraph, i) => (
+          <p
+            key={i}
+            className="font-geist mt-4 max-w-2xl text-sm leading-relaxed font-light text-cream/80 md:text-base"
+          >
+            {paragraph}
+          </p>
+        ))}
+      </div>
+    </>
+  )
+}
 
 export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterData; accent: string }) {
   const sectionRef = useRef<HTMLElement>(null)
@@ -39,19 +104,28 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
     <section ref={sectionRef} className="py-10 md:py-16">
       {(chapter.label || paragraphs.length > 0) && (
         <div data-reveal className="px-6 md:px-10">
-          {chapter.label && (
-            <p style={{ color: accent }} className="font-geist mb-5 text-xs font-medium tracking-[-0.02em] uppercase">
-              {chapter.label}
-            </p>
+          {chapter.collapsible && chapter.label ? (
+            <CollapsibleChapterText label={chapter.label} paragraphs={paragraphs} accent={accent} />
+          ) : (
+            <>
+              {chapter.label && (
+                <p
+                  style={{ color: accent }}
+                  className="font-geist mb-5 text-xs font-medium tracking-[-0.02em] uppercase"
+                >
+                  {chapter.label}
+                </p>
+              )}
+              {paragraphs.map((paragraph, i) => (
+                <p
+                  key={i}
+                  className={`font-geist max-w-[90rem] text-lg leading-relaxed font-light tracking-tight text-cream md:text-xl lg:text-2xl ${i > 0 ? 'mt-6' : ''}`}
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </>
           )}
-          {paragraphs.map((paragraph, i) => (
-            <p
-              key={i}
-              className={`font-geist max-w-[90rem] text-lg leading-relaxed font-light tracking-tight text-cream md:text-xl lg:text-2xl ${i > 0 ? 'mt-6' : ''}`}
-            >
-              {paragraph}
-            </p>
-          ))}
         </div>
       )}
       <div data-reveal>
