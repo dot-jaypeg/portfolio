@@ -59,8 +59,26 @@ export function ProjectDetail() {
       <main>
         <ProjectHero project={project} detail={detail} />
 
-        <div className="px-6 pt-4 pb-4 md:px-10 md:pt-6">
-          <p className="font-geist max-w-[90rem] text-lg leading-relaxed font-light tracking-tight text-cream/70 md:text-xl lg:text-2xl">
+        {/* Left column reads as a quiet spec sheet (role, client) --
+            the narrative paragraph sits in its own wider column to the
+            right, instead of running the full width of the page. */}
+        <div className="grid grid-cols-1 gap-x-16 gap-y-10 px-6 pt-4 pb-4 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:px-10 md:pt-6">
+          <div className="font-geist space-y-7 text-sm md:pt-1 md:text-base">
+            <div className="grid grid-cols-[6rem_1fr] gap-x-6">
+              <p className="italic text-cream/35">Role</p>
+              <div className="space-y-1 text-cream/70">
+                {detail.tags.map((tag) => (
+                  <p key={tag}>{tag}</p>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-[6rem_1fr] gap-x-6">
+              <p className="italic text-cream/35">Client</p>
+              <p className="text-cream/70">{project.client}</p>
+            </div>
+          </div>
+
+          <p className="font-geist text-lg leading-relaxed font-light tracking-tight text-cream md:text-xl lg:text-2xl">
             {detail.intro}
           </p>
         </div>
