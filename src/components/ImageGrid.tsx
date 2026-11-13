@@ -4,6 +4,21 @@ import { useScrollParallax } from '../hooks/useScrollParallax'
 
 export type ImageGridLayout = 'full-bleed' | 'full-page' | 'two-up' | 'trio' | 'cluster' | 'contained'
 
+// The four-column grid every multi-image layout below snaps to (same
+// margin/gutter system as austinyi.com/works/too-faced: a consistent
+// outer margin with the content split into even tracks, so a two-up
+// pair's column edges land in the same place a trio or cluster row's
+// would). `full-bleed`/`full-page` deliberately opt out -- those are
+// meant to run flush to the viewport edge (see their own notes below),
+// not sit inside this margin.
+export const GRID = 'grid grid-cols-1 gap-6 px-6 sm:grid-cols-4 sm:gap-x-6 sm:gap-y-10 md:gap-x-10 md:px-10'
+// Literal, statically-greppable span classes -- same reasoning as
+// CLUSTER_SIZE_CLASS below, Tailwind needs the full utility name in
+// source text, not a template-built one.
+const FULL_SPAN = 'col-span-1 sm:col-span-4'
+const HALF_SPAN = 'col-span-1 sm:col-span-2'
+const CENTER_HALF_SPAN = 'col-span-1 sm:col-span-2 sm:col-start-2'
+
 // Plays once its container scrolls into view, pauses once it scrolls
 // back out -- starts muted (autoplay triggered by scroll, not a real
 // user gesture, so browsers won't allow it unmuted), but keeps native
@@ -221,17 +236,21 @@ export function ImageGrid({
 
   if (layout === 'contained') {
     return (
-      <div className="mx-auto mt-6 max-w-2xl px-6 md:px-10">
-        <Figure image={images[0]} rounded card={card} />
+      <div className={`mt-6 ${GRID}`}>
+        <div className={CENTER_HALF_SPAN}>
+          <Figure image={images[0]} rounded card={card} />
+        </div>
       </div>
     )
   }
 
   if (layout === 'two-up') {
     return (
-      <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-2 md:gap-10 md:px-10">
+      <div className={`mt-6 ${GRID}`}>
         {images.slice(0, 2).map((image, i) => (
-          <Figure key={`${image.alt}-${i}`} image={image} rounded card={card} />
+          <div key={`${image.alt}-${i}`} className={HALF_SPAN}>
+            <Figure image={image} rounded card={card} />
+          </div>
         ))}
       </div>
     )
@@ -239,25 +258,29 @@ export function ImageGrid({
 
   if (layout === 'trio') {
     return (
-      <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-3 md:gap-8 md:px-10">
-        {images.slice(0, 3).map((image, i) => (
-          <Figure key={`${image.alt}-${i}`} image={image} rounded card={card} />
-        ))}
+      <div className={`mt-6 ${GRID}`}>
+        <div className={`${FULL_SPAN} grid grid-cols-1 gap-8 sm:grid-cols-3`}>
+          {images.slice(0, 3).map((image, i) => (
+            <Figure key={`${image.alt}-${i}`} image={image} rounded card={card} />
+          ))}
+        </div>
       </div>
     )
   }
 
   if (layout === 'cluster') {
     return (
-      <div className="mx-auto mt-6 flex max-w-7xl flex-wrap items-end justify-center gap-x-8 gap-y-10 px-6 md:px-10">
-        {images.map((image, i) => (
-          <div
-            key={`${image.alt}-${i}`}
-            className={`${CLUSTER_SIZE_CLASS[image.size ?? 'md']} ${CLUSTER_OFFSET_CLASS[i % CLUSTER_OFFSET_CLASS.length]}`}
-          >
-            <Figure image={image} rounded card={card} interactive tilt={i % 2 === 0 ? 'right' : 'left'} />
-          </div>
-        ))}
+      <div className={`mt-6 ${GRID}`}>
+        <div className={`${FULL_SPAN} flex flex-wrap items-end justify-center gap-x-8 gap-y-10`}>
+          {images.map((image, i) => (
+            <div
+              key={`${image.alt}-${i}`}
+              className={`${CLUSTER_SIZE_CLASS[image.size ?? 'md']} ${CLUSTER_OFFSET_CLASS[i % CLUSTER_OFFSET_CLASS.length]}`}
+            >
+              <Figure image={image} rounded card={card} interactive tilt={i % 2 === 0 ? 'right' : 'left'} />
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
