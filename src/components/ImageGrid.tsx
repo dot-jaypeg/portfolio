@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import type { ProjectImage } from '../data/projectDetails'
 import { useScrollParallax } from '../hooks/useScrollParallax'
 
-export type ImageGridLayout = 'full-bleed' | 'full-page' | 'two-up' | 'trio' | 'cluster' | 'contained'
+export type ImageGridLayout = 'full-bleed' | 'full-page' | 'two-up' | 'trio' | 'cluster' | 'contained' | 'grid-3'
 
 // Plays once its container scrolls into view, pauses once it scrolls
 // back out -- starts muted (autoplay triggered by scroll, not a real
@@ -241,6 +241,20 @@ export function ImageGrid({
     return (
       <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-3 md:gap-8 md:px-10">
         {images.slice(0, 3).map((image, i) => (
+          <Figure key={`${image.alt}-${i}`} image={image} rounded card={card} />
+        ))}
+      </div>
+    )
+  }
+
+  if (layout === 'grid-3') {
+    // A plain, even three-column grid -- every image the same
+    // treatment, no tilt/stagger -- for a tidier, more deliberate feel
+    // than `cluster`'s organic wrap (closer to the clean card-grid
+    // reference the Contra dropdown sections were redone to match).
+    return (
+      <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-3 md:gap-10 md:px-10">
+        {images.map((image, i) => (
           <Figure key={`${image.alt}-${i}`} image={image} rounded card={card} />
         ))}
       </div>

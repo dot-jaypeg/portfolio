@@ -4,10 +4,28 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import type { ProjectChapter as ProjectChapterData } from '../data/projectDetails'
 import { ImageGrid } from './ImageGrid'
 
-// Closed by default -- click the label to reveal the copy. Body text
-// renders much smaller than the standard chapter treatment (a notch
-// above the label itself, not the usual big editorial size), since a
-// dropdown reads as a compact aside, not the chapter's own headline.
+// Points down closed, flips to point up open -- a plain chevron
+// instead of a +/x morph, which reads as a more standard (and less
+// fiddly-looking) accordion affordance.
+function CaretIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="11"
+      height="7"
+      viewBox="0 0 11 7"
+      fill="none"
+      className={`shrink-0 transition-transform duration-300 ease-out ${open ? 'rotate-180' : ''}`}
+    >
+      <path d="M1 1L5.5 5.5L10 1" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+// Closed by default -- click the row to reveal the copy. Styled as a
+// plain accordion list row (hairline rule, label pinned left, caret
+// pinned right) rather than a label-plus-icon cluster -- body copy
+// still reads a notch smaller than the standard chapter treatment
+// (a compact aside, not the chapter's own headline).
 function CollapsibleChapterText({
   label,
   paragraphs,
@@ -38,34 +56,33 @@ function CollapsibleChapterText({
   }, [isOpen, prefersReducedMotion])
 
   return (
-    <>
+    <div style={{ borderColor: `${accent}26` }} className="max-w-2xl border-t">
       <button
         type="button"
         onClick={() => setIsOpen((open) => !open)}
         aria-expanded={isOpen}
-        className="flex items-center gap-3 text-left"
+        className="flex w-full items-center justify-between gap-6 py-6 text-left"
       >
-        <span style={{ color: accent }} className="font-geist text-xs font-medium tracking-[-0.02em] uppercase">
+        <span style={{ color: accent }} className="font-geist text-sm font-medium tracking-[0.1em] uppercase">
           {label}
         </span>
-        <span
-          style={{ color: accent }}
-          className={`text-base leading-none transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`}
-        >
-          +
+        <span style={{ color: accent }}>
+          <CaretIcon open={isOpen} />
         </span>
       </button>
       <div ref={contentRef} className="overflow-hidden" style={{ height: 0, opacity: 0 }}>
-        {paragraphs.map((paragraph, i) => (
-          <p
-            key={i}
-            className="font-geist mt-4 max-w-2xl text-sm leading-relaxed font-light text-cream/80 md:text-base"
-          >
-            {paragraph}
-          </p>
-        ))}
+        <div className="pb-6">
+          {paragraphs.map((paragraph, i) => (
+            <p
+              key={i}
+              className={`font-geist text-sm leading-relaxed font-light text-cream/75 md:text-base ${i > 0 ? 'mt-4' : ''}`}
+            >
+              {paragraph}
+            </p>
+          ))}
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 

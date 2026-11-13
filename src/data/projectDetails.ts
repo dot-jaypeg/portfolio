@@ -197,7 +197,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Character Concepting',
         collapsible: true,
         text: 'Early concepts drew on a retro, school sketchbook style, with each drink playing the electric guitar. Picking which drinks to personify was tricky, so Contra shared their most popular orders to avoid bias. The final lineup balanced drinks that were fun to draw with ones that deserved more attention. Initial sketches began with Kuya Latte (ube latte), Gold Rush (Vietnamese coffee), and Strawberry Fields (strawberry matcha latte).',
-        layout: 'cluster',
+        layout: 'grid-3',
         imagesOnCard: false,
         images: [
           {
@@ -231,7 +231,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           'Kuya means “older brother” in Tagalog, and with the drink’s deep purple color, a monotone palette and a nonchalant expression best fit his personality. Gold Rush, a Vietnamese latte meant to wake you up, became a spunky baddie, and sparkles were added later to bring out the gold in its name. Strawberry Fields, with the drink’s pastel, pretty look, became a cottage-core soft girl whose strawberry pigtails, inspired by Strawberry Shortcake, set her apart from a regular matcha.',
           'For the full-body designs, more drinks from the taplist joined the band. Lucky Cat (mango kumquat green tea) became a nekomimi-inspired character, and That Orange Stuff (vanilla oat milk Thai tea) took after the soft style of Strawberry Fields. To balance out Strawberry Fields, MC² (matcha espresso) was added as her opposite, designed as a nerdy but stylish schoolboy.',
         ],
-        layout: 'cluster',
+        layout: 'grid-3',
         imagesOnCard: false,
         images: [
           {
