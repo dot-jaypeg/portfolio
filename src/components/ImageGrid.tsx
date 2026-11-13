@@ -2,7 +2,15 @@ import { useEffect, useRef } from 'react'
 import type { ProjectImage } from '../data/projectDetails'
 import { useScrollParallax } from '../hooks/useScrollParallax'
 
-export type ImageGridLayout = 'full-bleed' | 'full-page' | 'two-up' | 'trio' | 'cluster' | 'contained' | 'grid-3'
+export type ImageGridLayout =
+  | 'full-bleed'
+  | 'full-page'
+  | 'full-page-two-up'
+  | 'two-up'
+  | 'trio'
+  | 'cluster'
+  | 'contained'
+  | 'grid-3'
 
 // Plays once its container scrolls into view, pauses once it scrolls
 // back out -- starts muted (autoplay triggered by scroll, not a real
@@ -123,6 +131,33 @@ function FullPageMedia({ image, tall }: { image: ProjectImage; tall: boolean }) 
         </figcaption>
       )}
     </figure>
+  )
+}
+
+// Same flush, parallaxing treatment as `FullPageMedia`, split into
+// two side-by-side halves instead of one full-width image -- each
+// half gets its own oversized wrapper/parallax drift, scrubbed off
+// the same shared container so both move together.
+function FullPageMediaPair({ images, tall }: { images: ProjectImage[]; tall: boolean }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const wrapperRefA = useRef<HTMLDivElement>(null)
+  const wrapperRefB = useRef<HTMLDivElement>(null)
+  useScrollParallax(containerRef, wrapperRefA, 10)
+  useScrollParallax(containerRef, wrapperRefB, 10)
+
+  return (
+    <div ref={containerRef} className={`flex w-full ${tall ? 'h-[150vh]' : 'h-[92vh]'}`}>
+      <div className="relative h-full w-1/2 overflow-hidden bg-cream/5">
+        <div ref={wrapperRefA} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
+          <Media image={images[0]} className="h-full w-full object-cover" />
+        </div>
+      </div>
+      <div className="relative h-full w-1/2 overflow-hidden bg-cream/5">
+        <div ref={wrapperRefB} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
+          <Media image={images[1]} className="h-full w-full object-cover" />
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -284,6 +319,14 @@ export function ImageGrid({
     return (
       <div className="w-full">
         <FullPageMedia image={images[0]} tall={tall} />
+      </div>
+    )
+  }
+
+  if (layout === 'full-page-two-up') {
+    return (
+      <div className="w-full">
+        <FullPageMediaPair images={images} tall={tall} />
       </div>
     )
   }

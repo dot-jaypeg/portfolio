@@ -281,25 +281,19 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         // No label and no copy -- per direct request, this chapter runs
         // as pure imagery.
-        layout: 'full-page',
+        layout: 'full-page-two-up',
         tall: true,
         images: [
           {
             src: tshirtMockup,
             alt: 'Contra Coffee & Tea t-shirt with speech bubble logo and character illustration',
           },
+          {
+            src: keychainMockup,
+            alt: 'MC Squared acrylic keychain with dice charms',
+          },
         ],
         moreImages: [
-          {
-            layout: 'full-page',
-            tall: true,
-            images: [
-              {
-                src: keychainMockup,
-                alt: 'MC Squared acrylic keychain with dice charms',
-              },
-            ],
-          },
           {
             layout: 'full-page',
             tall: true,

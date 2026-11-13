@@ -149,7 +149,11 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
         <ImageGrid layout={chapter.layout} images={chapter.images} card={card} tall={chapter.tall} />
       </div>
       {chapter.moreImages?.map((block, i) => (
-        <div data-reveal key={i} className={block.layout === 'full-page' ? '' : 'mt-10'}>
+        <div
+          data-reveal
+          key={i}
+          className={block.layout === 'full-page' || block.layout === 'full-page-two-up' ? '' : 'mt-10'}
+        >
           <ImageGrid layout={block.layout} images={block.images} card={card} tall={block.tall} />
         </div>
       ))}
