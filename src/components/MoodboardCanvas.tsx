@@ -22,9 +22,8 @@ function buildTileList(): Tile[] {
   }))
   // The site's own wordmark as one of the tiles, the same way the
   // reference uses its own name as a tile in the flow rather than a
-  // fixed overlay -- dropped roughly in the middle of the list so the
-  // packer below places it wherever the shortest column happens to be
-  // at that point, same as any other tile.
+  // fixed overlay -- dropped roughly in the middle of the list, same
+  // cell size as every other tile (see packGrid below).
   tiles.splice(Math.floor(tiles.length / 2), 0, { kind: 'wordmark', key: 'wordmark' })
   return tiles
 }
@@ -35,7 +34,6 @@ interface PlacedTile {
   y: number
   width: number
   height: number
-  col: number
 }
 interface Pattern {
   placed: PlacedTile[]
@@ -43,53 +41,33 @@ interface Pattern {
   height: number
 }
 
-// Classic masonry packing: each tile goes into whichever column is
-// currently shortest, with its own height derived from its real aspect
-// ratio rather than a fixed row height -- that variation (not just
-// different scroll speeds) is what reads as an organic layout instead
-// of a uniform grid.
-function packMasonry(tiles: Tile[], columns: number, columnWidth: number, gap: number): Pattern {
-  const colHeights = new Array(columns).fill(0)
-  const lastInCol = new Array(columns).fill(-1)
+// A strict, uniform grid -- every tile the same fixed cell size
+// (object-cover crops whatever the real photo's own aspect ratio is to
+// fit), laid out row-major rather than masonry-packed by real aspect
+// ratio. The previous masonry version let each column's real photos
+// run to a different total height, which meant shorter columns fell
+// short of the tallest one and left a gap right where the infinite
+// pattern repeated -- a real, confirmed seam. A uniform grid can't
+// have that problem: every row is the same height by construction, so
+// the pattern tiles seamlessly with no special-casing needed.
+function packGrid(tiles: Tile[], columns: number, cellWidth: number, cellHeight: number, gap: number): Pattern {
   const placed = tiles.map((tile, i): PlacedTile => {
-    // The wordmark gets a taller-than-wide slot (not a plain square) so
-    // it reads as a deliberate, larger feature tile rather than just
-    // another photo-shaped box.
-    const aspect = tile.kind === 'wordmark' ? 0.75 : tile.media.width / tile.media.height
-    const height = columnWidth / aspect
-    let col = 0
-    for (let c = 1; c < columns; c++) if (colHeights[c] < colHeights[col]) col = c
-    const placedTile: PlacedTile = { tile, x: col * (columnWidth + gap), y: colHeights[col], width: columnWidth, height, col }
-    colHeights[col] += height + gap
-    lastInCol[col] = i
-    return placedTile
+    const col = i % columns
+    const row = Math.floor(i / columns)
+    return { tile, x: col * (cellWidth + gap), y: row * (cellHeight + gap), width: cellWidth, height: cellHeight }
   })
-
-  // Seamless looping needs every column to bottom out at EXACTLY the
-  // same height -- real photos' aspect ratios don't divide evenly, so
-  // left as-is, shorter columns left a gap of bare background right
-  // where the pattern repeats (confirmed directly: up to ~440px of it
-  // at this pool's real dimensions). Stretching just the last tile in
-  // each column closes that gap without moving anything else --
-  // object-cover already crops every tile to fill its box, so this
-  // just reads as a slightly different crop on one tile per column,
-  // not a visible seam.
-  const patternHeight = Math.max(...colHeights) - gap
-  placed.forEach((p, i) => {
-    if (lastInCol[p.col] !== i) return
-    const shortfall = patternHeight - (p.y + p.height)
-    if (shortfall > 0) p.height += shortfall
-  })
-
+  const rows = Math.ceil(tiles.length / columns)
   return {
     placed,
-    width: columns * (columnWidth + gap) - gap,
-    height: patternHeight,
+    width: columns * (cellWidth + gap) - gap,
+    height: rows * (cellHeight + gap) - gap,
   }
 }
 
-const DESKTOP_LAYOUT = { columns: 6, columnWidth: 280, gap: 20 }
-const MOBILE_LAYOUT = { columns: 4, columnWidth: 100, gap: 8 }
+// A 4:5 cell -- portrait enough to suit this pool's mostly-portrait
+// photos without cropping the landscape ones down too aggressively.
+const DESKTOP_LAYOUT = { columns: 6, cellWidth: 280, cellHeight: 350, gap: 20 }
+const MOBILE_LAYOUT = { columns: 4, cellWidth: 100, cellHeight: 125, gap: 8 }
 const DESKTOP_BREAKPOINT = '(min-width: 768px)'
 
 // The pattern is repeated in a 3x3 block around the wrapped pan
@@ -104,7 +82,7 @@ function MoodboardTile({ placed, onSelect }: { placed: PlacedTile; onSelect: (ph
   if (placed.tile.kind === 'wordmark') {
     const style: CSSProperties = { position: 'absolute', left: placed.x, top: placed.y, width: placed.width, height: placed.height }
     return (
-      <div style={{ ...style, aspectRatio: '0.75' }} className="flex items-center justify-center bg-teal">
+      <div style={style} className="flex items-center justify-center bg-teal">
         <span className="font-display text-2xl font-bold tracking-[-0.06em] text-ink italic md:text-4xl">
           .jaypeg
         </span>
@@ -161,7 +139,7 @@ export function MoodboardCanvas() {
 
   const pattern = useMemo(() => {
     const layout = isDesktop ? DESKTOP_LAYOUT : MOBILE_LAYOUT
-    return packMasonry(buildTileList(), layout.columns, layout.columnWidth, layout.gap)
+    return packGrid(buildTileList(), layout.columns, layout.cellWidth, layout.cellHeight, layout.gap)
   }, [isDesktop])
 
   useLayoutEffect(() => {
