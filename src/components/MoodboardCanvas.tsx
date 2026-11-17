@@ -1,20 +1,20 @@
 import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import { PROJECTS, type ProjectImage } from '../data/projects'
+import type { ProjectImage } from '../data/projects'
+import { GALLERY_PHOTOS } from '../data/galleryPhotos'
 import { ProjectMedia } from './ProjectMedia'
 import { gsap, Observer } from '../lib/gsap'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 type Tile = { kind: 'media'; media: ProjectImage; key: string } | { kind: 'wordmark'; key: string }
 
-// Every image/gif/video across all placeholder projects, flattened
-// into one pool and used TWICE over -- this canvas is purely
-// decorative filler (see Gallery.tsx for why it isn't wired up to
-// browse any one project), so it draws from everything rather than
-// being tied to a single project. Using the pool twice just gives the
-// underlying pattern more content before it visibly repeats itself;
-// the canvas itself already loops infinitely regardless (see PATTERN
-// below).
-const MEDIA_POOL: ProjectImage[] = PROJECTS.flatMap((p) => [p.cover, ...p.images])
+// The real photography pool (event/sports, graduation, landscape &
+// nature -- see src/data/galleryPhotos.ts), used TWICE over -- this
+// canvas is purely decorative filler (see Gallery.tsx), so it draws
+// from everything rather than being tied to one category. Using the
+// pool twice just gives the underlying pattern more content before it
+// visibly repeats itself; the canvas itself already loops infinitely
+// regardless (see PATTERN below).
+const MEDIA_POOL: ProjectImage[] = GALLERY_PHOTOS
 
 function buildTileList(): Tile[] {
   const tiles: Tile[] = [...MEDIA_POOL, ...MEDIA_POOL].map((media, i) => ({
