@@ -2,10 +2,22 @@ import type { ProjectImage } from './projects'
 
 export type GalleryCategory = 'event-sports' | 'graduation' | 'landscape-natural'
 
+export interface GalleryPhoto extends ProjectImage {
+  category: GalleryCategory
+}
+
 const CATEGORY_ALT: Record<GalleryCategory, string> = {
   'event-sports': 'Event and sports photography',
   graduation: 'Graduation portrait photography',
   'landscape-natural': 'Landscape and nature photography',
+}
+
+// The reader-facing name for each category -- shown in the gallery's
+// click-to-expand view (see MoodboardCanvas).
+export const CATEGORY_LABEL: Record<GalleryCategory, string> = {
+  'event-sports': 'Events & Sports',
+  graduation: 'Graduation',
+  'landscape-natural': 'Natural & Landscape',
 }
 
 // Eagerly imports every optimized photo under assets/images/gallery/<category>/
@@ -134,7 +146,7 @@ const DIMENSIONS: Record<string, [number, number]> = {
   'landscape-natural/vyc_storephotos-53.jpg': [933, 1400],
 }
 
-export const GALLERY_PHOTOS: ProjectImage[] = Object.entries(DIMENSIONS).map(([key, [width, height]]) => {
+export const GALLERY_PHOTOS: GalleryPhoto[] = Object.entries(DIMENSIONS).map(([key, [width, height]]) => {
   const category = key.split('/')[0] as GalleryCategory
   const modulePath = `../assets/images/gallery/${key}`
   return {
@@ -143,5 +155,6 @@ export const GALLERY_PHOTOS: ProjectImage[] = Object.entries(DIMENSIONS).map(([k
     type: 'image',
     width,
     height,
+    category,
   }
 })

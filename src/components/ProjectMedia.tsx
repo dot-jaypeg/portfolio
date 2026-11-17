@@ -12,6 +12,7 @@ export function ProjectMedia({
   media,
   priority = false,
   decorative = false,
+  heightOverride,
 }: {
   media: ProjectImage
   // Hero images are already in the viewport the instant the page
@@ -24,6 +25,14 @@ export function ProjectMedia({
   // of near-duplicate descriptions for content that conveys nothing.
   // The canvas itself is also aria-hidden; this covers the img tag too.
   decorative?: boolean
+  // MoodboardCanvas only -- overrides the box's height instead of
+  // deriving it from the image's own aspect ratio (object-cover still
+  // crops to fill), so the last tile in a masonry column can be
+  // stretched to close that column out at an exact target height. A
+  // plain `height` alongside `aspectRatio` wins over it per the CSS
+  // spec (aspect-ratio only fills in a dimension left auto), so this
+  // needs no other change to how the box sizes itself.
+  heightOverride?: number
 }) {
   const [loaded, setLoaded] = useState(false)
   const aspectRatio = `${media.width} / ${media.height}`
@@ -31,7 +40,7 @@ export function ProjectMedia({
   if (!media.src) {
     return (
       <div
-        style={{ aspectRatio }}
+        style={{ aspectRatio, height: heightOverride }}
         className="flex items-center justify-center border border-dashed border-cream/15 bg-cream/5"
       >
         <span className="font-body px-4 text-center text-[10px] tracking-[0.22em] text-cream/25 uppercase">
@@ -50,7 +59,7 @@ export function ProjectMedia({
   }`
 
   return (
-    <div style={{ aspectRatio }} className="relative overflow-hidden bg-cream/5">
+    <div style={{ aspectRatio, height: heightOverride }} className="relative overflow-hidden bg-cream/5">
       {media.type === 'video' ? (
         <video
           src={media.src}
