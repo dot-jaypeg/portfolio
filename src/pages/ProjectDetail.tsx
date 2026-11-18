@@ -7,6 +7,7 @@ import { Nav } from '../components/Nav'
 import { Contact } from '../components/Contact'
 import { ProjectHero } from '../components/ProjectHero'
 import { ProjectChapter } from '../components/ProjectChapter'
+import { ImageGrid } from '../components/ImageGrid'
 import { MoreProjects } from '../components/MoreProjects'
 import { useSmoothScroll } from '../hooks/useSmoothScroll'
 import { useScrollToTop } from '../hooks/useScrollToTop'
@@ -71,6 +72,12 @@ export function ProjectDetail() {
             </p>
           ))}
         </div>
+
+        {detail.introImage && (
+          <div className="pt-4 pb-4 md:pt-6">
+            <ImageGrid layout="full-bleed" images={[detail.introImage]} />
+          </div>
+        )}
 
         {detail.brandMark && (
           <div className="flex justify-center px-6 py-4 md:py-6">

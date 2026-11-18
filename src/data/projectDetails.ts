@@ -41,6 +41,7 @@ import nsuLifestyleTee from '../assets/images/projects/detail/nikkei-student-uni
 import nsuVideoProduction from '../assets/images/projects/detail/nikkei-student-union/video-production.mp4'
 import nsuVideoProductionPoster from '../assets/images/projects/detail/nikkei-student-union/video-production-poster.jpg'
 import nsuCultureNight from '../assets/images/projects/detail/nikkei-student-union/culture-night.jpg'
+import nsuCultureNightOverview from '../assets/images/projects/detail/nikkei-student-union/culture-night-overview.jpg'
 import nsuBeachDay from '../assets/images/projects/detail/nikkei-student-union/beach-day.jpg'
 import nsuSpringRetreatSunset from '../assets/images/projects/detail/nikkei-student-union/spring-retreat-sunset.jpg'
 
@@ -164,6 +165,11 @@ export interface ProjectDetailData {
   // An optional small mark (a logo, a wordmark) rendered centered
   // between the intro and the first chapter.
   brandMark?: { src: string; alt: string }
+  // An optional full-bleed lead photo directly under the intro
+  // paragraphs, above `brandMark`/the first chapter -- for a single
+  // establishing shot that belongs to the overview itself rather than
+  // to any one chapter below it.
+  introImage?: ProjectImage
   links?: ProjectLinks
   // Optional concrete number/credit -- omitted everywhere for now since
   // none of these are verified yet (see the per-project ask list this
@@ -585,6 +591,12 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       'A cohesive body of creative work for Chapman University’s Nikkei Student Union, designed to celebrate and promote Japanese and Japanese-American culture on campus.',
       'NSU is an inclusive cultural organization honoring Japanese and Japanese-American heritage. As creative lead, I managed its visual identity, media production, and marketing, so the way the organization looked and sounded reflected the community it was built around.',
     ],
+    introImage: {
+      src: nsuCultureNightOverview,
+      alt: 'NSU members performing a choreographed dance at Culture Night',
+      width: 2000,
+      height: 1333,
+    },
     chapters: [
       {
         // Board Hoodie + Spring Merch Line used to be two separate
