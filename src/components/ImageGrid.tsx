@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
 import type { ProjectImage } from '../data/projectDetails'
 import { useScrollParallax } from '../hooks/useScrollParallax'
 
@@ -16,12 +16,31 @@ export type ImageGridLayout =
 // back out -- starts muted (autoplay triggered by scroll, not a real
 // user gesture, so browsers won't allow it unmuted), but keeps native
 // controls so a visitor can unmute or scrub manually.
-function AutoplayInViewVideo({ image, className }: { image: ProjectImage; className: string }) {
+function AutoplayInViewVideo({
+  image,
+  className,
+  observeRef,
+}: {
+  image: ProjectImage
+  className: string
+  // Defaults to observing the <video> itself. FullPageMedia/
+  // FullPageMediaPair pass their own visible clipping container
+  // instead -- the video there sits inside an oversized (130%)
+  // parallax wrapper, so observing the video's OWN (also oversized)
+  // box can never clear a 0.5 intersection ratio with much margin:
+  // confirmed directly, even at perfect alignment it peaks around
+  // 0.51, right at the threshold's edge, so ordinary scroll jitter
+  // flickers play/pause instead of settling. Observing the real
+  // container (sized to the viewport, not inflated for parallax
+  // slack) gives a stable ratio instead.
+  observeRef?: RefObject<HTMLElement | null>
+}) {
   const ref = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    const target = observeRef?.current ?? el
+    if (!el || !target) return
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -32,9 +51,9 @@ function AutoplayInViewVideo({ image, className }: { image: ProjectImage; classN
       },
       { threshold: 0.5 },
     )
-    observer.observe(el)
+    observer.observe(target)
     return () => observer.disconnect()
-  }, [])
+  }, [observeRef])
 
   return (
     <video
@@ -60,7 +79,17 @@ function AutoplayInViewVideo({ image, className }: { image: ProjectImage; classN
 // once scrolled into view (see AutoplayInViewVideo above). The
 // default, 'controls', is a plain user-initiated player with a poster
 // frame -- for an actual trailer, which shouldn't autodownload.
-function Media({ image, className }: { image: ProjectImage; className: string }) {
+function Media({
+  image,
+  className,
+  observeRef,
+}: {
+  image: ProjectImage
+  className: string
+  // See AutoplayInViewVideo's own note -- only meaningful when
+  // `videoMode === 'autoplay'`.
+  observeRef?: RefObject<HTMLElement | null>
+}) {
   if (image.video) {
     if (image.videoMode === 'loop') {
       return (
@@ -77,7 +106,7 @@ function Media({ image, className }: { image: ProjectImage; className: string })
       )
     }
     if (image.videoMode === 'autoplay') {
-      return <AutoplayInViewVideo image={image} className={className} />
+      return <AutoplayInViewVideo image={image} className={className} observeRef={observeRef} />
     }
     return (
       <video src={image.video} poster={image.poster} controls preload="none" aria-label={image.alt} className={className} />
@@ -122,7 +151,7 @@ function FullPageMedia({ image, tall }: { image: ProjectImage; tall: boolean }) 
         className={`relative ${tall ? 'h-[150vh]' : 'h-[92vh]'} w-full overflow-hidden bg-cream/5`}
       >
         <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
-          <Media image={image} className="h-full w-full object-cover" />
+          <Media image={image} className="h-full w-full object-cover" observeRef={containerRef} />
         </div>
       </div>
       {image.caption && (
@@ -142,19 +171,33 @@ function FullPageMediaPair({ images, tall }: { images: ProjectImage[]; tall: boo
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRefA = useRef<HTMLDivElement>(null)
   const wrapperRefB = useRef<HTMLDivElement>(null)
+  // Each half's own visible clipping box -- passed to `autoplay`
+  // videos as what to actually measure intersection against, instead
+  // of their own oversized (130%) wrapper (see AutoplayInViewVideo's
+  // note on why that one alone is too unreliable a target).
+  const boxRefA = useRef<HTMLDivElement>(null)
+  const boxRefB = useRef<HTMLDivElement>(null)
   useScrollParallax(containerRef, wrapperRefA, 10)
   useScrollParallax(containerRef, wrapperRefB, 10)
 
   return (
     <div ref={containerRef} className={`flex w-full ${tall ? 'h-[150vh]' : 'h-[92vh]'}`}>
-      <div className="relative h-full w-1/2 overflow-hidden bg-cream/5">
+      <div ref={boxRefA} className="relative h-full w-1/2 overflow-hidden bg-cream/5">
         <div ref={wrapperRefA} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
-          <Media image={images[0]} className={`h-full w-full ${images[0].fit === 'contain' ? 'object-contain' : 'object-cover'}`} />
+          <Media
+            image={images[0]}
+            className={`h-full w-full ${images[0].fit === 'contain' ? 'object-contain' : 'object-cover'}`}
+            observeRef={boxRefA}
+          />
         </div>
       </div>
-      <div className="relative h-full w-1/2 overflow-hidden bg-cream/5">
+      <div ref={boxRefB} className="relative h-full w-1/2 overflow-hidden bg-cream/5">
         <div ref={wrapperRefB} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
-          <Media image={images[1]} className={`h-full w-full ${images[1].fit === 'contain' ? 'object-contain' : 'object-cover'}`} />
+          <Media
+            image={images[1]}
+            className={`h-full w-full ${images[1].fit === 'contain' ? 'object-contain' : 'object-cover'}`}
+            observeRef={boxRefB}
+          />
         </div>
       </div>
     </div>

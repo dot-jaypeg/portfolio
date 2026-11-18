@@ -88,8 +88,13 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
                   href={links.site}
                   target="_blank"
                   rel="noreferrer"
-                  style={{ '--pill-accent': accent, borderColor: `${accent}66`, color: accent } as CSSProperties}
-                  className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
+                  style={{ '--pill-accent': accent, '--pill-fg': accent, borderColor: `${accent}66` } as CSSProperties}
+                  // `text-[var(--pill-fg)]`, not an inline `color` -- an
+                  // inline style always wins over a class regardless of
+                  // pseudo-class, which silently killed `hover:text-ink`
+                  // below (confirmed directly: the bg swap worked, the
+                  // text color never did).
+                  className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider text-[var(--pill-fg)] uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
                 >
                   Visit Site
                 </a>
@@ -100,8 +105,8 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
                   href={f.href}
                   target="_blank"
                   rel="noreferrer"
-                  style={{ '--pill-accent': accent, borderColor: `${accent}66`, color: accent } as CSSProperties}
-                  className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
+                  style={{ '--pill-accent': accent, '--pill-fg': accent, borderColor: `${accent}66` } as CSSProperties}
+                  className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider text-[var(--pill-fg)] uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
                 >
                   {f.label}
                 </a>
