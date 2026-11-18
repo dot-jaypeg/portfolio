@@ -167,11 +167,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   'contra-coffee-sticker-pack': {
     heroLead: 'A cohesive collection for',
     heroTagline: ' designed to function as their Spring Y2K Merch Drop.',
-    // The cover photo is a tall shot of stickers spread across a table --
-    // centering it (the default) pushes the visible crop down toward
-    // the lower, sparser half. Biasing toward the top keeps more of the
-    // actual sticker faces in frame.
-    heroImagePosition: 'center 20%',
+    // The cover photo is a tall shot of Jayden against a hedge --
+    // `center` alone crops in tight on just the face; this keeps the
+    // cap/face comfortably in frame while showing much more of the
+    // body than a plain center crop would.
+    heroImagePosition: 'center 45%',
     tags: ['Illustration', 'Character Design', 'Merchandise', 'Branding'],
     intro:
       'Contra reimagines the café with signature coffee and tea on draft, served in a minimalist space made for studying, unwinding, and browsing Resident Vinyl’s record collection. Community drives the brand, so this collection was designed for the people who love it most.',
