@@ -38,6 +38,11 @@ import boardHoodie from '../assets/images/projects/detail/nikkei-student-union/b
 import springFront from '../assets/images/projects/detail/nikkei-student-union/spring-merch-front.jpg'
 import springBack from '../assets/images/projects/detail/nikkei-student-union/spring-merch-back.jpg'
 import nsuLifestyleTee from '../assets/images/projects/detail/nikkei-student-union/lifestyle-tee.jpg'
+import nsuVideoProduction from '../assets/images/projects/detail/nikkei-student-union/video-production.mp4'
+import nsuVideoProductionPoster from '../assets/images/projects/detail/nikkei-student-union/video-production-poster.jpg'
+import nsuCultureNight from '../assets/images/projects/detail/nikkei-student-union/culture-night.jpg'
+import nsuBeachDay from '../assets/images/projects/detail/nikkei-student-union/beach-day.jpg'
+import nsuSpringRetreatSunset from '../assets/images/projects/detail/nikkei-student-union/spring-retreat-sunset.jpg'
 
 import packaging1 from '../assets/images/projects/detail/fetch-doggy-deli/packaging-1.jpg'
 import packaging2 from '../assets/images/projects/detail/fetch-doggy-deli/packaging-2.jpg'
@@ -151,7 +156,11 @@ export interface ProjectDetailData {
   // Defaults to `project.imagePosition ?? 'center'` when unset.
   heroImagePosition?: string
   tags: string[]
-  intro: string
+  // A second paragraph is rare -- most projects' intro is one line.
+  // NSU's is written as two: a short overview sentence, then a longer
+  // one on NSU itself and the role, which read as one run-on mass
+  // when forced into a single paragraph.
+  intro: string | string[]
   // An optional small mark (a logo, a wordmark) rendered centered
   // between the intro and the first chapter.
   brandMark?: { src: string; alt: string }
@@ -572,14 +581,20 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     heroTagline:
       '’s Nikkei Student Union, giving the organization a stronger, more unified presence on campus.',
     tags: ['Branding', 'Merchandise', 'Photography'],
-    intro:
-      'NSU needed merch that board members and general members would actually wear — one consistent mark carried across hoodies and seasonal drops instead of a different logo treatment every semester.',
+    intro: [
+      'A cohesive body of creative work for Chapman University’s Nikkei Student Union, designed to celebrate and promote Japanese and Japanese-American culture on campus.',
+      'NSU is an inclusive cultural organization honoring Japanese and Japanese-American heritage. As creative lead, I managed its visual identity, media production, and marketing, so the way the organization looked and sounded reflected the community it was built around.',
+    ],
     chapters: [
       {
-        label: 'Board Hoodie',
+        // Board Hoodie + Spring Merch Line used to be two separate
+        // chapters -- merged into one since the brief's own copy
+        // talks about merch/flyers/social as one body of identity
+        // work, not as distinct pieces.
+        label: 'Visual Identity',
         collapsible: true,
-        text: 'A heavier, members-only piece built around a cleaner lockup of the mark.',
-        layout: 'contained',
+        text: 'Merchandise, flyers, and social media graphics were designed to give NSU a consistent, recognizable look across every touchpoint, from event promotion to everyday posts. Each piece was made to speak to the members who make the community what it is.',
+        layout: 'trio',
         images: [
           {
             src: boardHoodie,
@@ -587,14 +602,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             width: 2000,
             height: 1333,
           },
-        ],
-      },
-      {
-        label: 'Spring Merch Line',
-        collapsible: true,
-        text: 'The seasonal drop kept the front simple and moved the detail to the back, so the line could scale across more product without feeling repetitive.',
-        layout: 'two-up',
-        images: [
           {
             src: springFront,
             alt: 'NSU spring merchandise, front print',
@@ -608,15 +615,63 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             height: 1500,
           },
         ],
+        moreImages: [
+          {
+            // Closing this chapter on a lifestyle shot of the shirt
+            // in wear, same as before the merge.
+            layout: 'full-page',
+            tall: true,
+            images: [
+              {
+                src: nsuLifestyleTee,
+                alt: 'Model holding up an NSU t-shirt with embroidered logo',
+              },
+            ],
+          },
+        ],
       },
       {
-        // No label -- closing on a lifestyle shot of the shirt in wear.
+        label: 'Video Production',
+        collapsible: true,
+        text: 'For major events, I handled promotional videos from start to finish: screenwriting, filming, and editing. These spotlighted key initiatives like NSU Culture Night, Retreat, and the Bigs & Littles Program, with the goal of building excitement and showing new members what NSU is about.',
         layout: 'full-page',
         tall: true,
         images: [
           {
-            src: nsuLifestyleTee,
-            alt: 'Model holding up an NSU t-shirt with embroidered logo',
+            // Opening title card and establishing shots from the
+            // Spring Retreat recap -- real audio, so `autoplay`
+            // (muted on scroll-in, controls to unmute) rather than a
+            // silent background loop.
+            video: nsuVideoProduction,
+            poster: nsuVideoProductionPoster,
+            videoMode: 'autoplay',
+            alt: 'NSU Spring Retreat promotional recap video',
+          },
+        ],
+      },
+      {
+        label: 'Documentation & Content Strategy',
+        collapsible: true,
+        text: 'Beyond promotion, I documented events through photography and videography, preserving the memories that define the community year to year. I also shaped the social media content strategy, tying the photos, videos, and graphics into one story. The full collection of work lives on our OneDrive.',
+        layout: 'trio',
+        images: [
+          {
+            src: nsuCultureNight,
+            alt: 'NSU Culture Night performer in traditional yukata',
+            width: 933,
+            height: 1400,
+          },
+          {
+            src: nsuBeachDay,
+            alt: 'NSU Beach Day water gun fight',
+            width: 1400,
+            height: 933,
+          },
+          {
+            src: nsuSpringRetreatSunset,
+            alt: 'Desert sunset over Joshua Tree during NSU Spring Retreat',
+            width: 1400,
+            height: 933,
           },
         ],
       },

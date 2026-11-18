@@ -20,11 +20,13 @@ export function ProjectDetail() {
   const project = CASE_STUDIES.find((p) => p.slug === slug)
   const detail = project ? PROJECT_DETAILS[project.slug] : undefined
 
+  const introParagraphs = detail ? (Array.isArray(detail.intro) ? detail.intro : [detail.intro]) : []
+
   useSmoothScroll()
   useScrollToTop(slug)
   useDocumentMeta(
     project ? `${project.title} — .jaypeg` : 'Project not found — .jaypeg',
-    detail?.intro ?? project?.description ?? 'This project could not be found.',
+    introParagraphs[0] ?? project?.description ?? 'This project could not be found.',
   )
 
   if (!project || !detail) {
@@ -60,9 +62,14 @@ export function ProjectDetail() {
         <ProjectHero project={project} detail={detail} />
 
         <div className="px-6 pt-4 pb-4 md:px-10 md:pt-6">
-          <p className="font-geist max-w-[90rem] text-lg leading-relaxed font-light tracking-tight text-cream/70 md:text-xl lg:text-2xl">
-            {detail.intro}
-          </p>
+          {introParagraphs.map((paragraph, i) => (
+            <p
+              key={i}
+              className={`font-geist max-w-[90rem] text-lg leading-relaxed font-light tracking-tight text-cream/70 md:text-xl lg:text-2xl ${i > 0 ? 'mt-6' : ''}`}
+            >
+              {paragraph}
+            </p>
+          ))}
         </div>
 
         {detail.brandMark && (
