@@ -189,7 +189,14 @@ export function MoodboardCanvas() {
     () => packColumns(buildTileList(), layout.columns, layout.columnWidth, layout.gap),
     [layout.columns, layout.columnWidth, layout.gap],
   )
-  const blockWidth = layout.columns * (layout.columnWidth + layout.gap) - layout.gap
+  // Deliberately NOT "columns * (columnWidth + gap) - gap" -- that
+  // would put the last column's right edge exactly at the next
+  // block's left edge, closing the gap to zero right where the
+  // horizontal repeat seams (every `columns` columns while panning
+  // sideways), while every other column-to-column gap stays the
+  // configured size. Keeping the trailing gap in this width is what
+  // makes that seam match every other gap instead of disappearing.
+  const blockWidth = layout.columns * (layout.columnWidth + layout.gap)
 
   const rxList = prefersReducedMotion ? [0] : RX
   const dupList = prefersReducedMotion ? [0] : [0, 1]
