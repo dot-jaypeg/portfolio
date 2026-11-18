@@ -9,6 +9,14 @@ import bagguImg from '../assets/images/projects/baggu.jpg'
 import chichaImg from '../assets/images/projects/chicha.jpg'
 import protocolOfBetrayalImg from '../assets/images/projects/star-wars.jpg'
 
+import nsuWorkVideo from '../assets/images/projects/work-covers/nsu-work.mp4'
+import nsuWorkPoster from '../assets/images/projects/work-covers/nsu-work-poster.jpg'
+import chichaWorkVideo from '../assets/images/projects/work-covers/chicha-work.mp4'
+import chichaWorkPoster from '../assets/images/projects/work-covers/chicha-work-poster.jpg'
+import protocolWorkVideo from '../assets/images/projects/work-covers/protocol-of-betrayal-work.mp4'
+import protocolWorkPoster from '../assets/images/projects/work-covers/protocol-of-betrayal-work-poster.jpg'
+import fetchWorkImg from '../assets/images/projects/work-covers/fetch-work.jpg'
+
 export interface CaseStudy {
   slug: string
   title: string
@@ -24,8 +32,19 @@ export interface CaseStudy {
   // wall sizes each tile from these directly (no cropping, see
   // ProjectCard), so it needs the real ratio up front the same way
   // every other image-with-a-box on the site already declares one.
+  // When `workCoverVideo`/`workCoverImage` below is set, these describe
+  // THAT asset's own dimensions instead of `image`'s.
   coverWidth?: number
   coverHeight?: number
+  // /work-page-only overrides, same scoping convention as
+  // `workImagePosition` below -- everywhere else that reads `image`
+  // (WorkPanel, MoreProjects) keeps showing the original cover
+  // untouched. `workCoverVideo` wins when set (rendered autoplay/
+  // muted/loop, `workCoverPoster` as its poster frame); otherwise
+  // `workCoverImage ?? image` renders as a plain <img>.
+  workCoverVideo?: string
+  workCoverPoster?: string
+  workCoverImage?: string
   // Optional override for the parallax swing's amount/oversize (see
   // JourneyDesktop's `data-parallax-amount`) -- defaults to 8. A photo
   // whose subject sits close to its own edges (little disposable
@@ -116,8 +135,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Photo & Merchandising',
     client: 'Chapman University',
     image: nsuImg,
-    coverWidth: 1067,
-    coverHeight: 1600,
+    coverWidth: 960,
+    coverHeight: 540,
+    workCoverVideo: nsuWorkVideo,
+    workCoverPoster: nsuWorkPoster,
     accent: '#b52025',
     // The shirt photo is a tall 2:3 crop inside a 4:5 box -- the default
     // 8% swing oversize was cropping into the shirt itself (collar/hem),
@@ -133,8 +154,9 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Branding & Advertising',
     client: 'Academic',
     image: fetchImg,
-    coverWidth: 1280,
-    coverHeight: 1148,
+    coverWidth: 1600,
+    coverHeight: 1398,
+    workCoverImage: fetchWorkImg,
     accent: '#45815a',
     description:
       'A dog-friendly deli food truck for SoCal parks, fetch! doggy deli is a concept built end to end, from the name and mark to packaging, menus, and a truck wrap, with a playful brand voice and natural, local ingredients made for dogs.',
@@ -181,8 +203,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Digital Marketing',
     client: 'Chi-Cha',
     image: chichaImg,
-    coverWidth: 1067,
-    coverHeight: 1600,
+    coverWidth: 720,
+    coverHeight: 720,
+    workCoverVideo: chichaWorkVideo,
+    workCoverPoster: chichaWorkPoster,
     accent: '#e391a8',
     description:
       'A retro-arcade-themed digital push for Chi-Cha -- display ads, social posts, and a direct mailer all built around one playful visual world.',
@@ -193,8 +217,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: '3D & Motion',
     client: 'Personal Project',
     image: protocolOfBetrayalImg,
-    coverWidth: 1600,
-    coverHeight: 899,
+    coverWidth: 854,
+    coverHeight: 480,
+    workCoverVideo: protocolWorkVideo,
+    workCoverPoster: protocolWorkPoster,
     accent: '#c0453a',
     // Source is a 16:9 still with the character off-center to the
     // right -- centering it (the default) crops half of him out.
