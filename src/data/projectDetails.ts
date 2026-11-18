@@ -21,8 +21,13 @@ import a7xMerchStory from '../assets/images/projects/detail/afi-marketing-campai
 import a7xHalloweenMask from '../assets/images/projects/detail/afi-marketing-campaign/a7x-halloween-mask.jpg'
 import deftonesMerchStory from '../assets/images/projects/detail/afi-marketing-campaign/deftones-merch-story.jpg'
 import incubusVinylShelf from '../assets/images/projects/detail/afi-marketing-campaign/incubus-vinyl-shelf.jpg'
+import incubusVinylShelf2 from '../assets/images/projects/detail/afi-marketing-campaign/incubus-vinyl-shelf-2.jpg'
 import incubusVinylVideo from '../assets/images/projects/work-covers/afi-work.mp4'
 import incubusVinylPoster from '../assets/images/projects/work-covers/afi-work-poster.jpg'
+import afiLiveCloseup from '../assets/images/projects/detail/afi-marketing-campaign/afi-live-closeup.jpg'
+import afiLiveFullStage from '../assets/images/projects/detail/afi-marketing-campaign/afi-live-fullstage.jpg'
+import a7xMerchStory2 from '../assets/images/projects/detail/afi-marketing-campaign/a7x-merch-story-2.jpg'
+import deftonesMerchStory2 from '../assets/images/projects/detail/afi-marketing-campaign/deftones-merch-story-2.jpg'
 
 import resonancePoster from '../assets/images/projects/detail/ui-design-for-resonance/poster.jpg'
 import splash1 from '../assets/images/projects/detail/ui-design-for-resonance/splash-1.jpg'
@@ -357,12 +362,23 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     tags: ['Digital Marketing', 'Social Media', 'Merch Promotion'],
     intro:
       'Velvet Hammer is a music management company representing hard rock, alternative metal, and post-grunge artists. The internship centered on the digital side of the roster, developing creative campaigns, Instagram content, visual assets, and brand guidelines alongside managers and the marketing team. Each artist called for a different voice, so the work moved between fan-club identity, merch promotion, weekly content strategy, and overall daily management of each band.',
+    introImage: {
+      // Same overview placement as NSU's lead photo -- a single
+      // establishing shot above the first chapter, not scoped to any
+      // one artist. AFI's own stage backdrop happens to carry the
+      // same radiating sun mark the Despair Faction cards reuse below.
+      src: afiLiveCloseup,
+      alt: 'AFI performing live, with the Despair Faction sun mark on the backdrop',
+    },
     chapters: [
       {
         label: 'AFI: Despair Faction',
         collapsible: true,
         text: 'Despair Faction, AFI’s official fan club since 2002, was relaunched as a digital-first rewards program, and new membership cards gave the club a fresh identity. A radiating sun mark and the AFI wordmark were carried across five colorways: pink, black and pink, silver, gold, and black and silver. The new gameified system was then paired with an interactive promo for their recent album "Silver Bleeds the Black Sun", a digital tarot campaign that introduced the band’s new single Holy Visions. Fans shared the cards they pulled on r/AFireInside, where they discussed the design and meaning behind the cards.',
-        layout: 'two-up',
+        // Same flush/parallax pairing Contra's t-shirt+keychain and
+        // Resonance's gameplay chapters use, instead of the small
+        // gutter-card treatment this used to be.
+        layout: 'full-page-two-up',
         images: [
           {
             // Silent product-rotation clip through all five colorways
@@ -372,14 +388,23 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             poster: membershipCardsPoster,
             videoMode: 'loop',
             alt: 'AFI Despair Faction membership cards in five colorways',
-            width: 1200,
-            height: 834,
           },
           {
             src: visionCards,
             alt: 'AFI digital tarot cards for the Holy Visions single',
-            width: 2000,
-            height: 1466,
+          },
+        ],
+        moreImages: [
+          {
+            // Closing on the full stage shot -- same sun mark backdrop
+            // as the overview photo, now with the whole band in frame.
+            layout: 'full-page',
+            images: [
+              {
+                src: afiLiveFullStage,
+                alt: 'AFI performing live on stage with full band and sun-mark backdrop',
+              },
+            ],
           },
         ],
       },
@@ -387,19 +412,29 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Avenged Sevenfold: Merch and Promotions',
         collapsible: true,
         text: 'Story graphics promoted the Magic merch collection, pulling the painted artwork across tees and hoodies. A Deathbat Halloween mask offer, free with a $75 purchase, used a worn-paper, typewriter style to match the band’s darker visual identity. Pitched ideas rounded out the work, including a Guess the Riff TikTok challenge, a custom Discord emoji pack, and tour vlogs.',
-        layout: 'two-up',
+        layout: 'full-page-two-up',
         images: [
           {
             src: a7xMerchStory,
             alt: 'Avenged Sevenfold Magic merch collection story graphic',
-            width: 648,
-            height: 1152,
           },
           {
             src: a7xHalloweenMask,
             alt: 'Avenged Sevenfold free Deathbat Halloween mask offer',
-            width: 1080,
-            height: 1080,
+          },
+        ],
+        moreImages: [
+          {
+            // A second, differently-laid-out pass at the same merch
+            // collection -- closing the chapter tall, same as AFI's.
+            layout: 'full-page',
+            tall: true,
+            images: [
+              {
+                src: a7xMerchStory2,
+                alt: 'Avenged Sevenfold Magic merch collection, alternate story layout',
+              },
+            ],
           },
         ],
       },
@@ -407,13 +442,19 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Deftones: Private Music Merch',
         collapsible: true,
         text: 'Story graphics for Deftones tour and Private Music merch showcased tees, hoodies, CD, and vinyl on a dark, glowing background. The layouts built on the album artwork’s white serpent and the band’s green and lavender palette, keeping the products as the focus.',
-        layout: 'contained',
+        // Two distinct layout passes on the same merch set, paired
+        // flush like AFI's and A7X's own chapters, in place of the
+        // single small `contained` card this used to be.
+        layout: 'full-page-two-up',
+        tall: true,
         images: [
           {
             src: deftonesMerchStory,
             alt: 'Deftones Private Music tour merch story graphic',
-            width: 900,
-            height: 1600,
+          },
+          {
+            src: deftonesMerchStory2,
+            alt: 'Deftones Private Music tour merch, alternate story layout',
           },
         ],
       },
@@ -421,7 +462,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Incubus: Content Strategy',
         collapsible: true,
         text: 'Five campaigns were pitched for Incubus: a Halloween post tied to Drive’s Surf’s Up moment, an end-of-year Wrapped recap, a 2025 tour recap to reopen the band’s YouTube channel, Spotify DMs to thank top listeners, and influencer vinyl unboxings ahead of the vinyl release.',
-        layout: 'two-up',
+        layout: 'full-page-two-up',
         images: [
           {
             // Silent b-roll of the vinyl, same clip used as this
@@ -431,14 +472,21 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             poster: incubusVinylPoster,
             videoMode: 'loop',
             alt: 'Incubus vinyl record close-up, pitched for an unboxing campaign',
-            width: 608,
-            height: 1080,
           },
           {
             src: incubusVinylShelf,
             alt: 'Shelf of Incubus vinyl records',
-            width: 1333,
-            height: 2000,
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'full-page',
+            images: [
+              {
+                src: incubusVinylShelf2,
+                alt: 'A second angle of the Incubus vinyl record shelf',
+              },
+            ],
           },
         ],
       },
