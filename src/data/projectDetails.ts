@@ -14,11 +14,15 @@ import tshirtMockup from '../assets/images/projects/detail/contra-coffee-sticker
 import chapmanSticker from '../assets/images/projects/detail/contra-coffee-sticker-pack/chapman-sticker.mp4'
 import chapmanStickerPoster from '../assets/images/projects/detail/contra-coffee-sticker-pack/chapman-sticker-poster.jpg'
 
-import showBoston2 from '../assets/images/projects/detail/afi-marketing-campaign/show-boston-2.jpg'
-import showPhilly from '../assets/images/projects/detail/afi-marketing-campaign/show-philly.jpg'
-import showBoston1 from '../assets/images/projects/detail/afi-marketing-campaign/show-boston-1.jpg'
 import visionCards from '../assets/images/projects/detail/afi-marketing-campaign/vision-cards.jpg'
-import showFullStage from '../assets/images/projects/detail/afi-marketing-campaign/show-full-stage.jpg'
+import membershipCards from '../assets/images/projects/detail/afi-marketing-campaign/membership-cards.mp4'
+import membershipCardsPoster from '../assets/images/projects/detail/afi-marketing-campaign/membership-cards-poster.jpg'
+import a7xMerchStory from '../assets/images/projects/detail/afi-marketing-campaign/a7x-merch-story.jpg'
+import a7xHalloweenMask from '../assets/images/projects/detail/afi-marketing-campaign/a7x-halloween-mask.jpg'
+import deftonesMerchStory from '../assets/images/projects/detail/afi-marketing-campaign/deftones-merch-story.jpg'
+import incubusVinylShelf from '../assets/images/projects/detail/afi-marketing-campaign/incubus-vinyl-shelf.jpg'
+import incubusVinylVideo from '../assets/images/projects/work-covers/afi-work.mp4'
+import incubusVinylPoster from '../assets/images/projects/work-covers/afi-work-poster.jpg'
 
 import resonancePoster from '../assets/images/projects/detail/ui-design-for-resonance/poster.jpg'
 import splash1 from '../assets/images/projects/detail/ui-design-for-resonance/splash-1.jpg'
@@ -350,66 +354,97 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   },
 
   'afi-marketing-campaign': {
-    heroLead: 'A multi-channel marketing push for',
-    heroTagline:
-      ', built to get AFI’s tour in front of the right audience at the right moment — and to capture the room once they showed up.',
-    tags: ['Digital Marketing', 'Campaign', 'Event Photography'],
+    heroLead: 'A digital marketing and creative internship for',
+    // Overrides `client` ('Velvet Hammer Music') to match the brief's
+    // own "Velvet Hammer Music Management" -- the more formal name
+    // reads better bolded into the hero sentence.
+    heroBold: 'Velvet Hammer Music Management',
+    heroTagline: ', supporting Incubus, AFI, Avenged Sevenfold, and Deftones.',
+    tags: ['Digital Marketing', 'Social Media', 'Merch Promotion'],
     intro:
-      'Velvet Hammer Music brought this on as a full-funnel push for AFI’s tour: paid and organic assets to drive ticket sales, then photography on the ground to turn each stop into content for the next one.',
+      'Velvet Hammer is a music management company representing hard rock, alternative metal, and post-grunge artists. The internship centered on the digital side of the roster, developing creative campaigns, Instagram content, visual assets, and brand guidelines alongside managers and the marketing team. Each artist called for a different voice, so the work moved between fan-club identity, merch promotion, weekly content strategy, and overall daily management of each band.',
     chapters: [
       {
-        label: 'On Tour',
+        label: 'AFI: Despair Faction',
         collapsible: true,
-        text: 'Coverage followed the tour from city to city, shot to double as recap content and raw material for the next stop’s promo.',
-        layout: 'full-page',
-        images: [
-          {
-            src: showBoston2,
-            alt: 'AFI performing live in Boston, 2025',
-          },
-        ],
-      },
-      {
-        label: 'Live Coverage',
-        collapsible: true,
-        text: 'Philadelphia’s Fillmore and a Boston stop gave the campaign its two strongest live sets.',
+        text: 'Despair Faction, AFI’s official fan club since 2002, was relaunched as a digital-first rewards program, and new membership cards gave the club a fresh identity. A radiating sun mark and the AFI wordmark were carried across five colorways: pink, black and pink, silver, gold, and black and silver. The new gameified system was then paired with an interactive promo for their recent album "Silver Bleeds the Black Sun", a digital tarot campaign that introduced the band’s new single Holy Visions. Fans shared the cards they pulled on r/AFireInside, where they discussed the design and meaning behind the cards.',
         layout: 'two-up',
         images: [
           {
-            src: showPhilly,
-            alt: 'AFI performing at the Fillmore in Philadelphia',
-            width: 1632,
-            height: 2000,
+            // Silent product-rotation clip through all five colorways
+            // -- no dialogue/narration worth unmuting, so `loop`
+            // (always muted, no controls) instead of `autoplay`.
+            video: membershipCards,
+            poster: membershipCardsPoster,
+            videoMode: 'loop',
+            alt: 'AFI Despair Faction membership cards in five colorways',
+            width: 1200,
+            height: 834,
           },
-          {
-            src: showBoston1,
-            alt: 'AFI performing live in Boston, 2025',
-            width: 1333,
-            height: 2000,
-          },
-        ],
-      },
-      {
-        label: 'Membership & Vision Cards',
-        collapsible: true,
-        text: 'A supporting card series gave the campaign a physical, collectible touchpoint alongside the digital push.',
-        layout: 'contained',
-        images: [
           {
             src: visionCards,
-            alt: 'AFI membership and vision card series',
+            alt: 'AFI digital tarot cards for the Holy Visions single',
             width: 2000,
             height: 1466,
           },
         ],
       },
       {
-        // No label -- closing on the full stage shot, pure imagery.
-        layout: 'full-page',
+        label: 'Avenged Sevenfold: Merch and Promotions',
+        collapsible: true,
+        text: 'Story graphics promoted the Magic merch collection, pulling the painted artwork across tees and hoodies. A Deathbat Halloween mask offer, free with a $75 purchase, used a worn-paper, typewriter style to match the band’s darker visual identity. Pitched ideas rounded out the work, including a Guess the Riff TikTok challenge, a custom Discord emoji pack, and tour vlogs.',
+        layout: 'two-up',
         images: [
           {
-            src: showFullStage,
-            alt: 'AFI performing live on stage with full band and backdrop',
+            src: a7xMerchStory,
+            alt: 'Avenged Sevenfold Magic merch collection story graphic',
+            width: 648,
+            height: 1152,
+          },
+          {
+            src: a7xHalloweenMask,
+            alt: 'Avenged Sevenfold free Deathbat Halloween mask offer',
+            width: 1080,
+            height: 1080,
+          },
+        ],
+      },
+      {
+        label: 'Deftones: Private Music Merch',
+        collapsible: true,
+        text: 'Story graphics for Deftones tour and Private Music merch showcased tees, hoodies, CD, and vinyl on a dark, glowing background. The layouts built on the album artwork’s white serpent and the band’s green and lavender palette, keeping the products as the focus.',
+        layout: 'contained',
+        images: [
+          {
+            src: deftonesMerchStory,
+            alt: 'Deftones Private Music tour merch story graphic',
+            width: 900,
+            height: 1600,
+          },
+        ],
+      },
+      {
+        label: 'Incubus: Content Strategy',
+        collapsible: true,
+        text: 'Five campaigns were pitched for Incubus: a Halloween post tied to Drive’s Surf’s Up moment, an end-of-year Wrapped recap, a 2025 tour recap to reopen the band’s YouTube channel, Spotify DMs to thank top listeners, and influencer vinyl unboxings ahead of the vinyl release.',
+        layout: 'two-up',
+        images: [
+          {
+            // Silent b-roll of the vinyl, same clip used as this
+            // project's own /work cover -- `loop` rather than
+            // `autoplay` for the same reason as the membership cards.
+            video: incubusVinylVideo,
+            poster: incubusVinylPoster,
+            videoMode: 'loop',
+            alt: 'Incubus vinyl record close-up, pitched for an unboxing campaign',
+            width: 608,
+            height: 1080,
+          },
+          {
+            src: incubusVinylShelf,
+            alt: 'Shelf of Incubus vinyl records',
+            width: 1333,
+            height: 2000,
           },
         ],
       },

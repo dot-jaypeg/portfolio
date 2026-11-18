@@ -113,8 +113,13 @@ export const CASE_STUDIES: CaseStudy[] = [
       'A cohesive collection for Contra Coffee & Tea designed to function as their Spring Y2K Merch Drop.',
   },
   {
+    // Slug kept as-is (afi-marketing-campaign) even though the
+    // project itself is now framed around the whole Velvet Hammer
+    // roster, not just AFI -- renaming the slug would be a URL
+    // change, not just a copy change, so it's left alone unless asked
+    // for separately.
     slug: 'afi-marketing-campaign',
-    title: 'AFI Marketing Campaign',
+    title: 'Velvet Hammer Music',
     category: 'Digital Marketing',
     client: 'Velvet Hammer Music',
     image: afiImg,
@@ -130,7 +135,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     // mid-frame).
     moreWorkImagePosition: 'center 35%',
     description:
-      'To launch AFI’s single Holy Visions and the relaunch of their fan club, Despair Faction, new DF membership cards were paired with digital tarot cards and a collectible physical card series.',
+      'A digital marketing and creative internship for Velvet Hammer Music Management, supporting Incubus, AFI, Avenged Sevenfold, and Deftones.',
   },
   {
     slug: 'ui-design-for-resonance',
