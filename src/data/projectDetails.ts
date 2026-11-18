@@ -440,25 +440,31 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
       },
       {
-        // Same full-page-two-up treatment as Contra's t-shirt/keychain
-        // pairing -- large, flush, side-by-side images with parallax,
-        // in place of the smaller organic cluster this used to be.
+        // Same full-page treatment as Contra's t-shirt/keychain
+        // pairing -- large, flush images with parallax, in place of
+        // the smaller organic cluster this used to be. All three logo
+        // marks sit in one flush row (no gap between them) instead of
+        // a pair + a separate section, since there's no text calling
+        // out the icon on its own.
         label: 'Brand Identity',
         collapsible: true,
         text: [
           'The wordmark went through several passes before landing on its final glitch-edged look — the same mark that carried straight into the game’s icon.',
           'That identity extended into the world itself: Azonix became the display type running through menus and HUD, and in-universe sponsors like Katto got their own weapon-skin branding, reinforcing the sponsor-driven, broadcast-for-entertainment premise.',
         ],
-        layout: 'full-page-two-up',
+        layout: 'full-page-trio',
         tall: true,
         images: [
           {
             src: logoConcept1,
             alt: 'Resonance wordmark concept, variant one',
             // `contain`, not the default `cover` -- these are flat
-            // logo marks, not photos; cropping into this pairing's
-            // tall column was cutting into the mark itself instead of
-            // just trimming background.
+            // logo marks, not photos; cropping into this row's
+            // columns was cutting into the mark itself instead of
+            // just trimming background. logoConcept1/2 are cropped to
+            // the exact same source aspect ratio as each other
+            // already, so this is really just about not cropping the
+            // game icon's different ratio against them.
             fit: 'contain',
           },
           {
@@ -466,19 +472,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'Resonance wordmark concept, variant two',
             fit: 'contain',
           },
+          {
+            src: gameIcon,
+            alt: 'Resonance game icon',
+            fit: 'contain',
+          },
         ],
         moreImages: [
-          {
-            layout: 'full-page',
-            tall: true,
-            images: [
-              {
-                src: gameIcon,
-                alt: 'Resonance game icon',
-                fit: 'contain',
-              },
-            ],
-          },
           {
             // Reverted to its own full-bleed section (same treatment
             // as before the Contra-style pass) -- full-bleed already
