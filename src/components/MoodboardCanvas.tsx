@@ -43,65 +43,90 @@ function buildTileList(): Tile[] {
   }))
   // The site's own wordmark as one of the tiles, the same way the
   // reference uses its own name as a tile in the flow rather than a
-  // fixed overlay -- dropped roughly in the middle of the list, same
-  // cell size as every other tile (see packGrid below).
+  // fixed overlay -- dropped roughly in the middle of the list so the
+  // packer below places it wherever the shortest column happens to be
+  // at that point, same as any other tile.
   tiles.splice(Math.floor(tiles.length / 2), 0, { kind: 'wordmark', key: 'wordmark' })
   return tiles
 }
 
-interface PlacedTile {
+interface ColumnTile {
   tile: Tile
-  x: number
+  y: number
+  height: number
+}
+interface ColumnData {
+  tiles: ColumnTile[]
+  // Total content height of this one column, no trailing gap --
+  // every column gets its OWN value here, not a shared one across
+  // the whole grid (see the note on packColumns below).
+  height: number
+}
+
+// Classic masonry packing -- each tile goes into whichever column is
+// currently shortest, sized at this column's fixed width and whatever
+// height its own real aspect ratio calls for at that width. Nothing
+// crops or stretches any tile to make columns match: object-cover had
+// nothing to crop in the first place once the box's aspect ratio
+// already equals the photo's own, so every photo renders at exactly
+// the ratio it was shot at.
+//
+// That means columns legitimately end up different total heights --
+// real photos' aspect ratios don't divide evenly. Rather than forcing
+// them to match (which only ever worked by cropping something), each
+// column loops on ITS OWN height independently (see the per-column
+// `y` transform in MoodboardCanvas) instead of the whole grid sharing
+// one pattern height. No shared height to match means no seam to
+// close in the first place.
+function packColumns(tiles: Tile[], columns: number, columnWidth: number, gap: number): ColumnData[] {
+  const cols: ColumnData[] = Array.from({ length: columns }, () => ({ tiles: [], height: 0 }))
+  tiles.forEach((tile) => {
+    // The wordmark gets a taller-than-wide slot (not a plain square) so
+    // it reads as a deliberate, larger feature tile rather than just
+    // another photo-shaped box.
+    const aspect = tile.kind === 'wordmark' ? 0.75 : tile.media.width / tile.media.height
+    const height = columnWidth / aspect
+    let col = 0
+    for (let c = 1; c < columns; c++) if (cols[c].height < cols[col].height) col = c
+    cols[col].tiles.push({ tile, y: cols[col].height, height })
+    cols[col].height += height + gap
+  })
+  cols.forEach((c) => {
+    c.height -= gap
+  })
+  return cols
+}
+
+// Noticeably more generous than a tight editorial grid -- closer to
+// the breathing room juliajohnson.com's own mood-board reference
+// leaves around each image -- so the wall reads as a loose scatter of
+// distinct photos, not packed tiles with barely a seam between them.
+const DESKTOP_LAYOUT = { columns: 5, columnWidth: 320, gap: 48 }
+const MOBILE_LAYOUT = { columns: 3, columnWidth: 120, gap: 20 }
+const DESKTOP_BREAKPOINT = '(min-width: 768px)'
+
+// Horizontal repeats of the whole multi-column block, so panning
+// sideways always has another copy ready to slide into view -- see
+// the `xWrapperRef` transform in MoodboardCanvas. Vertical looping is
+// handled per-column instead (each one wraps on its own height), so
+// there's no equivalent vertical repeat needed here.
+const RX = [-1, 0, 1]
+
+function MoodboardTile({
+  tile,
+  y,
+  width,
+  height,
+  onSelect,
+}: {
+  tile: Tile
   y: number
   width: number
   height: number
-}
-interface Pattern {
-  placed: PlacedTile[]
-  width: number
-  height: number
-}
-
-// A strict, uniform grid -- every tile the same fixed cell size
-// (object-cover crops whatever the real photo's own aspect ratio is to
-// fit), laid out row-major rather than masonry-packed by real aspect
-// ratio. The previous masonry version let each column's real photos
-// run to a different total height, which meant shorter columns fell
-// short of the tallest one and left a gap right where the infinite
-// pattern repeated -- a real, confirmed seam. A uniform grid can't
-// have that problem: every row is the same height by construction, so
-// the pattern tiles seamlessly with no special-casing needed.
-function packGrid(tiles: Tile[], columns: number, cellWidth: number, cellHeight: number, gap: number): Pattern {
-  const placed = tiles.map((tile, i): PlacedTile => {
-    const col = i % columns
-    const row = Math.floor(i / columns)
-    return { tile, x: col * (cellWidth + gap), y: row * (cellHeight + gap), width: cellWidth, height: cellHeight }
-  })
-  const rows = Math.ceil(tiles.length / columns)
-  return {
-    placed,
-    width: columns * (cellWidth + gap) - gap,
-    height: rows * (cellHeight + gap) - gap,
-  }
-}
-
-// A 4:5 cell -- portrait enough to suit this pool's mostly-portrait
-// photos without cropping the landscape ones down too aggressively.
-const DESKTOP_LAYOUT = { columns: 6, cellWidth: 280, cellHeight: 350, gap: 20 }
-const MOBILE_LAYOUT = { columns: 4, cellWidth: 100, cellHeight: 125, gap: 8 }
-const DESKTOP_BREAKPOINT = '(min-width: 768px)'
-
-// The pattern is repeated in a 3x3 block around the wrapped pan
-// position so the viewport stays fully covered no matter where that
-// position currently sits -- with a 1-pattern margin on every side,
-// covering the worst case only needs the pattern itself to be at least
-// half the viewport's size, which comfortably holds even on very wide
-// desktop monitors at the sizes above.
-const PATTERN_REPEATS = [-1, 0, 1]
-
-function MoodboardTile({ placed, onSelect }: { placed: PlacedTile; onSelect: (photo: GalleryPhoto) => void }) {
-  if (placed.tile.kind === 'wordmark') {
-    const style: CSSProperties = { position: 'absolute', left: placed.x, top: placed.y, width: placed.width, height: placed.height }
+  onSelect: (photo: GalleryPhoto) => void
+}) {
+  if (tile.kind === 'wordmark') {
+    const style: CSSProperties = { position: 'absolute', left: 0, top: y, width, height }
     return (
       <div style={style} className="flex items-center justify-center bg-teal">
         <span className="font-display text-2xl font-bold tracking-[-0.06em] text-ink italic md:text-4xl">
@@ -110,7 +135,7 @@ function MoodboardTile({ placed, onSelect }: { placed: PlacedTile; onSelect: (ph
       </div>
     )
   }
-  const media = placed.tile.media
+  const media = tile.media
   return (
     <button
       type="button"
@@ -122,10 +147,10 @@ function MoodboardTile({ placed, onSelect }: { placed: PlacedTile; onSelect: (ph
       // however many tiles are currently mounted.
       tabIndex={-1}
       data-cursor="View"
-      className="group absolute left-0 top-0 block cursor-pointer overflow-hidden"
-      style={{ left: placed.x, top: placed.y, width: placed.width, height: placed.height }}
+      className="group absolute left-0 block cursor-pointer overflow-hidden"
+      style={{ top: y, width, height }}
     >
-      <ProjectMedia media={media} decorative heightOverride={placed.height} />
+      <ProjectMedia media={media} decorative heightOverride={height} />
     </button>
   )
 }
@@ -151,29 +176,35 @@ export function MoodboardCanvas() {
     () => typeof window !== 'undefined' && window.matchMedia(DESKTOP_BREAKPOINT).matches,
   )
   const stageRef = useRef<HTMLDivElement>(null)
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const xWrapperRef = useRef<HTMLDivElement>(null)
+  const columnRefs = useRef<(HTMLDivElement | null)[]>([])
   const overlayRef = useRef<HTMLDivElement>(null)
   const imgWrapRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const pausedRef = useRef(false)
   const [selected, setSelected] = useState<GalleryPhoto | null>(null)
 
-  const pattern = useMemo(() => {
-    const layout = isDesktop ? DESKTOP_LAYOUT : MOBILE_LAYOUT
-    return packGrid(buildTileList(), layout.columns, layout.cellWidth, layout.cellHeight, layout.gap)
-  }, [isDesktop])
+  const layout = isDesktop ? DESKTOP_LAYOUT : MOBILE_LAYOUT
+  const cols = useMemo(
+    () => packColumns(buildTileList(), layout.columns, layout.columnWidth, layout.gap),
+    [layout.columns, layout.columnWidth, layout.gap],
+  )
+  const blockWidth = layout.columns * (layout.columnWidth + layout.gap) - layout.gap
+
+  const rxList = prefersReducedMotion ? [0] : RX
+  const dupList = prefersReducedMotion ? [0] : [0, 1]
 
   useLayoutEffect(() => {
     // Static instead of animated for reduced-motion -- a continuously
     // drifting, scroll-hijacking canvas is the opposite of what that
     // preference asks for, so this skips Observer/the ticker entirely
-    // rather than trying to tone the motion down. (With only the [0,0]
-    // pattern copy rendered in that case -- see the JSX below -- there's
-    // nothing for a transform to do anyway.)
-    if (prefersReducedMotion || !stageRef.current || !wrapperRef.current) return
+    // rather than trying to tone the motion down. (With only one
+    // column copy and one horizontal block rendered in that case --
+    // see the JSX below -- there's nothing for a transform to do
+    // anyway.)
+    if (prefersReducedMotion || !stageRef.current || !xWrapperRef.current) return
 
-    const wrapper = wrapperRef.current
-    const { width: patternWidth, height: patternHeight } = pattern
+    const xWrapper = xWrapperRef.current
     // A gentle constant drift, always applied -- this is what keeps the
     // canvas "carouseling" on its own with zero input, matching the
     // reference's own always-on movement rather than an idle-after-
@@ -199,9 +230,18 @@ export function MoodboardCanvas() {
         // soft, organic feel instead of tracking 1:1 every frame.
         currentX += (targetX - currentX) * 0.1
         currentY += (targetY - currentY) * 0.1
-        gsap.set(wrapper, {
-          x: gsap.utils.wrap(-patternWidth, 0, currentX),
-          y: gsap.utils.wrap(-patternHeight, 0, currentY),
+        gsap.set(xWrapper, { x: gsap.utils.wrap(-blockWidth, 0, currentX) })
+        // Each column wraps on its OWN height (+ the gap that would
+        // otherwise sit between the real content and its own looped
+        // copy) -- not a value shared across columns, since they
+        // legitimately aren't the same height (see packColumns).
+        cols.forEach((col, c) => {
+          const period = col.height + layout.gap
+          const y = gsap.utils.wrap(-period, 0, currentY)
+          for (let rxIndex = 0; rxIndex < rxList.length; rxIndex++) {
+            const el = columnRefs.current[rxIndex * layout.columns + c]
+            if (el) gsap.set(el, { y })
+          }
         })
       }
       frameId = requestAnimationFrame(tick)
@@ -236,7 +276,8 @@ export function MoodboardCanvas() {
       cancelAnimationFrame(frameId)
       observer.kill()
     }
-  }, [prefersReducedMotion, pattern])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefersReducedMotion, cols, blockWidth, layout.columns, layout.gap])
 
   useEffect(() => {
     pausedRef.current = selected !== null
@@ -266,8 +307,6 @@ export function MoodboardCanvas() {
     return () => ctx.revert()
   }, [selected, prefersReducedMotion])
 
-  const repeats = prefersReducedMotion ? [0] : PATTERN_REPEATS
-
   return (
     <>
       <div
@@ -284,25 +323,36 @@ export function MoodboardCanvas() {
         // drag input on the previous (column-based) version of this.
         className="relative h-screen w-screen touch-none overflow-hidden bg-ink select-none"
       >
-        <div ref={wrapperRef} className="absolute inset-0">
-          {repeats.flatMap((rx) =>
-            repeats.map((ry) => (
-              <div
-                key={`${rx}-${ry}`}
-                style={{
-                  position: 'absolute',
-                  left: rx * pattern.width,
-                  top: ry * pattern.height,
-                  width: pattern.width,
-                  height: pattern.height,
-                }}
-              >
-                {pattern.placed.map((placed, i) => (
-                  <MoodboardTile key={i} placed={placed} onSelect={setSelected} />
-                ))}
-              </div>
-            )),
-          )}
+        <div ref={xWrapperRef} className="absolute inset-0">
+          {rxList.map((rx, rxIndex) => (
+            <div
+              key={rx}
+              style={{ position: 'absolute', left: rx * blockWidth, top: 0, width: blockWidth, height: '100%' }}
+            >
+              {cols.map((col, c) => (
+                <div
+                  key={c}
+                  ref={(el) => {
+                    columnRefs.current[rxIndex * layout.columns + c] = el
+                  }}
+                  style={{ position: 'absolute', left: c * (layout.columnWidth + layout.gap), top: 0, width: layout.columnWidth }}
+                >
+                  {dupList.flatMap((dup) =>
+                    col.tiles.map((ct, ti) => (
+                      <MoodboardTile
+                        key={`${dup}-${ti}`}
+                        tile={ct.tile}
+                        y={dup * (col.height + layout.gap) + ct.y}
+                        width={layout.columnWidth}
+                        height={ct.height}
+                        onSelect={setSelected}
+                      />
+                    )),
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
 

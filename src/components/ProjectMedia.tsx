@@ -25,13 +25,13 @@ export function ProjectMedia({
   // of near-duplicate descriptions for content that conveys nothing.
   // The canvas itself is also aria-hidden; this covers the img tag too.
   decorative?: boolean
-  // MoodboardCanvas only -- overrides the box's height instead of
-  // deriving it from the image's own aspect ratio (object-cover still
-  // crops to fill), so the last tile in a masonry column can be
-  // stretched to close that column out at an exact target height. A
-  // plain `height` alongside `aspectRatio` wins over it per the CSS
-  // spec (aspect-ratio only fills in a dimension left auto), so this
-  // needs no other change to how the box sizes itself.
+  // MoodboardCanvas only -- an explicit height, computed from the
+  // same width/aspect math its own masonry packer already used, so
+  // the rendered box can't drift out of sync with the layout that
+  // positioned it. Resolves to the same value `aspectRatio` alone
+  // would (nothing is cropped or stretched to fit); a plain `height`
+  // alongside `aspectRatio` just wins over it per the CSS spec
+  // (aspect-ratio only fills in a dimension left auto).
   heightOverride?: number
 }) {
   const [loaded, setLoaded] = useState(false)
