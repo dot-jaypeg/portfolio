@@ -11,7 +11,11 @@ import finalCast2 from '../assets/images/projects/detail/contra-coffee-sticker-p
 import finalCast3 from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-cast-3.png'
 import waterBottleMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/water-bottle-mockup.jpg'
 import tshirtMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/tshirt-mockup.jpg'
-import keychainMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/keychain-mockup.jpg'
+import contraMe from '../assets/images/projects/detail/contra-coffee-sticker-pack/contra-me.jpg'
+import chapmanSticker from '../assets/images/projects/detail/contra-coffee-sticker-pack/chapman-sticker.mp4'
+import chapmanStickerPoster from '../assets/images/projects/detail/contra-coffee-sticker-pack/chapman-sticker-poster.jpg'
+import contraStickersheet from '../assets/images/projects/detail/contra-coffee-sticker-pack/contra-stickersheet.mp4'
+import contraStickersheetPoster from '../assets/images/projects/detail/contra-coffee-sticker-pack/contra-stickersheet-poster.jpg'
 
 import showBoston2 from '../assets/images/projects/detail/afi-marketing-campaign/show-boston-2.jpg'
 import showPhilly from '../assets/images/projects/detail/afi-marketing-campaign/show-philly.jpg'
@@ -279,6 +283,32 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
       },
       {
+        // No label/text -- pure imagery, directly under the final
+        // sticker files above. `controls` on the Chapman clip since
+        // it's an actual talking presentation (real audio, user-
+        // initiated), not ambient b-roll; `loop` on the stickersheet
+        // reveal since it's silent either way.
+        layout: 'two-up',
+        images: [
+          {
+            video: chapmanSticker,
+            poster: chapmanStickerPoster,
+            videoMode: 'controls',
+            alt: 'Presenting the Contra sticker pack for a Chapman University class critique',
+            width: 608,
+            height: 1080,
+          },
+          {
+            video: contraStickersheet,
+            poster: contraStickersheetPoster,
+            videoMode: 'loop',
+            alt: 'The finished Contra sticker sheet',
+            width: 608,
+            height: 1080,
+          },
+        ],
+      },
+      {
         // No label and no copy -- per direct request, this chapter runs
         // as pure imagery.
         layout: 'full-page-two-up',
@@ -289,8 +319,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'Contra Coffee & Tea t-shirt with speech bubble logo and character illustration',
           },
           {
-            src: keychainMockup,
-            alt: 'MC Squared acrylic keychain with dice charms',
+            src: contraMe,
+            alt: 'Jayden Ramirez with the finished Contra Coffee sticker pack',
           },
         ],
         moreImages: [
