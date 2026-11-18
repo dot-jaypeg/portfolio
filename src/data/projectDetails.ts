@@ -393,6 +393,12 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     heroLead: 'Twelve fighters. One arena that listens. Branding, UI, and HUD design for',
     heroBold: 'Resonance',
     heroTagline: '.',
+    // The case study's own `imagePosition` is biased all the way right
+    // to keep the character in frame for the WorkPanel/work-listing
+    // boxes -- the hero is a much wider box where that crops the
+    // "RESONANCE" wordmark out entirely. Left keeps the wordmark fully
+    // in view here instead.
+    heroImagePosition: 'left center',
     tags: ['Branding', 'UI/UX', 'HUD Design', 'Game Art'],
     intro:
       'Corporations run Resonance’s arenas, pitting fighters against each other to stress-test experimental weapons and augments in front of a live audience — weapons R&D disguised as spectator sport, broadcast for entertainment. Built by a small student team in about three months for a university capstone, then submitted to IEEE GameSIG 2026.',
@@ -434,87 +440,81 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
       },
       {
+        // Same full-page-two-up treatment as Contra's t-shirt/keychain
+        // pairing -- large, flush, side-by-side images with parallax,
+        // in place of the smaller organic cluster this used to be.
         label: 'Brand Identity',
         collapsible: true,
         text: [
           'The wordmark went through several passes before landing on its final glitch-edged look — the same mark that carried straight into the game’s icon.',
           'That identity extended into the world itself: Azonix became the display type running through menus and HUD, and in-universe sponsors like Katto got their own weapon-skin branding, reinforcing the sponsor-driven, broadcast-for-entertainment premise.',
         ],
-        layout: 'cluster',
+        layout: 'full-page-two-up',
+        tall: true,
         images: [
           {
             src: logoConcept1,
             alt: 'Resonance wordmark concept, variant one',
-            width: 1600,
-            height: 1067,
-            size: 'lg',
-          },
-          {
-            src: gameIcon,
-            alt: 'Resonance game icon',
-            width: 1200,
-            height: 800,
-            size: 'lg',
           },
           {
             src: logoConcept2,
             alt: 'Resonance wordmark concept, variant two',
-            width: 1600,
-            height: 1112,
-            size: 'lg',
           },
         ],
         moreImages: [
           {
-            layout: 'full-bleed',
+            layout: 'full-page-two-up',
+            tall: true,
             images: [
+              {
+                src: gameIcon,
+                alt: 'Resonance game icon',
+              },
               {
                 src: fontSpecimen,
                 alt: 'Azonix display typeface specimen, full alphabet and numerals',
-                width: 2000,
-                height: 1250,
               },
             ],
           },
           {
-            layout: 'full-bleed',
+            layout: 'full-page',
+            tall: true,
             images: [
               {
                 src: weaponSkinKatto,
                 alt: 'Katto sponsor weapon skin branding',
-                width: 2000,
-                height: 1333,
               },
             ],
           },
         ],
       },
       {
+        // Game Over & Victory Screens folds into this one now -- same
+        // full-page (edge to edge, no padding) treatment for both the
+        // HUD shot and the match-end video, flush-stacked.
         label: 'HUD & Interface',
         collapsible: true,
-        text: 'The HUD had to surface rank, health, ammo, and ability cooldowns at a glance without crowding the frame — color-coded enhancement states let players read their own build mid-fight.',
-        layout: 'contained',
+        text: [
+          'The HUD had to surface rank, health, ammo, and ability cooldowns at a glance without crowding the frame — color-coded enhancement states let players read their own build mid-fight.',
+          'Both the Game Over and Victory screens are built around the same audio-reactive waveform that runs through the rest of the game — the world still reacting to sound even after the match ends.',
+        ],
+        layout: 'full-page',
         images: [
           {
             src: hud1,
             alt: 'Resonance in-game HUD, magenta health variant',
-            width: 2000,
-            height: 1117,
           },
         ],
-      },
-      {
-        label: 'Game Over & Victory Screens',
-        collapsible: true,
-        text: 'Both screens are built around the same audio-reactive waveform that runs through the rest of the game — the world still reacting to sound even after the match ends.',
-        layout: 'contained',
-        images: [
+        moreImages: [
           {
-            video: matchEndLoop,
-            videoMode: 'loop',
-            alt: 'Resonance match-end screen background, audio-reactive waveform',
-            width: 1280,
-            height: 720,
+            layout: 'full-page',
+            images: [
+              {
+                video: matchEndLoop,
+                videoMode: 'loop',
+                alt: 'Resonance match-end screen background, audio-reactive waveform',
+              },
+            ],
           },
         ],
       },

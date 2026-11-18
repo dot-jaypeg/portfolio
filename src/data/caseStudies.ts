@@ -95,6 +95,11 @@ export const CASE_STUDIES: CaseStudy[] = [
     // needed to touch that headroom. Biasing down trades some of that
     // spare background for the rest of them actually being in frame.
     imagePosition: 'center 80%',
+    // The "More Work" row's 4:3 box is much shorter than the WorkPanel
+    // box imagePosition above was tuned for -- 80% there crops out the
+    // face entirely in this shorter box. Confirmed directly: 40% keeps
+    // the full face and cap in frame.
+    moreWorkImagePosition: 'center 40%',
     accent: '#9cc7b1',
     description:
       'A cohesive collection for Contra Coffee & Tea designed to function as their Spring Y2K Merch Drop.',
