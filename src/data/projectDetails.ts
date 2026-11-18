@@ -35,15 +35,19 @@ import hud1 from '../assets/images/projects/detail/ui-design-for-resonance/hud-1
 import matchEndLoop from '../assets/images/projects/detail/ui-design-for-resonance/match-end-loop.mp4'
 
 import boardHoodie from '../assets/images/projects/detail/nikkei-student-union/board-hoodie.jpg'
-import springFront from '../assets/images/projects/detail/nikkei-student-union/spring-merch-front.jpg'
-import springBack from '../assets/images/projects/detail/nikkei-student-union/spring-merch-back.jpg'
-import nsuLifestyleTee from '../assets/images/projects/detail/nikkei-student-union/lifestyle-tee.jpg'
 import nsuVideoProduction from '../assets/images/projects/detail/nikkei-student-union/video-production.mp4'
 import nsuVideoProductionPoster from '../assets/images/projects/detail/nikkei-student-union/video-production-poster.jpg'
-import nsuCultureNight from '../assets/images/projects/detail/nikkei-student-union/culture-night.jpg'
 import nsuCultureNightOverview from '../assets/images/projects/detail/nikkei-student-union/culture-night-overview.jpg'
-import nsuBeachDay from '../assets/images/projects/detail/nikkei-student-union/beach-day.jpg'
-import nsuSpringRetreatSunset from '../assets/images/projects/detail/nikkei-student-union/spring-retreat-sunset.jpg'
+import nsuImg4020 from '../assets/images/projects/detail/nikkei-student-union/img-4020.jpg'
+import nsuGm1272 from '../assets/images/projects/detail/nikkei-student-union/gm12-72.jpg'
+import nsuGm1202531 from '../assets/images/projects/detail/nikkei-student-union/gm1-2025-31.jpg'
+import nsuRecapVideo from '../assets/images/projects/detail/nikkei-student-union/nsu-recap.mp4'
+import nsuRecapPoster from '../assets/images/projects/detail/nikkei-student-union/nsu-recap-poster.jpg'
+import nsuGm1202207 from '../assets/images/projects/detail/nikkei-student-union/gm1-2025-207.jpg'
+import nsuGm124 from '../assets/images/projects/detail/nikkei-student-union/gm12-4.jpg'
+import nsuCultureNight36 from '../assets/images/projects/detail/nikkei-student-union/culture-night-36.jpg'
+import nsuCultureNight149 from '../assets/images/projects/detail/nikkei-student-union/culture-night-149.jpg'
+import nsuGm12121 from '../assets/images/projects/detail/nikkei-student-union/gm12-121.jpg'
 
 import packaging1 from '../assets/images/projects/detail/fetch-doggy-deli/packaging-1.jpg'
 import packaging2 from '../assets/images/projects/detail/fetch-doggy-deli/packaging-2.jpg'
@@ -597,56 +601,68 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       'A cohesive body of creative work for Chapman University’s Nikkei Student Union, designed to celebrate and promote Japanese and Japanese-American culture on campus.',
       'NSU is an inclusive cultural organization honoring Japanese and Japanese-American heritage. As creative lead, I managed its visual identity, media production, and marketing, so the way the organization looked and sounded reflected the community it was built around.',
     ],
-    introImage: {
-      src: nsuCultureNightOverview,
-      alt: 'NSU members performing a choreographed dance at Culture Night',
-      width: 2000,
-      height: 1333,
-    },
     chapters: [
       {
         // Board Hoodie + Spring Merch Line used to be two separate
         // chapters -- merged into one since the brief's own copy
         // talks about merch/flyers/social as one body of identity
-        // work, not as distinct pieces.
+        // work, not as distinct pieces. Restructured again to the
+        // same flush/parallax treatment Contra (full-page) and
+        // Resonance (full-page-trio) use, in place of the small
+        // squared-off cards this used to be -- a better fit now that
+        // the lead image moved in here from the overview.
         label: 'Visual Identity',
         collapsible: true,
         text: 'Merchandise, flyers, and social media graphics were designed to give NSU a consistent, recognizable look across every touchpoint, from event promotion to everyday posts. Each piece was made to speak to the members who make the community what it is.',
-        layout: 'trio',
-        // NSU's other chapters are all sharp-edged full-bleed/
-        // full-page photography -- rounded cards here read as
-        // inconsistent rather than deliberate.
-        roundedImages: false,
+        layout: 'full-page',
         images: [
           {
-            src: boardHoodie,
-            alt: 'NSU board hoodie with logo lockup',
-            width: 2000,
-            height: 1333,
-          },
-          {
-            src: springFront,
-            alt: 'NSU spring merchandise, front print',
-            width: 2000,
-            height: 1500,
-          },
-          {
-            src: springBack,
-            alt: 'NSU spring merchandise, back print',
-            width: 2000,
-            height: 1500,
+            // Moved in from the overview's own lead photo -- same
+            // parallax treatment every other full-page image on the
+            // page gets, instead of the static, non-parallaxing
+            // full-bleed box it rendered in up there. Landscape
+            // source (not a tall portrait like Contra's product
+            // shots), so no `tall` override -- that would crop in
+            // tighter than this one needs.
+            src: nsuCultureNightOverview,
+            alt: 'NSU members performing a choreographed dance at Culture Night',
           },
         ],
         moreImages: [
           {
-            // Closing this chapter on a lifestyle shot of the shirt
-            // in wear, same as before the merge.
-            layout: 'full-page',
-            tall: true,
+            // Same flush trio treatment as Resonance's Brand Identity
+            // -- all three source photos share the same ~1.5 aspect
+            // ratio already, so the row sits flush with no crop.
+            layout: 'full-page-trio',
             images: [
               {
-                src: nsuLifestyleTee,
-                alt: 'Model holding up an NSU t-shirt with embroidered logo',
+                src: boardHoodie,
+                alt: 'NSU board hoodie with logo lockup',
+                width: 2000,
+                height: 1333,
+              },
+              {
+                src: nsuImg4020,
+                alt: 'NSU members holding up branded tote bags',
+                width: 2000,
+                height: 1333,
+              },
+              {
+                src: nsuGm1272,
+                alt: 'NSU members wearing embroidered merch at a general meeting',
+                width: 2000,
+                height: 1333,
+              },
+            ],
+          },
+          {
+            // Closing this chapter on a lifestyle shot of the shirt
+            // in wear, same as before the merge/restructure.
+            layout: 'full-page',
+            images: [
+              {
+                src: nsuGm1202531,
+                alt: 'NSU member wearing the embroidered tee at a general meeting',
               },
             ],
           },
@@ -656,18 +672,38 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Video Production',
         collapsible: true,
         text: 'For major events, I handled promotional videos from start to finish: screenwriting, filming, and editing. These spotlighted key initiatives like NSU Culture Night, Retreat, and the Bigs & Littles Program, with the goal of building excitement and showing new members what NSU is about.',
+        // Same treatment as Resonance's Gameplay Trailer chapter --
+        // full-page, no `tall` override, `autoplay` (muted on
+        // scroll-in, controls to unmute real audio) with a poster.
         layout: 'full-page',
-        tall: true,
         images: [
           {
-            // Opening title card and establishing shots from the
-            // Spring Retreat recap -- real audio, so `autoplay`
-            // (muted on scroll-in, controls to unmute) rather than a
-            // silent background loop.
-            video: nsuVideoProduction,
-            poster: nsuVideoProductionPoster,
+            video: nsuRecapVideo,
+            poster: nsuRecapPoster,
             videoMode: 'autoplay',
-            alt: 'NSU Spring Retreat promotional recap video',
+            alt: 'NSU general meetings and events recap video',
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'full-page',
+            images: [
+              {
+                src: nsuGm1272,
+                alt: 'NSU members wearing embroidered merch at a general meeting',
+              },
+            ],
+          },
+          {
+            layout: 'full-page',
+            images: [
+              {
+                video: nsuVideoProduction,
+                poster: nsuVideoProductionPoster,
+                videoMode: 'autoplay',
+                alt: 'NSU Spring Retreat promotional recap video',
+              },
+            ],
           },
         ],
       },
@@ -675,26 +711,41 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Documentation & Content Strategy',
         collapsible: true,
         text: 'Beyond promotion, I documented events through photography and videography, preserving the memories that define the community year to year. I also shaped the social media content strategy, tying the photos, videos, and graphics into one story. The full collection of work lives on our OneDrive.',
-        layout: 'trio',
+        // `grid-3` instead of `trio` -- five photos now, not three,
+        // and grid-3 wraps any count into even rows instead of
+        // slicing down to the first 3.
+        layout: 'grid-3',
         roundedImages: false,
         images: [
           {
-            src: nsuCultureNight,
-            alt: 'NSU Culture Night performer in traditional yukata',
-            width: 933,
-            height: 1400,
+            src: nsuGm1202207,
+            alt: 'NSU members posing with a handmade welcome banner',
+            width: 2000,
+            height: 1333,
           },
           {
-            src: nsuBeachDay,
-            alt: 'NSU Beach Day water gun fight',
-            width: 1400,
-            height: 933,
+            src: nsuGm124,
+            alt: 'NSU members hanging the welcome banner before a meeting',
+            width: 2000,
+            height: 1333,
           },
           {
-            src: nsuSpringRetreatSunset,
-            alt: 'Desert sunset over Joshua Tree during NSU Spring Retreat',
-            width: 1400,
-            height: 933,
+            src: nsuCultureNight36,
+            alt: 'NSU Culture Night performers in yukata with cherry blossom branches',
+            width: 2000,
+            height: 1333,
+          },
+          {
+            src: nsuCultureNight149,
+            alt: 'NSU Culture Night taiko drum performance',
+            width: 1333,
+            height: 2000,
+          },
+          {
+            src: nsuGm12121,
+            alt: 'NSU general meeting full group photo',
+            width: 2000,
+            height: 1333,
           },
         ],
       },
