@@ -34,7 +34,7 @@ import weaponSkinKatto from '../assets/images/projects/detail/ui-design-for-reso
 import hud1 from '../assets/images/projects/detail/ui-design-for-resonance/hud-1.jpg'
 import matchEndLoop from '../assets/images/projects/detail/ui-design-for-resonance/match-end-loop.mp4'
 
-import boardHoodie from '../assets/images/projects/detail/nikkei-student-union/board-hoodie.jpg'
+import nsuGm1202131 from '../assets/images/projects/detail/nikkei-student-union/gm1-2025-131.jpg'
 import nsuVideoProduction from '../assets/images/projects/detail/nikkei-student-union/video-production.mp4'
 import nsuVideoProductionPoster from '../assets/images/projects/detail/nikkei-student-union/video-production-poster.jpg'
 import nsuCultureNightOverview from '../assets/images/projects/detail/nikkei-student-union/culture-night-overview.jpg'
@@ -626,8 +626,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         layout: 'full-page-trio',
         images: [
           {
-            src: boardHoodie,
-            alt: 'NSU board hoodie with logo lockup',
+            // Cropped from a portrait source to match the other two's
+            // ~1.5 ratio -- `full-page-trio` sizes each column by its
+            // own aspect ratio (see FlushMediaRow), so a portrait
+            // image in this row would render roughly 2x taller than
+            // its neighbors instead of sitting flush with them.
+            src: nsuGm1202131,
+            alt: 'NSU member wearing the embroidered tee at a general meeting',
             width: 2000,
             height: 1333,
           },
@@ -662,13 +667,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Video Production',
         collapsible: true,
         text: 'For major events, I handled promotional videos from start to finish: screenwriting, filming, and editing. These spotlighted key initiatives like NSU Culture Night, Retreat, and the Bigs & Littles Program, with the goal of building excitement and showing new members what NSU is about.',
-        // Same treatment as Resonance's Gameplay Trailer chapter --
-        // full-page, no `tall` override, `autoplay` (muted on
-        // scroll-in, controls to unmute real audio) with a poster.
+        // `contained` instead of `full-page` -- full-viewport-height
+        // video read as too big/heavy for three in a row. `contained`
+        // sizes each by its own 960x540 ratio inside the same padded,
+        // centered box every other single-image chapter on the site
+        // uses, instead of filling the whole screen edge to edge.
         // Each gets a `caption` below it as a small hint that it can
         // be clicked to unmute -- autoplay starts every video muted,
         // and without the hint that's easy to miss.
-        layout: 'full-page',
+        layout: 'contained',
+        roundedImages: false,
         images: [
           {
             video: nsuRecapVideo,
@@ -676,11 +684,14 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             videoMode: 'autoplay',
             alt: 'NSU general meetings and events recap video',
             caption: 'Click to unmute',
+            width: 960,
+            height: 540,
           },
         ],
         moreImages: [
           {
-            layout: 'full-page',
+            layout: 'contained',
+            roundedImages: false,
             images: [
               {
                 video: nsuBeachDayRecap,
@@ -688,11 +699,14 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
                 videoMode: 'autoplay',
                 alt: 'NSU Beach Day recap video',
                 caption: 'Click to unmute',
+                width: 960,
+                height: 540,
               },
             ],
           },
           {
-            layout: 'full-page',
+            layout: 'contained',
+            roundedImages: false,
             images: [
               {
                 video: nsuVideoProduction,
@@ -700,6 +714,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
                 videoMode: 'autoplay',
                 alt: 'NSU Spring Retreat promotional recap video',
                 caption: 'Click to unmute',
+                width: 960,
+                height: 540,
               },
             ],
           },
@@ -709,13 +725,15 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Documentation & Content Strategy',
         collapsible: true,
         text: 'Beyond promotion, I documented events through photography and videography, preserving the memories that define the community year to year. I also shaped the social media content strategy, tying the photos, videos, and graphics into one story. The full collection of work lives on our OneDrive.',
-        // `cluster` instead of `grid-3` -- a fixed 3-column grid paired
-        // a tall portrait shot (the taiko drummers) against a short
-        // landscape one in the same row, which read as a broken grid
-        // rather than a deliberate mix. `cluster`'s free-wrapping,
-        // bottom-aligned layout is built for exactly this: varied
-        // aspect ratios sitting together on purpose.
-        layout: 'cluster',
+        // Both `grid-3` (a fixed 3-column grid) and `cluster` (a
+        // free-wrapping organic mix) ended up pairing the one
+        // portrait photo (the taiko drummers) against a landscape
+        // neighbor in the same row/line, which kept reading as
+        // off no matter how it was tuned. Isolating the portrait shot
+        // in its own centered `contained` block, with the four
+        // matching-ratio landscape photos as two plain `two-up` rows,
+        // means no row ever mixes the two ratios.
+        layout: 'two-up',
         roundedImages: false,
         images: [
           {
@@ -723,35 +741,44 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'NSU members posing with a handmade welcome banner',
             width: 2000,
             height: 1333,
-            size: 'lg',
           },
           {
             src: nsuGm124,
             alt: 'NSU members hanging the welcome banner before a meeting',
             width: 2000,
             height: 1333,
-            size: 'sm',
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'two-up',
+            roundedImages: false,
+            images: [
+              {
+                src: nsuCultureNight36,
+                alt: 'NSU Culture Night performers in yukata with cherry blossom branches',
+                width: 2000,
+                height: 1333,
+              },
+              {
+                src: nsuGm12121,
+                alt: 'NSU general meeting full group photo',
+                width: 2000,
+                height: 1333,
+              },
+            ],
           },
           {
-            src: nsuCultureNight36,
-            alt: 'NSU Culture Night performers in yukata with cherry blossom branches',
-            width: 2000,
-            height: 1333,
-            size: 'md',
-          },
-          {
-            src: nsuCultureNight149,
-            alt: 'NSU Culture Night taiko drum performance',
-            width: 1333,
-            height: 2000,
-            size: 'sm',
-          },
-          {
-            src: nsuGm12121,
-            alt: 'NSU general meeting full group photo',
-            width: 2000,
-            height: 1333,
-            size: 'xl',
+            layout: 'contained',
+            roundedImages: false,
+            images: [
+              {
+                src: nsuCultureNight149,
+                alt: 'NSU Culture Night taiko drum performance',
+                width: 1333,
+                height: 2000,
+              },
+            ],
           },
         ],
       },
