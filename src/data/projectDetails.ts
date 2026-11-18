@@ -48,6 +48,8 @@ import nsuGm124 from '../assets/images/projects/detail/nikkei-student-union/gm12
 import nsuCultureNight36 from '../assets/images/projects/detail/nikkei-student-union/culture-night-36.jpg'
 import nsuCultureNight149 from '../assets/images/projects/detail/nikkei-student-union/culture-night-149.jpg'
 import nsuGm12121 from '../assets/images/projects/detail/nikkei-student-union/gm12-121.jpg'
+import nsuBeachDayRecap from '../assets/images/projects/detail/nikkei-student-union/beach-day-recap.mp4'
+import nsuBeachDayRecapPoster from '../assets/images/projects/detail/nikkei-student-union/beach-day-recap-poster.jpg'
 
 import packaging1 from '../assets/images/projects/detail/fetch-doggy-deli/packaging-1.jpg'
 import packaging2 from '../assets/images/projects/detail/fetch-doggy-deli/packaging-2.jpg'
@@ -175,10 +177,10 @@ export interface ProjectDetailData {
   // An optional small mark (a logo, a wordmark) rendered centered
   // between the intro and the first chapter.
   brandMark?: { src: string; alt: string }
-  // An optional full-bleed lead photo directly under the intro
-  // paragraphs, above `brandMark`/the first chapter -- for a single
-  // establishing shot that belongs to the overview itself rather than
-  // to any one chapter below it.
+  // An optional full-page (parallaxing) lead photo directly under the
+  // intro paragraphs, above `brandMark`/the first chapter -- for a
+  // single establishing shot that belongs to the overview itself
+  // rather than to any one chapter below it.
   introImage?: ProjectImage
   links?: ProjectLinks
   // Optional concrete number/credit -- omitted everywhere for now since
@@ -601,60 +603,48 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       'A cohesive body of creative work for Chapman University’s Nikkei Student Union, designed to celebrate and promote Japanese and Japanese-American culture on campus.',
       'NSU is an inclusive cultural organization honoring Japanese and Japanese-American heritage. As creative lead, I managed its visual identity, media production, and marketing, so the way the organization looked and sounded reflected the community it was built around.',
     ],
+    introImage: {
+      // Back above Visual Identity (not inside it) -- still the same
+      // parallaxing full-page treatment, just scoped to the overview
+      // itself rather than to any one chapter below it.
+      src: nsuCultureNightOverview,
+      alt: 'NSU members performing a choreographed dance at Culture Night',
+    },
     chapters: [
       {
         // Board Hoodie + Spring Merch Line used to be two separate
         // chapters -- merged into one since the brief's own copy
         // talks about merch/flyers/social as one body of identity
-        // work, not as distinct pieces. Restructured again to the
-        // same flush/parallax treatment Contra (full-page) and
-        // Resonance (full-page-trio) use, in place of the small
-        // squared-off cards this used to be -- a better fit now that
-        // the lead image moved in here from the overview.
+        // work, not as distinct pieces. Same flush treatment as
+        // Resonance's Brand Identity trio, closing on a full-page
+        // shot the way Contra's own chapters do.
         label: 'Visual Identity',
         collapsible: true,
         text: 'Merchandise, flyers, and social media graphics were designed to give NSU a consistent, recognizable look across every touchpoint, from event promotion to everyday posts. Each piece was made to speak to the members who make the community what it is.',
-        layout: 'full-page',
+        // All three source photos share the same ~1.5 aspect ratio
+        // already, so the row sits flush with no crop.
+        layout: 'full-page-trio',
         images: [
           {
-            // Moved in from the overview's own lead photo -- same
-            // parallax treatment every other full-page image on the
-            // page gets, instead of the static, non-parallaxing
-            // full-bleed box it rendered in up there. Landscape
-            // source (not a tall portrait like Contra's product
-            // shots), so no `tall` override -- that would crop in
-            // tighter than this one needs.
-            src: nsuCultureNightOverview,
-            alt: 'NSU members performing a choreographed dance at Culture Night',
+            src: boardHoodie,
+            alt: 'NSU board hoodie with logo lockup',
+            width: 2000,
+            height: 1333,
+          },
+          {
+            src: nsuImg4020,
+            alt: 'NSU members holding up branded tote bags',
+            width: 2000,
+            height: 1333,
+          },
+          {
+            src: nsuGm1272,
+            alt: 'NSU members wearing embroidered merch at a general meeting',
+            width: 2000,
+            height: 1333,
           },
         ],
         moreImages: [
-          {
-            // Same flush trio treatment as Resonance's Brand Identity
-            // -- all three source photos share the same ~1.5 aspect
-            // ratio already, so the row sits flush with no crop.
-            layout: 'full-page-trio',
-            images: [
-              {
-                src: boardHoodie,
-                alt: 'NSU board hoodie with logo lockup',
-                width: 2000,
-                height: 1333,
-              },
-              {
-                src: nsuImg4020,
-                alt: 'NSU members holding up branded tote bags',
-                width: 2000,
-                height: 1333,
-              },
-              {
-                src: nsuGm1272,
-                alt: 'NSU members wearing embroidered merch at a general meeting',
-                width: 2000,
-                height: 1333,
-              },
-            ],
-          },
           {
             // Closing this chapter on a lifestyle shot of the shirt
             // in wear, same as before the merge/restructure.
@@ -675,6 +665,9 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         // Same treatment as Resonance's Gameplay Trailer chapter --
         // full-page, no `tall` override, `autoplay` (muted on
         // scroll-in, controls to unmute real audio) with a poster.
+        // Each gets a `caption` below it as a small hint that it can
+        // be clicked to unmute -- autoplay starts every video muted,
+        // and without the hint that's easy to miss.
         layout: 'full-page',
         images: [
           {
@@ -682,6 +675,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             poster: nsuRecapPoster,
             videoMode: 'autoplay',
             alt: 'NSU general meetings and events recap video',
+            caption: 'Click to unmute',
           },
         ],
         moreImages: [
@@ -689,8 +683,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             layout: 'full-page',
             images: [
               {
-                src: nsuGm1272,
-                alt: 'NSU members wearing embroidered merch at a general meeting',
+                video: nsuBeachDayRecap,
+                poster: nsuBeachDayRecapPoster,
+                videoMode: 'autoplay',
+                alt: 'NSU Beach Day recap video',
+                caption: 'Click to unmute',
               },
             ],
           },
@@ -702,6 +699,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
                 poster: nsuVideoProductionPoster,
                 videoMode: 'autoplay',
                 alt: 'NSU Spring Retreat promotional recap video',
+                caption: 'Click to unmute',
               },
             ],
           },
@@ -711,10 +709,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Documentation & Content Strategy',
         collapsible: true,
         text: 'Beyond promotion, I documented events through photography and videography, preserving the memories that define the community year to year. I also shaped the social media content strategy, tying the photos, videos, and graphics into one story. The full collection of work lives on our OneDrive.',
-        // `grid-3` instead of `trio` -- five photos now, not three,
-        // and grid-3 wraps any count into even rows instead of
-        // slicing down to the first 3.
-        layout: 'grid-3',
+        // `cluster` instead of `grid-3` -- a fixed 3-column grid paired
+        // a tall portrait shot (the taiko drummers) against a short
+        // landscape one in the same row, which read as a broken grid
+        // rather than a deliberate mix. `cluster`'s free-wrapping,
+        // bottom-aligned layout is built for exactly this: varied
+        // aspect ratios sitting together on purpose.
+        layout: 'cluster',
         roundedImages: false,
         images: [
           {
@@ -722,30 +723,35 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'NSU members posing with a handmade welcome banner',
             width: 2000,
             height: 1333,
+            size: 'lg',
           },
           {
             src: nsuGm124,
             alt: 'NSU members hanging the welcome banner before a meeting',
             width: 2000,
             height: 1333,
+            size: 'sm',
           },
           {
             src: nsuCultureNight36,
             alt: 'NSU Culture Night performers in yukata with cherry blossom branches',
             width: 2000,
             height: 1333,
+            size: 'md',
           },
           {
             src: nsuCultureNight149,
             alt: 'NSU Culture Night taiko drum performance',
             width: 1333,
             height: 2000,
+            size: 'sm',
           },
           {
             src: nsuGm12121,
             alt: 'NSU general meeting full group photo',
             width: 2000,
             height: 1333,
+            size: 'xl',
           },
         ],
       },

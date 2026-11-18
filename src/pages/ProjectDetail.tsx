@@ -73,11 +73,7 @@ export function ProjectDetail() {
           ))}
         </div>
 
-        {detail.introImage && (
-          <div className="pt-4 pb-4 md:pt-6">
-            <ImageGrid layout="full-bleed" images={[detail.introImage]} />
-          </div>
-        )}
+        {detail.introImage && <ImageGrid layout="full-page" images={[detail.introImage]} />}
 
         {detail.brandMark && (
           <div className="flex justify-center px-6 py-4 md:py-6">
