@@ -8,7 +8,19 @@ import { useMaskNavigate } from '../hooks/useMaskNavigate'
 // plain `image` every other page on the site already uses, all sized
 // at the cover's own native aspect ratio rather than cropped into a
 // fixed box. `className` is the caller's own box/hover treatment.
-export function ProjectCoverMedia({ cs, className }: { cs: CaseStudy; className: string }) {
+export function ProjectCoverMedia({
+  cs,
+  className,
+  objectPosition,
+}: {
+  cs: CaseStudy
+  className: string
+  // Only meaningful when the caller crops into a fixed box (MoreProjects)
+  // rather than sizing the box to the cover's own native ratio (the
+  // /work wall, which never needs this). Falls back to CSS's own
+  // 'center' default when unset.
+  objectPosition?: string
+}) {
   const aspectRatio = cs.coverWidth && cs.coverHeight ? `${cs.coverWidth} / ${cs.coverHeight}` : '4 / 5'
   // /work-only override -- see the fields' own notes in caseStudies.ts.
   // A video wins when set; otherwise the work-specific image, falling
@@ -28,7 +40,7 @@ export function ProjectCoverMedia({ cs, className }: { cs: CaseStudy; className:
         aria-label={`${cs.title} cover`}
         width={cs.coverWidth}
         height={cs.coverHeight}
-        style={{ aspectRatio }}
+        style={{ aspectRatio, objectPosition }}
         className={className}
       />
     )
@@ -42,7 +54,7 @@ export function ProjectCoverMedia({ cs, className }: { cs: CaseStudy; className:
         decoding="async"
         width={cs.coverWidth}
         height={cs.coverHeight}
-        style={{ aspectRatio }}
+        style={{ aspectRatio, objectPosition }}
         className={className}
       />
     )

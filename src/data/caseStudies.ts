@@ -110,10 +110,12 @@ export const CASE_STUDIES: CaseStudy[] = [
     workCoverVideo: afiWorkVideo,
     workCoverPoster: afiWorkPoster,
     accent: '#e6869a',
-    // Tall portrait shot with the face near the top -- the default
-    // vertical center crop lands on the guitar/torso instead.
-    moreWorkImagePosition: 'center top',
-    workImagePosition: 'center top',
+    // The Incubus vinyl video is a tall, narrow shot of a record stack
+    // + hand -- cropping into a wide 4:3 box needs a position tuned to
+    // THIS clip, not the old portrait cover photo this used to be set
+    // for (that one wanted the top; this one's subject sits more
+    // mid-frame).
+    moreWorkImagePosition: 'center 35%',
     description:
       'To launch AFI’s single Holy Visions and the relaunch of their fan club, Despair Faction, new DF membership cards were paired with digital tarot cards and a collectible physical card series.',
   },

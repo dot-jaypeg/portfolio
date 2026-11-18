@@ -34,14 +34,17 @@ export function MoreProjects({ currentSlug }: { currentSlug: string }) {
             onClick={goTo(p.slug)}
             className="group block focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-teal"
           >
-            {/* Same cover treatment as the /work wall -- native aspect
-                ratio, no fixed box to crop into, /work-only video/image
-                overrides respected -- instead of this row's own
-                previous fixed 4:3 crop. */}
-            <div className="overflow-hidden bg-cream/5">
+            {/* A fixed, uniform box across all three cards -- unlike
+                the /work wall's own masonry (fine with three different
+                heights side by side since it isn't a strict row), a
+                plain 3-up row with three different aspect ratios reads
+                as misaligned rather than intentional. `moreWorkImagePosition`
+                still only exists for this box's own crop. */}
+            <div className="overflow-hidden bg-cream/5" style={{ aspectRatio: '4 / 3' }}>
               <ProjectCoverMedia
                 cs={p}
-                className="h-auto w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                objectPosition={p.moreWorkImagePosition ?? p.imagePosition ?? 'center'}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>
             <p className="mt-4 font-body text-xs tracking-[0.18em] text-cream/40 uppercase">{p.category}</p>
