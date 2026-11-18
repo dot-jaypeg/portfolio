@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { CASE_STUDIES } from '../data/caseStudies'
+import { ProjectCoverMedia } from './ProjectCard'
 import { useMaskNavigate } from '../hooks/useMaskNavigate'
 
 export function MoreProjects({ currentSlug }: { currentSlug: string }) {
@@ -33,17 +34,15 @@ export function MoreProjects({ currentSlug }: { currentSlug: string }) {
             onClick={goTo(p.slug)}
             className="group block focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-teal"
           >
-            <div className="overflow-hidden bg-cream/5" style={{ aspectRatio: '4 / 3' }}>
-              {p.image && (
-                <img
-                  src={p.image}
-                  alt={`${p.title} cover`}
-                  loading="lazy"
-                  decoding="async"
-                  style={{ objectPosition: p.moreWorkImagePosition ?? p.imagePosition ?? 'center' }}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              )}
+            {/* Same cover treatment as the /work wall -- native aspect
+                ratio, no fixed box to crop into, /work-only video/image
+                overrides respected -- instead of this row's own
+                previous fixed 4:3 crop. */}
+            <div className="overflow-hidden bg-cream/5">
+              <ProjectCoverMedia
+                cs={p}
+                className="h-auto w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
             </div>
             <p className="mt-4 font-body text-xs tracking-[0.18em] text-cream/40 uppercase">{p.category}</p>
             <h3 className="font-display mt-1 text-lg font-bold tracking-[-0.02em] text-cream uppercase">
