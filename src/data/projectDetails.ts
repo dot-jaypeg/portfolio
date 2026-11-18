@@ -123,12 +123,6 @@ export interface ProjectImageBlock {
   // `full-page` only -- use a taller-than-viewport box, for a square
   // or portrait source a plain viewport-height crop cuts too hard.
   tall?: boolean
-  // `contained`/`two-up`/`trio`/`grid-3`/`cluster` only -- false drops
-  // their cards' rounded-2xl corners, for a project page whose other
-  // chapters are sharp-edged full-bleed/full-page photography (NSU),
-  // where the rounding reads as inconsistent rather than deliberate.
-  // Defaults to true.
-  roundedImages?: boolean
 }
 
 export interface ProjectChapter extends ProjectImageBlock {
@@ -140,7 +134,7 @@ export interface ProjectChapter extends ProjectImageBlock {
   // alongside `label` for a chapter that's pure imagery, no copy at all.
   text?: string | string[]
   moreImages?: ProjectImageBlock[]
-  // False drops ImageGrid's rounded bg-cream/5 card backdrop for this
+  // False drops ImageGrid's bg-cream/5 card backdrop for this
   // chapter's images -- for transparent-background cutouts (sketches,
   // sticker renders) where that backdrop would show as an unwanted
   // grey box around the art. Defaults to true.
@@ -711,7 +705,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         // be clicked to unmute -- autoplay starts every video muted,
         // and without the hint that's easy to miss.
         layout: 'contained',
-        roundedImages: false,
         images: [
           {
             video: nsuRecapVideo,
@@ -726,7 +719,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         moreImages: [
           {
             layout: 'contained',
-            roundedImages: false,
             images: [
               {
                 video: nsuBeachDayRecap,
@@ -741,7 +733,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           },
           {
             layout: 'contained',
-            roundedImages: false,
             images: [
               {
                 video: nsuVideoProduction,
@@ -769,7 +760,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         // matching-ratio landscape photos as two plain `two-up` rows,
         // means no row ever mixes the two ratios.
         layout: 'two-up',
-        roundedImages: false,
         images: [
           {
             src: nsuGm1202207,
@@ -787,7 +777,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         moreImages: [
           {
             layout: 'two-up',
-            roundedImages: false,
             images: [
               {
                 src: nsuCultureNight36,
@@ -805,7 +794,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           },
           {
             layout: 'contained',
-            roundedImages: false,
             images: [
               {
                 src: nsuCultureNight149,

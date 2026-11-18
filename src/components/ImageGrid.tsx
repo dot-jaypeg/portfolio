@@ -269,13 +269,11 @@ const TILT_CLASS = { left: 'hover:-rotate-3', right: 'hover:rotate-3' } as const
 
 function Figure({
   image,
-  rounded,
   card,
   interactive,
   tilt = 'right',
 }: {
   image: ProjectImage
-  rounded: boolean
   card: boolean
   // Subtle scale + tilt on hover -- opt-in, for a cluster of sticker
   // cutouts specifically, not every image on the site.
@@ -286,7 +284,7 @@ function Figure({
   return (
     <figure>
       <div
-        className={`${card ? `overflow-hidden bg-cream/5 ${rounded ? 'rounded-2xl' : ''}` : 'overflow-hidden'} ${interactive ? `transition-transform duration-300 ease-out hover:scale-110 ${TILT_CLASS[tilt]}` : ''}`}
+        className={`${card ? 'overflow-hidden bg-cream/5' : 'overflow-hidden'} ${interactive ? `transition-transform duration-300 ease-out hover:scale-110 ${TILT_CLASS[tilt]}` : ''}`}
         style={{ aspectRatio: hasMedia ? `${image.width} / ${image.height}` : '4 / 3' }}
       >
         <Media image={image} className="h-full w-full object-cover" />
@@ -325,20 +323,15 @@ const CLUSTER_OFFSET_CLASS = ['md:translate-y-0', 'md:translate-y-8', 'md:-trans
 // littletroop.com/work/rocco's own product shots do -- `tall` swaps
 // its box from one viewport height to 1.5x, for a square/portrait
 // source that a plain viewport-height crop cuts too aggressively.
-// `contained`, `two-up`, and `trio` are rounded cards sitting on the
-// page with a gutter -- the treatment every graphic/deliverable image
-// on the littletroop.com reference actually uses (confirmed directly:
-// even their "full width" poster grids are gapped rounded cards, not
-// true edge-to-edge bleed -- only their lead photography bleeds).
-// `cluster` is a free-wrapping, mixed-size arrangement (each image's
-// own `size`) for a looser, more organic grouping than the fixed
-// two-up/trio grids.
+// `contained`, `two-up`, and `trio` are sharp-edged cards sitting on
+// the page with a gutter. `cluster` is a free-wrapping, mixed-size
+// arrangement (each image's own `size`) for a looser, more organic
+// grouping than the fixed two-up/trio grids.
 export function ImageGrid({
   layout,
   images,
   card = true,
   tall = false,
-  rounded = true,
 }: {
   layout: ImageGridLayout
   images: ProjectImage[]
@@ -347,19 +340,13 @@ export function ImageGrid({
   card?: boolean
   // `full-page` only -- see the note above.
   tall?: boolean
-  // Drops the rounded-2xl corners from `contained`/`two-up`/`trio`/
-  // `grid-3`/`cluster`'s cards -- for a project page (NSU) whose other
-  // chapters are all sharp-edged full-bleed/full-page photography,
-  // where these cards' rounding read as inconsistent rather than
-  // deliberate. Defaults to true (every other project keeps it).
-  rounded?: boolean
 }) {
   if (images.length === 0) return null
 
   if (layout === 'contained') {
     return (
       <div className="mx-auto mt-6 max-w-2xl px-6 md:px-10">
-        <Figure image={images[0]} rounded={rounded} card={card} />
+        <Figure image={images[0]} card={card} />
       </div>
     )
   }
@@ -368,7 +355,7 @@ export function ImageGrid({
     return (
       <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-2 md:gap-10 md:px-10">
         {images.slice(0, 2).map((image, i) => (
-          <Figure key={`${image.alt}-${i}`} image={image} rounded={rounded} card={card} />
+          <Figure key={`${image.alt}-${i}`} image={image} card={card} />
         ))}
       </div>
     )
@@ -378,7 +365,7 @@ export function ImageGrid({
     return (
       <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-3 md:gap-8 md:px-10">
         {images.slice(0, 3).map((image, i) => (
-          <Figure key={`${image.alt}-${i}`} image={image} rounded={rounded} card={card} />
+          <Figure key={`${image.alt}-${i}`} image={image} card={card} />
         ))}
       </div>
     )
@@ -392,7 +379,7 @@ export function ImageGrid({
     return (
       <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-3 md:gap-10 md:px-10">
         {images.map((image, i) => (
-          <Figure key={`${image.alt}-${i}`} image={image} rounded={rounded} card={card} />
+          <Figure key={`${image.alt}-${i}`} image={image} card={card} />
         ))}
       </div>
     )
@@ -406,7 +393,7 @@ export function ImageGrid({
             key={`${image.alt}-${i}`}
             className={`${CLUSTER_SIZE_CLASS[image.size ?? 'md']} ${CLUSTER_OFFSET_CLASS[i % CLUSTER_OFFSET_CLASS.length]}`}
           >
-            <Figure image={image} rounded={rounded} card={card} interactive tilt={i % 2 === 0 ? 'right' : 'left'} />
+            <Figure image={image} card={card} interactive tilt={i % 2 === 0 ? 'right' : 'left'} />
           </div>
         ))}
       </div>
@@ -443,7 +430,7 @@ export function ImageGrid({
 
   return (
     <div className="mt-6 w-full">
-      <Figure image={images[0]} rounded={false} card={card} />
+      <Figure image={images[0]} card={card} />
     </div>
   )
 }
