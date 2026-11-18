@@ -38,15 +38,23 @@ export interface CaseStudy {
   // THAT asset's own dimensions instead of `image`'s.
   coverWidth?: number
   coverHeight?: number
-  // /work-page-only overrides, same scoping convention as
-  // `workImagePosition` below -- everywhere else that reads `image`
-  // (WorkPanel, MoreProjects) keeps showing the original cover
-  // untouched. `workCoverVideo` wins when set (rendered autoplay/
-  // muted/loop, `workCoverPoster` as its poster frame); otherwise
-  // `workCoverImage ?? image` renders as a plain <img>.
+  // The project's real cover -- `workCoverVideo` wins when set
+  // (rendered autoplay/muted/loop, `workCoverPoster` as its poster
+  // frame); otherwise `workCoverImage ?? image` renders as a plain
+  // <img>. Read by the /work wall's tile (ProjectCoverMedia) AND the
+  // project's own page hero (ProjectHero), so both agree on which
+  // asset is "the" cover. WorkPanel and MoreProjects still read
+  // `image` directly (their boxes crop into a fixed ratio these
+  // work-only assets weren't sized for).
   workCoverVideo?: string
   workCoverPoster?: string
   workCoverImage?: string
+  // Opt out of `workCoverVideo` for the hero specifically (the /work
+  // tile still plays it) -- for a clip that's fine as a small, muted,
+  // easy-to-glance-past loop but reads wrong blown up full-screen as
+  // the first thing on the page (confirmed directly: Chi-Cha's work
+  // cover has a few candid, non-campaign moments mixed into the loop).
+  heroSkipCoverVideo?: boolean
   // Optional override for the parallax swing's amount/oversize (see
   // JourneyDesktop's `data-parallax-amount`) -- defaults to 8. A photo
   // whose subject sits close to its own edges (little disposable
@@ -224,6 +232,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     coverHeight: 720,
     workCoverVideo: chichaWorkVideo,
     workCoverPoster: chichaWorkPoster,
+    heroSkipCoverVideo: true,
     accent: '#e391a8',
     description:
       'A retro-arcade-themed digital push for Chi-Cha -- display ads, social posts, and a direct mailer all built around one playful visual world.',

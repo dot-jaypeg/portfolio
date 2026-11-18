@@ -14,13 +14,21 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
   const heroBold = detail.heroBold ?? project.client
   const links = detail.links
   const accent = project.accent ?? '#618c82'
+  // Same source priority as the /work wall's own tile (see
+  // ProjectCoverMedia) -- the hero used to always show the plain
+  // `image` even when /work showed a different video or work-only
+  // cover photo, so a project's own page and its work-wall tile
+  // disagreed on which asset was "the" cover.
+  const coverVideo = project.heroSkipCoverVideo ? undefined : project.workCoverVideo
+  const coverImage = project.workCoverImage ?? project.image
 
   useEffect(() => {
-    const el = imgRef.current
+    const el = imgRef.current ?? videoRef.current
     if (!el || prefersReducedMotion) return
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -30,7 +38,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
       )
     })
     return () => ctx.revert()
-  }, [prefersReducedMotion])
+  }, [prefersReducedMotion, coverVideo, coverImage])
 
   // Same subtle drift every full-page image on this page gets (see
   // ImageGrid's FullPageMedia) -- the hero is full-page too, just its
@@ -39,18 +47,34 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
 
   return (
     <header>
-      {project.image && (
+      {(coverVideo || coverImage) && (
         <div ref={containerRef} className="relative h-screen w-full overflow-hidden bg-cream/5">
           <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
-            <img
-              ref={imgRef}
-              src={project.image}
-              alt={`${project.title} lead image`}
-              style={{ objectPosition: detail.heroImagePosition ?? project.imagePosition ?? 'center' }}
-              className="h-full w-full object-cover"
-              loading="eager"
-              decoding="async"
-            />
+            {coverVideo ? (
+              <video
+                ref={videoRef}
+                src={coverVideo}
+                poster={project.workCoverPoster}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label={`${project.title} lead video`}
+                style={{ objectPosition: detail.heroImagePosition ?? project.imagePosition ?? 'center' }}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <img
+                ref={imgRef}
+                src={coverImage}
+                alt={`${project.title} lead image`}
+                style={{ objectPosition: detail.heroImagePosition ?? project.imagePosition ?? 'center' }}
+                className="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            )}
           </div>
         </div>
       )}

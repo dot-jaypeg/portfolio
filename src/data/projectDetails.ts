@@ -911,6 +911,12 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   'protocol-of-betrayal': {
     heroLead: 'A Star Wars-inspired cinematic short for',
     heroTagline: ', built in Unreal Engine from lighting and environment to the final animated sequence.',
+    // `imagePosition: 'right center'` (caseStudies.ts) was tuned for
+    // the old static still, whose character sits off-center right --
+    // the work-cover video that now plays here instead frames him
+    // closer to center, so that position pushed him out of frame
+    // entirely in favor of the video's own dark negative space.
+    heroImagePosition: 'center',
     tags: ['3D', 'Motion', 'Cinematics'],
     intro:
       'A personal short built end to end in Unreal Engine — environment, lighting, and character animation — aimed at one finished cinematic beat rather than a full scene.',
