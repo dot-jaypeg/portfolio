@@ -9,7 +9,7 @@ import finalStickerStrawberryFields from '../assets/images/projects/detail/contr
 import finalCast1 from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-cast-1.png'
 import finalCast2 from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-cast-2.png'
 import finalCast3 from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-cast-3.png'
-import waterBottleMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/water-bottle-mockup.jpg'
+import stickerPackPhoto from '../assets/images/projects/detail/contra-coffee-sticker-pack/sticker-pack-photo.jpg'
 import tshirtMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/tshirt-mockup.jpg'
 import chapmanSticker from '../assets/images/projects/detail/contra-coffee-sticker-pack/chapman-sticker.mp4'
 import chapmanStickerPoster from '../assets/images/projects/detail/contra-coffee-sticker-pack/chapman-sticker-poster.jpg'
@@ -312,8 +312,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             tall: true,
             images: [
               {
-                src: waterBottleMockup,
-                alt: 'Contra Coffee stickers applied to reusable glass growlers',
+                src: stickerPackPhoto,
+                alt: 'The printed Contra sticker pack',
               },
             ],
           },

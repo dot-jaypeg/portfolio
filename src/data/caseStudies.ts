@@ -89,6 +89,12 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: contraImg,
     coverWidth: 1067,
     coverHeight: 1600,
+    // The photo has a lot of empty headroom above Jayden's head (~30%
+    // of the frame is just hedge) -- the default center crop was
+    // eating into their legs/feet in shorter boxes well before it ever
+    // needed to touch that headroom. Biasing down trades some of that
+    // spare background for the rest of them actually being in frame.
+    imagePosition: 'center 80%',
     accent: '#9cc7b1',
     description:
       'A cohesive collection for Contra Coffee & Tea designed to function as their Spring Y2K Merch Drop.',

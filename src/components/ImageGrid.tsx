@@ -71,7 +71,16 @@ function AutoplayInViewVideo({
       // un-mute itself without a real user gesture, so it has to start
       // true for the scroll-triggered autoplay above to be allowed at
       // all), and this click IS that real gesture.
-      onClick={() => {
+      //
+      // `preventDefault` first -- a plain `controls` video's own
+      // native click handling toggles play/pause on top of whatever a
+      // page's own click listener does, confirmed directly (mute
+      // alone worked, but so did an unasked-for pause every time).
+      // This only suppresses THAT default; clicks on the native
+      // controls bar itself (scrub bar, volume, fullscreen) aren't
+      // routed through this handler's default action at all.
+      onClick={(e) => {
+        e.preventDefault()
         const el = ref.current
         if (el) el.muted = !el.muted
       }}
