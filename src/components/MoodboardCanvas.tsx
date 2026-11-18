@@ -128,10 +128,17 @@ function MoodboardTile({
   if (tile.kind === 'wordmark') {
     const style: CSSProperties = { position: 'absolute', left: 0, top: y, width, height }
     return (
-      <div style={style} className="flex items-center justify-center bg-teal">
+      <div style={style} className="flex flex-col items-center justify-center gap-4 bg-teal">
         <span className="font-display text-2xl font-bold tracking-[-0.06em] text-ink italic md:text-4xl">
           .jaypeg
         </span>
+        <a
+          href="mailto:design.jaypeg@gmail.com?subject=Photoshoot%20Booking%20Request"
+          data-cursor="Email"
+          className="font-body rounded-full border border-ink/40 px-4 py-2 text-[10px] font-medium tracking-[0.18em] text-ink uppercase transition-colors duration-300 hover:bg-ink hover:text-teal"
+        >
+          Contact
+        </a>
       </div>
     )
   }
