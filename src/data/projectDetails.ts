@@ -455,24 +455,42 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           {
             src: logoConcept1,
             alt: 'Resonance wordmark concept, variant one',
+            // `contain`, not the default `cover` -- these are flat
+            // logo marks, not photos; cropping into this pairing's
+            // tall column was cutting into the mark itself instead of
+            // just trimming background.
+            fit: 'contain',
           },
           {
             src: logoConcept2,
             alt: 'Resonance wordmark concept, variant two',
+            fit: 'contain',
           },
         ],
         moreImages: [
           {
-            layout: 'full-page-two-up',
+            layout: 'full-page',
             tall: true,
             images: [
               {
                 src: gameIcon,
                 alt: 'Resonance game icon',
+                fit: 'contain',
               },
+            ],
+          },
+          {
+            // Reverted to its own full-bleed section (same treatment
+            // as before the Contra-style pass) -- full-bleed already
+            // sizes to the image's own aspect ratio, so this needs no
+            // `fit` override.
+            layout: 'full-bleed',
+            images: [
               {
                 src: fontSpecimen,
                 alt: 'Azonix display typeface specimen, full alphabet and numerals',
+                width: 2000,
+                height: 1250,
               },
             ],
           },
@@ -503,6 +521,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           {
             src: hud1,
             alt: 'Resonance in-game HUD, magenta health variant',
+            // `contain` -- this is a UI screenshot with real elements
+            // near every edge, not a photo; `cover`'s crop was cutting
+            // into the HUD itself.
+            fit: 'contain',
           },
         ],
         moreImages: [
@@ -519,8 +541,9 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
       },
       {
+        // No `collapsible` -- there's no body copy here to reveal, so
+        // a "See details" toggle would just be a dead click.
         label: 'Splash Screens',
-        collapsible: true,
         layout: 'full-page',
         images: [
           {

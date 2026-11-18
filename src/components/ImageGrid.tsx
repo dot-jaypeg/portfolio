@@ -171,7 +171,11 @@ function FullPageMedia({ image, tall }: { image: ProjectImage; tall: boolean }) 
         className={`relative ${tall ? 'h-[150vh]' : 'h-[92vh]'} w-full overflow-hidden bg-cream/5`}
       >
         <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
-          <Media image={image} className="h-full w-full object-cover" observeRef={containerRef} />
+          <Media
+            image={image}
+            className={`h-full w-full ${image.fit === 'contain' ? 'object-contain' : 'object-cover'}`}
+            observeRef={containerRef}
+          />
         </div>
       </div>
       {image.caption && (
