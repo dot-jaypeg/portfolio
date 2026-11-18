@@ -332,6 +332,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     chapters: [
       {
         label: 'On Tour',
+        collapsible: true,
         text: 'Coverage followed the tour from city to city, shot to double as recap content and raw material for the next stop’s promo.',
         layout: 'full-page',
         images: [
@@ -343,6 +344,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Live Coverage',
+        collapsible: true,
         text: 'Philadelphia’s Fillmore and a Boston stop gave the campaign its two strongest live sets.',
         layout: 'two-up',
         images: [
@@ -362,6 +364,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Membership & Vision Cards',
+        collapsible: true,
         text: 'A supporting card series gave the campaign a physical, collectible touchpoint alongside the digital push.',
         layout: 'contained',
         images: [
@@ -396,6 +399,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     chapters: [
       {
         label: 'Gameplay Trailer',
+        collapsible: true,
         text: 'Every match comes down to the Overdrive — a high-stakes ability that can turn a fight around, best saved for when it counts. Stay in the lead too long, though, and a spotlight turns you into the target: the whole lobby’s bounty.',
         layout: 'full-page',
         images: [
@@ -409,6 +413,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'The World',
+        collapsible: true,
         text: 'Two medium-sized maps support three modes apiece — Arena, Polarity, and Synthesis — each built around the same economy, so skill and loadouts carry across all of them instead of resetting per mode.',
         layout: 'two-up',
         imagesOnCard: false,
@@ -430,6 +435,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Brand Identity',
+        collapsible: true,
         text: [
           'The wordmark went through several passes before landing on its final glitch-edged look — the same mark that carried straight into the game’s icon.',
           'That identity extended into the world itself: Azonix became the display type running through menus and HUD, and in-universe sponsors like Katto got their own weapon-skin branding, reinforcing the sponsor-driven, broadcast-for-entertainment premise.',
@@ -485,6 +491,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'HUD & Interface',
+        collapsible: true,
         text: 'The HUD had to surface rank, health, ammo, and ability cooldowns at a glance without crowding the frame — color-coded enhancement states let players read their own build mid-fight.',
         layout: 'contained',
         images: [
@@ -498,6 +505,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Game Over & Victory Screens',
+        collapsible: true,
         text: 'Both screens are built around the same audio-reactive waveform that runs through the rest of the game — the world still reacting to sound even after the match ends.',
         layout: 'contained',
         images: [
@@ -512,6 +520,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Splash Screens',
+        collapsible: true,
         layout: 'full-page',
         images: [
           {
@@ -544,6 +553,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     chapters: [
       {
         label: 'Board Hoodie',
+        collapsible: true,
         text: 'A heavier, members-only piece built around a cleaner lockup of the mark.',
         layout: 'contained',
         images: [
@@ -557,6 +567,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Spring Merch Line',
+        collapsible: true,
         text: 'The seasonal drop kept the front simple and moved the detail to the back, so the line could scale across more product without feeling repetitive.',
         layout: 'two-up',
         images: [
@@ -599,6 +610,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     chapters: [
       {
         label: 'Packaging System',
+        collapsible: true,
         text: 'Color-coded labels do the sorting across the lineup, so the shelf reads as one family instead of a scramble.',
         layout: 'two-up',
         images: [
@@ -618,6 +630,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'On the Road',
+        collapsible: true,
         text: 'The identity had to survive being wrapped around a full-size vehicle without losing any of its detail.',
         layout: 'full-page',
         images: [
@@ -629,6 +642,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Social',
+        collapsible: true,
         text: 'Social carried the same playful tone into something people would actually stop scrolling for.',
         layout: 'contained',
         images: [
@@ -654,6 +668,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     chapters: [
       {
         label: 'Posters & Signage',
+        collapsible: true,
         text: 'New Balance’s vintage sports photography and a neon-accented urban palette anchored every touchpoint, from bus-stop posters to the signage marking the event itself.',
         layout: 'two-up',
         images: [
@@ -673,6 +688,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'On-Site Signage',
+        collapsible: true,
         text: 'Signage carried the identity from print into the physical space of the festival grounds at Under the K Bridge Park.',
         layout: 'full-page',
         images: [
@@ -684,6 +700,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Merch',
+        collapsible: true,
         text: 'Merch kept the same neon-accented energy, built to be worn past the night of the show.',
         layout: 'two-up',
         images: [
@@ -703,6 +720,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Social',
+        collapsible: true,
         text: 'Social rounded out the campaign, keeping the same sneaker-culture energy in a scrollable format.',
         layout: 'contained',
         images: [
@@ -726,6 +744,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     chapters: [
       {
         label: 'Key Art',
+        collapsible: true,
         text: 'The final key art, built around the glow of the blade as the single light source driving the whole composition.',
         layout: 'full-page',
         tall: true,
@@ -738,6 +757,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Expanded Studies',
+        collapsible: true,
         text: 'Supporting studies pushed the character and pose further before the final render locked in.',
         layout: 'cluster',
         images: [
@@ -769,6 +789,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     chapters: [
       {
         label: 'Pattern Swatches',
+        collapsible: true,
         text: 'Each swatch was built as a tileable repeat first, so it could scale cleanly across any bag size without a visible seam.',
         layout: 'contained',
         images: [
@@ -782,6 +803,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'In Production',
+        collapsible: true,
         text: 'Placeholder chapter — add a product shot of the pattern printed on an actual tote or pouch once one exists.',
         layout: 'contained',
         images: [{ alt: 'Add a product photo of the printed tote or pouch' }],
@@ -798,6 +820,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     chapters: [
       {
         label: 'Display & Static Ads',
+        collapsible: true,
         text: 'Display and static placements shared one arcade-inspired palette, built to stop a scroll without straying from the brand.',
         layout: 'two-up',
         images: [
@@ -817,6 +840,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Social',
+        collapsible: true,
         text: 'Stories and feed posts carried the same world into a faster, more disposable format.',
         layout: 'two-up',
         images: [
@@ -836,6 +860,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Direct Mailer & Packaging',
+        collapsible: true,
         text: 'The campaign closed the loop with a physical mailer and a packaging mockup, keeping the same voice off-screen.',
         layout: 'full-page',
         images: [
@@ -868,6 +893,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     chapters: [
       {
         label: 'The Shot',
+        collapsible: true,
         text: 'Lighting and camera did most of the storytelling here, built to sell the moment in a single continuous shot.',
         layout: 'full-bleed',
         images: [
@@ -881,12 +907,14 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Environment & Lighting',
+        collapsible: true,
         text: 'Placeholder chapter — add a render or screenshot of the environment build and lighting setup once you have one.',
         layout: 'contained',
         images: [{ alt: 'Add an environment or lighting render' }],
       },
       {
         label: 'Character Animation',
+        collapsible: true,
         text: 'Placeholder chapter — add an animation still, turntable, or breakdown shot once you have one.',
         layout: 'contained',
         images: [{ alt: 'Add a character animation still' }],
