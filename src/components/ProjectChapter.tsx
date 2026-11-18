@@ -66,11 +66,13 @@ function CollapsibleChapterText({
         <span style={{ color: accent }} className="font-geist text-sm font-medium tracking-[0.1em] uppercase">
           {label}
         </span>
-        <span style={{ color: accent }} className="flex items-center gap-2">
-          <span className="font-geist text-xs font-medium tracking-[0.1em] uppercase">
+        <span className="flex items-center gap-2">
+          <span className="font-geist text-red text-xs font-medium tracking-[0.1em] uppercase">
             {isOpen ? 'Hide details' : 'See details'}
           </span>
-          <CaretIcon open={isOpen} />
+          <span style={{ color: accent }}>
+            <CaretIcon open={isOpen} />
+          </span>
         </span>
       </button>
       <div ref={contentRef} className="overflow-hidden" style={{ height: 0, opacity: 0 }}>

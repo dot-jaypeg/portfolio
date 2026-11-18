@@ -11,11 +11,10 @@ import finalCast2 from '../assets/images/projects/detail/contra-coffee-sticker-p
 import finalCast3 from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-cast-3.png'
 import waterBottleMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/water-bottle-mockup.jpg'
 import tshirtMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/tshirt-mockup.jpg'
-import contraMe from '../assets/images/projects/detail/contra-coffee-sticker-pack/contra-me.jpg'
+import contraMeStory from '../assets/images/projects/detail/contra-coffee-sticker-pack/contra-me-story.jpg'
+import keychainMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/keychain-mockup.jpg'
 import chapmanSticker from '../assets/images/projects/detail/contra-coffee-sticker-pack/chapman-sticker.mp4'
 import chapmanStickerPoster from '../assets/images/projects/detail/contra-coffee-sticker-pack/chapman-sticker-poster.jpg'
-import contraStickersheet from '../assets/images/projects/detail/contra-coffee-sticker-pack/contra-stickersheet.mp4'
-import contraStickersheetPoster from '../assets/images/projects/detail/contra-coffee-sticker-pack/contra-stickersheet-poster.jpg'
 
 import showBoston2 from '../assets/images/projects/detail/afi-marketing-campaign/show-boston-2.jpg'
 import showPhilly from '../assets/images/projects/detail/afi-marketing-campaign/show-philly.jpg'
@@ -92,6 +91,12 @@ export interface ProjectImage {
   // `cluster` layout only -- how wide this image renders relative to
   // the others in the same free-wrapping group. Defaults to 'md'.
   size?: 'sm' | 'md' | 'lg' | 'xl'
+  // Defaults to 'cover' (crops to fill its box) everywhere. 'contain'
+  // letterboxes instead -- for a source whose own aspect ratio is too
+  // different from its box's (e.g. a landscape product shot sitting in
+  // a `full-page-two-up` pair's tall column) for 'cover' to show the
+  // whole thing without cropping into the actual subject.
+  fit?: 'cover' | 'contain'
 }
 
 // One image block: a layout plus the images it renders. A chapter's
@@ -284,27 +289,25 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         // No label/text -- pure imagery, directly under the final
-        // sticker files above. `controls` on the Chapman clip since
-        // it's an actual talking presentation (real audio, user-
-        // initiated), not ambient b-roll; `loop` on the stickersheet
-        // reveal since it's silent either way.
+        // sticker files above. `autoplay` on the Chapman clip -- plays
+        // once scrolled into view (muted, controls still there to
+        // unmute for the real talking audio), same as every other
+        // ambient-but-has-real-content clip on this page.
         layout: 'two-up',
         images: [
           {
             video: chapmanSticker,
             poster: chapmanStickerPoster,
-            videoMode: 'controls',
+            videoMode: 'autoplay',
             alt: 'Presenting the Contra sticker pack for a Chapman University class critique',
             width: 608,
             height: 1080,
           },
           {
-            video: contraStickersheet,
-            poster: contraStickersheetPoster,
-            videoMode: 'loop',
-            alt: 'The finished Contra sticker sheet',
-            width: 608,
-            height: 1080,
+            src: contraMeStory,
+            alt: 'Contra sticker pack photo mocked up as an Instagram story',
+            width: 1200,
+            height: 2460,
           },
         ],
       },
@@ -319,8 +322,12 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'Contra Coffee & Tea t-shirt with speech bubble logo and character illustration',
           },
           {
-            src: contraMe,
-            alt: 'Jayden Ramirez with the finished Contra Coffee sticker pack',
+            // `contain`, not the default `cover` -- this photo is
+            // landscape, a shape this pairing's tall column would
+            // otherwise crop hard into the keychain itself to fill.
+            src: keychainMockup,
+            alt: 'MC Squared acrylic keychain with dice charms',
+            fit: 'contain',
           },
         ],
         moreImages: [

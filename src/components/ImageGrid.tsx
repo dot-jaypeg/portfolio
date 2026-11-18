@@ -149,12 +149,12 @@ function FullPageMediaPair({ images, tall }: { images: ProjectImage[]; tall: boo
     <div ref={containerRef} className={`flex w-full ${tall ? 'h-[150vh]' : 'h-[92vh]'}`}>
       <div className="relative h-full w-1/2 overflow-hidden bg-cream/5">
         <div ref={wrapperRefA} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
-          <Media image={images[0]} className="h-full w-full object-cover" />
+          <Media image={images[0]} className={`h-full w-full ${images[0].fit === 'contain' ? 'object-contain' : 'object-cover'}`} />
         </div>
       </div>
       <div className="relative h-full w-1/2 overflow-hidden bg-cream/5">
         <div ref={wrapperRefB} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
-          <Media image={images[1]} className="h-full w-full object-cover" />
+          <Media image={images[1]} className={`h-full w-full ${images[1].fit === 'contain' ? 'object-contain' : 'object-cover'}`} />
         </div>
       </div>
     </div>
