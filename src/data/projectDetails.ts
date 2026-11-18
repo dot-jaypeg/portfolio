@@ -11,7 +11,6 @@ import finalCast2 from '../assets/images/projects/detail/contra-coffee-sticker-p
 import finalCast3 from '../assets/images/projects/detail/contra-coffee-sticker-pack/final-cast-3.png'
 import waterBottleMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/water-bottle-mockup.jpg'
 import tshirtMockup from '../assets/images/projects/detail/contra-coffee-sticker-pack/tshirt-mockup.jpg'
-import contraMe from '../assets/images/projects/detail/contra-coffee-sticker-pack/contra-me.jpg'
 import chapmanSticker from '../assets/images/projects/detail/contra-coffee-sticker-pack/chapman-sticker.mp4'
 import chapmanStickerPoster from '../assets/images/projects/detail/contra-coffee-sticker-pack/chapman-sticker-poster.jpg'
 
@@ -283,17 +282,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             width: 1200,
             height: 1200,
             size: 'xl',
-          },
-        ],
-      },
-      {
-        // No label/text -- pure imagery, directly under the final
-        // sticker files above.
-        layout: 'contained',
-        images: [
-          {
-            src: contraMe,
-            alt: 'Jayden Ramirez with the finished Contra Coffee sticker pack',
           },
         ],
       },

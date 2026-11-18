@@ -64,7 +64,18 @@ function AutoplayInViewVideo({
       muted
       preload="metadata"
       aria-label={image.alt}
-      className={className}
+      // Clicking the video itself unmutes (or re-mutes) it -- quicker
+      // than hunting for the native controls' own mute icon. Mutating
+      // `el.muted` directly rather than through React state: `muted`
+      // is only ever applied once at mount (browsers don't let a video
+      // un-mute itself without a real user gesture, so it has to start
+      // true for the scroll-triggered autoplay above to be allowed at
+      // all), and this click IS that real gesture.
+      onClick={() => {
+        const el = ref.current
+        if (el) el.muted = !el.muted
+      }}
+      className={`cursor-pointer ${className}`}
     />
   )
 }

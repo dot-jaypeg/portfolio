@@ -87,7 +87,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Illustration',
     client: 'Contra Coffee & Tea',
     image: contraImg,
-    coverWidth: 1200,
+    coverWidth: 1067,
     coverHeight: 1600,
     accent: '#9cc7b1',
     description:
