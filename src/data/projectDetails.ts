@@ -453,29 +453,30 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           'That identity extended into the world itself: Azonix became the display type running through menus and HUD, and in-universe sponsors like Katto got their own weapon-skin branding, reinforcing the sponsor-driven, broadcast-for-entertainment premise.',
         ],
         layout: 'full-page-trio',
-        tall: true,
         images: [
           {
+            // `full-page-trio` sizes each column by its own
+            // width/height ratio (see FlushMediaRow) instead of
+            // forcing a viewport-height box -- these three are
+            // already cropped to (effectively) the same ~1.5 ratio,
+            // so the row ends up flush with no letterboxing and no
+            // crop needed.
             src: logoConcept1,
             alt: 'Resonance wordmark concept, variant one',
-            // `contain`, not the default `cover` -- these are flat
-            // logo marks, not photos; cropping into this row's
-            // columns was cutting into the mark itself instead of
-            // just trimming background. logoConcept1/2 are cropped to
-            // the exact same source aspect ratio as each other
-            // already, so this is really just about not cropping the
-            // game icon's different ratio against them.
-            fit: 'contain',
+            width: 1600,
+            height: 1067,
           },
           {
             src: logoConcept2,
             alt: 'Resonance wordmark concept, variant two',
-            fit: 'contain',
+            width: 1600,
+            height: 1067,
           },
           {
             src: gameIcon,
             alt: 'Resonance game icon',
-            fit: 'contain',
+            width: 1200,
+            height: 800,
           },
         ],
         moreImages: [

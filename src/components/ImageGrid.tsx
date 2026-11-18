@@ -185,45 +185,38 @@ function FullPageMedia({ image, tall }: { image: ProjectImage; tall: boolean }) 
   )
 }
 
-// Same flush, parallaxing treatment as `FullPageMedia`, split into
-// 2 or 3 equal-width side-by-side columns instead of one full-width
-// image -- each column gets its own oversized wrapper/parallax drift,
-// scrubbed off the same shared container so they all move together.
-// No backdrop fill behind any of them (unlike FullPageMedia/this used
-// to have) -- was only ever visible as a stray light-grey bar once a
+// Same flush, parallaxing treatment as `FullPageMedia`, split into 2
+// equal-width side-by-side columns instead of one full-width image --
+// each column gets its own oversized wrapper/parallax drift, scrubbed
+// off the same shared container so they both move together. No
+// backdrop fill behind either (unlike FullPageMedia/this used to
+// have) -- was only ever visible as a stray light-grey bar once a
 // `fit: 'contain'` image left empty space to show it through, and
 // looked like an accident rather than an intentional card backdrop.
 function FullPageMediaRow({ images, tall }: { images: ProjectImage[]; tall: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRefA = useRef<HTMLDivElement>(null)
   const wrapperRefB = useRef<HTMLDivElement>(null)
-  const wrapperRefC = useRef<HTMLDivElement>(null)
   // Each column's own visible clipping box -- passed to `autoplay`
   // videos as what to actually measure intersection against, instead
   // of their own oversized (130%) wrapper (see AutoplayInViewVideo's
   // note on why that one alone is too unreliable a target).
   const boxRefA = useRef<HTMLDivElement>(null)
   const boxRefB = useRef<HTMLDivElement>(null)
-  const boxRefC = useRef<HTMLDivElement>(null)
   useScrollParallax(containerRef, wrapperRefA, 10)
   useScrollParallax(containerRef, wrapperRefB, 10)
-  useScrollParallax(containerRef, wrapperRefC, 10)
 
-  // Always 3 slots declared above (hook count has to stay fixed across
-  // renders) -- only as many as `images.length` actually get used below.
   const slots = [
     { wrapperRef: wrapperRefA, boxRef: boxRefA },
     { wrapperRef: wrapperRefB, boxRef: boxRefB },
-    { wrapperRef: wrapperRefC, boxRef: boxRefC },
   ]
-  const widthClass = images.length >= 3 ? 'w-1/3' : 'w-1/2'
 
   return (
     <div ref={containerRef} className={`flex w-full ${tall ? 'h-[150vh]' : 'h-[92vh]'}`}>
       {images.map((image, i) => {
         const { wrapperRef, boxRef } = slots[i]
         return (
-          <div key={i} ref={boxRef} className={`relative h-full ${widthClass} overflow-hidden`}>
+          <div key={i} ref={boxRef} className="relative h-full w-1/2 overflow-hidden">
             <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
               <Media
                 image={image}
@@ -234,6 +227,31 @@ function FullPageMediaRow({ images, tall }: { images: ProjectImage[]; tall: bool
           </div>
         )
       })}
+    </div>
+  )
+}
+
+// A flush row of 2-3 images sized by their OWN aspect ratio instead of
+// a forced viewport-height box -- for flat marks/icons already cropped
+// to matching ratios, where `FullPageMediaRow`'s parallaxing box would
+// mostly show empty letterboxed space above/below the actual content
+// rather than the mark itself (confirmed directly: three logo/icon
+// images at ~1.5 ratio inside a 92-150vh column left most of the
+// column empty). No parallax here either, since there's no tall photo
+// to drift -- the whole point is the box already matches the content.
+function FlushMediaRow({ images }: { images: ProjectImage[] }) {
+  const widthClass = images.length >= 3 ? 'w-1/3' : 'w-1/2'
+  return (
+    <div className="flex w-full">
+      {images.map((image, i) => (
+        <div
+          key={i}
+          className={`relative ${widthClass} overflow-hidden`}
+          style={{ aspectRatio: `${image.width ?? 3} / ${image.height ?? 2}` }}
+        >
+          <Media image={image} className="h-full w-full object-cover" />
+        </div>
+      ))}
     </div>
   )
 }
@@ -411,7 +429,7 @@ export function ImageGrid({
   if (layout === 'full-page-trio') {
     return (
       <div className="w-full">
-        <FullPageMediaRow images={images.slice(0, 3)} tall={tall} />
+        <FlushMediaRow images={images.slice(0, 3)} />
       </div>
     )
   }
