@@ -113,6 +113,12 @@ export interface ProjectImageBlock {
   // `full-page` only -- use a taller-than-viewport box, for a square
   // or portrait source a plain viewport-height crop cuts too hard.
   tall?: boolean
+  // `contained`/`two-up`/`trio`/`grid-3`/`cluster` only -- false drops
+  // their cards' rounded-2xl corners, for a project page whose other
+  // chapters are sharp-edged full-bleed/full-page photography (NSU),
+  // where the rounding reads as inconsistent rather than deliberate.
+  // Defaults to true.
+  roundedImages?: boolean
 }
 
 export interface ProjectChapter extends ProjectImageBlock {
@@ -607,6 +613,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         collapsible: true,
         text: 'Merchandise, flyers, and social media graphics were designed to give NSU a consistent, recognizable look across every touchpoint, from event promotion to everyday posts. Each piece was made to speak to the members who make the community what it is.',
         layout: 'trio',
+        // NSU's other chapters are all sharp-edged full-bleed/
+        // full-page photography -- rounded cards here read as
+        // inconsistent rather than deliberate.
+        roundedImages: false,
         images: [
           {
             src: boardHoodie,
@@ -666,6 +676,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         collapsible: true,
         text: 'Beyond promotion, I documented events through photography and videography, preserving the memories that define the community year to year. I also shaped the social media content strategy, tying the photos, videos, and graphics into one story. The full collection of work lives on our OneDrive.',
         layout: 'trio',
+        roundedImages: false,
         images: [
           {
             src: nsuCultureNight,

@@ -151,7 +151,13 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
         </div>
       )}
       <div data-reveal>
-        <ImageGrid layout={chapter.layout} images={chapter.images} card={card} tall={chapter.tall} />
+        <ImageGrid
+          layout={chapter.layout}
+          images={chapter.images}
+          card={card}
+          tall={chapter.tall}
+          rounded={chapter.roundedImages ?? true}
+        />
       </div>
       {chapter.moreImages?.map((block, i) => (
         <div
@@ -159,7 +165,13 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           key={i}
           className={block.layout === 'full-page' || block.layout === 'full-page-two-up' ? '' : 'mt-10'}
         >
-          <ImageGrid layout={block.layout} images={block.images} card={card} tall={block.tall} />
+          <ImageGrid
+            layout={block.layout}
+            images={block.images}
+            card={card}
+            tall={block.tall}
+            rounded={block.roundedImages ?? true}
+          />
         </div>
       ))}
     </section>

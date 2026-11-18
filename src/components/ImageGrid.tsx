@@ -338,6 +338,7 @@ export function ImageGrid({
   images,
   card = true,
   tall = false,
+  rounded = true,
 }: {
   layout: ImageGridLayout
   images: ProjectImage[]
@@ -346,13 +347,19 @@ export function ImageGrid({
   card?: boolean
   // `full-page` only -- see the note above.
   tall?: boolean
+  // Drops the rounded-2xl corners from `contained`/`two-up`/`trio`/
+  // `grid-3`/`cluster`'s cards -- for a project page (NSU) whose other
+  // chapters are all sharp-edged full-bleed/full-page photography,
+  // where these cards' rounding read as inconsistent rather than
+  // deliberate. Defaults to true (every other project keeps it).
+  rounded?: boolean
 }) {
   if (images.length === 0) return null
 
   if (layout === 'contained') {
     return (
       <div className="mx-auto mt-6 max-w-2xl px-6 md:px-10">
-        <Figure image={images[0]} rounded card={card} />
+        <Figure image={images[0]} rounded={rounded} card={card} />
       </div>
     )
   }
@@ -361,7 +368,7 @@ export function ImageGrid({
     return (
       <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-2 md:gap-10 md:px-10">
         {images.slice(0, 2).map((image, i) => (
-          <Figure key={`${image.alt}-${i}`} image={image} rounded card={card} />
+          <Figure key={`${image.alt}-${i}`} image={image} rounded={rounded} card={card} />
         ))}
       </div>
     )
@@ -371,7 +378,7 @@ export function ImageGrid({
     return (
       <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-3 md:gap-8 md:px-10">
         {images.slice(0, 3).map((image, i) => (
-          <Figure key={`${image.alt}-${i}`} image={image} rounded card={card} />
+          <Figure key={`${image.alt}-${i}`} image={image} rounded={rounded} card={card} />
         ))}
       </div>
     )
@@ -385,7 +392,7 @@ export function ImageGrid({
     return (
       <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-3 md:gap-10 md:px-10">
         {images.map((image, i) => (
-          <Figure key={`${image.alt}-${i}`} image={image} rounded card={card} />
+          <Figure key={`${image.alt}-${i}`} image={image} rounded={rounded} card={card} />
         ))}
       </div>
     )
@@ -399,7 +406,7 @@ export function ImageGrid({
             key={`${image.alt}-${i}`}
             className={`${CLUSTER_SIZE_CLASS[image.size ?? 'md']} ${CLUSTER_OFFSET_CLASS[i % CLUSTER_OFFSET_CLASS.length]}`}
           >
-            <Figure image={image} rounded card={card} interactive tilt={i % 2 === 0 ? 'right' : 'left'} />
+            <Figure image={image} rounded={rounded} card={card} interactive tilt={i % 2 === 0 ? 'right' : 'left'} />
           </div>
         ))}
       </div>
