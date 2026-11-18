@@ -16,6 +16,8 @@ import chichaWorkPoster from '../assets/images/projects/work-covers/chicha-work-
 import protocolWorkVideo from '../assets/images/projects/work-covers/protocol-of-betrayal-work.mp4'
 import protocolWorkPoster from '../assets/images/projects/work-covers/protocol-of-betrayal-work-poster.jpg'
 import fetchWorkImg from '../assets/images/projects/work-covers/fetch-work.jpg'
+import afiWorkVideo from '../assets/images/projects/work-covers/afi-work.mp4'
+import afiWorkPoster from '../assets/images/projects/work-covers/afi-work-poster.jpg'
 
 export interface CaseStudy {
   slug: string
@@ -97,8 +99,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Digital Marketing',
     client: 'Velvet Hammer Music',
     image: afiImg,
-    coverWidth: 910,
-    coverHeight: 1400,
+    coverWidth: 608,
+    coverHeight: 1080,
+    workCoverVideo: afiWorkVideo,
+    workCoverPoster: afiWorkPoster,
     accent: '#e6869a',
     // Tall portrait shot with the face near the top -- the default
     // vertical center crop lands on the guitar/torso instead.
