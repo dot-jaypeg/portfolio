@@ -20,6 +20,12 @@ export interface CaseStudy {
   // Optional -- cases without a real photo yet fall back to the
   // dashed placeholder box in WorkPanel.
   image?: string
+  // The cover image's own real pixel dimensions -- WorkGrid's masonry
+  // wall sizes each tile from these directly (no cropping, see
+  // ProjectCard), so it needs the real ratio up front the same way
+  // every other image-with-a-box on the site already declares one.
+  coverWidth?: number
+  coverHeight?: number
   // Optional override for the parallax swing's amount/oversize (see
   // JourneyDesktop's `data-parallax-amount`) -- defaults to 8. A photo
   // whose subject sits close to its own edges (little disposable
@@ -60,6 +66,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Illustration',
     client: 'Contra Coffee & Tea',
     image: contraImg,
+    coverWidth: 1200,
+    coverHeight: 1600,
     accent: '#9cc7b1',
     description:
       'A cohesive collection for Contra Coffee & Tea designed to function as their Spring Y2K Merch Drop.',
@@ -70,6 +78,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Digital Marketing',
     client: 'Velvet Hammer Music',
     image: afiImg,
+    coverWidth: 910,
+    coverHeight: 1400,
     accent: '#e6869a',
     // Tall portrait shot with the face near the top -- the default
     // vertical center crop lands on the guitar/torso instead.
@@ -84,6 +94,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'UX/UI & HUD',
     client: 'Chapman University',
     image: resonanceImg,
+    coverWidth: 1600,
+    coverHeight: 900,
     accent: '#49e1f6',
     // Source is a wide 16:9 banner with the wordmark on the left and the
     // character on the right -- centering it (the default) crops half
@@ -104,6 +116,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Photo & Merchandising',
     client: 'Chapman University',
     image: nsuImg,
+    coverWidth: 1067,
+    coverHeight: 1600,
     accent: '#b52025',
     // The shirt photo is a tall 2:3 crop inside a 4:5 box -- the default
     // 8% swing oversize was cropping into the shirt itself (collar/hem),
@@ -119,6 +133,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Branding & Advertising',
     client: 'Academic',
     image: fetchImg,
+    coverWidth: 1280,
+    coverHeight: 1148,
     accent: '#45815a',
     description:
       'A dog-friendly deli food truck for SoCal parks, fetch! doggy deli is a concept built end to end, from the name and mark to packaging, menus, and a truck wrap, with a playful brand voice and natural, local ingredients made for dogs.',
@@ -129,6 +145,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Branding & Advertising',
     client: 'New Balance',
     image: urbanSeoulImg,
+    coverWidth: 901,
+    coverHeight: 1600,
     accent: '#4f6f93',
     description:
       'An immersive Korean R&B festival presented by New Balance at Under the K Bridge Park in Brooklyn, urbanseoul. blends New Balance’s bold, vintage sports photography with KRNB’s sleek, neon-accented urban style, turning live music and sneaker culture into one lifestyle hub.',
@@ -139,6 +157,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Character Illustration',
     client: 'Personal Project',
     image: jadeSwordImg,
+    coverWidth: 1600,
+    coverHeight: 1066,
     accent: '#2f9e8f',
     description:
       'A stylized 3D jade sword inspired by Genshin Impact and ceremonial jade weapons, modeled and textured in Maya as a game-ready asset.',
@@ -149,6 +169,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Surface Pattern Design',
     client: 'Baggu',
     image: bagguImg,
+    coverWidth: 1600,
+    coverHeight: 1112,
     accent: '#8b5cf6',
     description:
       'A set of playful, trend-driven surface patterns designed for Baggu\'s tote and pouch lineup.',
@@ -159,6 +181,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Digital Marketing',
     client: 'Chi-Cha',
     image: chichaImg,
+    coverWidth: 1067,
+    coverHeight: 1600,
     accent: '#e391a8',
     description:
       'A retro-arcade-themed digital push for Chi-Cha -- display ads, social posts, and a direct mailer all built around one playful visual world.',
@@ -169,6 +193,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: '3D & Motion',
     client: 'Personal Project',
     image: protocolOfBetrayalImg,
+    coverWidth: 1600,
+    coverHeight: 899,
     accent: '#c0453a',
     // Source is a 16:9 still with the character off-center to the
     // right -- centering it (the default) crops half of him out.
