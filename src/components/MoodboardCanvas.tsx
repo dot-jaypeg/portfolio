@@ -6,13 +6,34 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 type Tile = { kind: 'media'; media: GalleryPhoto; key: string } | { kind: 'wordmark'; key: string }
 
+function gcd(a: number, b: number): number {
+  return b === 0 ? a : gcd(b, a % b)
+}
+
+// galleryPhotos.ts lists photos grouped by category/filename, so
+// photos from the same shoot (same lighting, same background) sit
+// right next to each other on disk -- up to 14 in a row, confirmed
+// directly. Side by side in the grid, a run like that reads as one
+// blended/overlapping section rather than a wall of distinct photos.
+// A fixed-stride reorder (a golden-ratio interleave) spreads
+// originally-adjacent photos apart without needing to parse filenames
+// for "which shoot is this" -- confirmed directly too: it drops that
+// same longest run from 14 to 1.
+function interleave<T>(items: T[]): T[] {
+  const n = items.length
+  if (n < 3) return items
+  let stride = Math.round(n * 0.618)
+  while (gcd(stride, n) !== 1) stride += 1
+  return Array.from({ length: n }, (_, i) => items[(i * stride) % n])
+}
+
 // The real photography pool (event/sports, graduation, landscape &
 // nature -- see src/data/galleryPhotos.ts). One pass through it is
 // already 111 distinct photos -- plenty not to feel repetitive within
 // a single pattern cycle, unlike the old handful of placeholder
 // projects this used to draw from (which needed doubling up just to
 // feel substantial).
-const MEDIA_POOL: GalleryPhoto[] = GALLERY_PHOTOS
+const MEDIA_POOL: GalleryPhoto[] = interleave(GALLERY_PHOTOS)
 
 function buildTileList(): Tile[] {
   const tiles: Tile[] = MEDIA_POOL.map((media, i) => ({
