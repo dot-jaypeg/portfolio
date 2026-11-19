@@ -206,14 +206,17 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: 'jade-sword',
     title: 'Jade Sword',
-    category: 'Character Illustration',
+    category: '3D Modeling',
     client: 'Personal Project',
+    // Was official Genshin Impact character splash art standing in as
+    // the cover -- not Jayden's own work. Replaced with the actual
+    // Arnold-rendered final piece.
     image: jadeSwordImg,
-    coverWidth: 1600,
-    coverHeight: 1066,
+    coverWidth: 2000,
+    coverHeight: 1333,
     accent: '#2f9e8f',
     description:
-      'A stylized 3D jade sword inspired by Genshin Impact and ceremonial jade weapons, modeled and textured in Maya as a game-ready asset.',
+      'A Genshin Impact-inspired 3D weapon model, created in Autodesk Maya and designed to serve both animation and game design needs.',
   },
   {
     slug: 'baggu',
