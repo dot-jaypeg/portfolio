@@ -75,20 +75,26 @@ import fetchSocialOrganic from '../assets/images/projects/detail/fetch-doggy-del
 import fetchSocialPaid from '../assets/images/projects/detail/fetch-doggy-deli/social-paid.png'
 
 import usIntroCrowd from '../assets/images/projects/detail/urban-seoul/intro-crowd.jpg'
+import usLogoWordmark from '../assets/images/projects/detail/urban-seoul/logo-wordmark.png'
 import usIdeationPhoto from '../assets/images/projects/detail/urban-seoul/ideation-campaign-photo.jpg'
+import usPosterCyanotype from '../assets/images/projects/detail/urban-seoul/poster-cyanotype.jpg'
+import usPosterCalendar from '../assets/images/projects/detail/urban-seoul/poster-calendar.jpg'
 import usTeaserBusStop from '../assets/images/projects/detail/urban-seoul/teaser-poster-busstop.jpg'
 import usTeaserSubway from '../assets/images/projects/detail/urban-seoul/teaser-poster-subway.jpg'
-import usStoryPost from '../assets/images/projects/detail/urban-seoul/social-story-post.jpg'
-import usSocialPhones from '../assets/images/projects/detail/urban-seoul/social-phones-composite.jpg'
+import usSocialStories from '../assets/images/projects/detail/urban-seoul/social-stories.jpg'
+import usSocialFeedPaid from '../assets/images/projects/detail/urban-seoul/social-feed-paid.jpg'
 import usSignageTicket from '../assets/images/projects/detail/urban-seoul/signage-ticket-pass.jpg'
 import usSignageWristband from '../assets/images/projects/detail/urban-seoul/signage-wristband.jpg'
 import usSignageBarricade from '../assets/images/projects/detail/urban-seoul/signage-barricade.jpg'
 import usSignageTaxiTopper from '../assets/images/projects/detail/urban-seoul/signage-taxi-topper.jpg'
-import usMerchIdolHoodie from '../assets/images/projects/detail/urban-seoul/merch-idol-hoodie.jpg'
-import usMerchIdolWindbreaker from '../assets/images/projects/detail/urban-seoul/merch-idol-windbreaker.jpg'
-import usMerchVintageFlatlay from '../assets/images/projects/detail/urban-seoul/merch-vintage-flatlay.jpg'
-import usMerchTote from '../assets/images/projects/detail/urban-seoul/merch-tote.jpg'
-import usMerchKeychain from '../assets/images/projects/detail/urban-seoul/merch-keychain.jpg'
+import usMerchModelDprlive from '../assets/images/projects/detail/urban-seoul/merch-model-dprlive.jpg'
+import usMerchModelIu from '../assets/images/projects/detail/urban-seoul/merch-model-iu.jpg'
+import usMerchModelBibi from '../assets/images/projects/detail/urban-seoul/merch-model-bibi.jpg'
+import usMerchVintageCutout from '../assets/images/projects/detail/urban-seoul/merch-vintage-cutout.png'
+import usMerchToteWhiteCutout from '../assets/images/projects/detail/urban-seoul/merch-tote-white-cutout.png'
+import usMerchToteGreyCutout from '../assets/images/projects/detail/urban-seoul/merch-tote-grey-cutout.png'
+import usKeychainLoop from '../assets/images/projects/detail/urban-seoul/keychain-loop.mp4'
+import usKeychainLoopPoster from '../assets/images/projects/detail/urban-seoul/keychain-loop-poster.jpg'
 import usMobilePrototype from '../assets/images/projects/detail/urban-seoul/mobile-prototype-composite.jpg'
 
 import jadeConceptSketch from '../assets/images/projects/detail/jade-sword/concept-sketch.png'
@@ -229,6 +235,11 @@ export interface ProjectChapter extends ProjectImageBlock {
   // scripts used to generate public/brand-guides/<slug>/), with
   // `pdfHref` offering the original file as a direct download.
   brandGuide?: { title: string; pageCount: number; basePath: string; pdfHref: string }
+  // Renders a live, clickable Figma prototype embed (in a phone-shaped
+  // frame) below this chapter's images -- for a prototype a visitor
+  // can actually click through themselves instead of only a static
+  // screenshot of it.
+  figmaEmbed?: { url: string; title: string }
 }
 
 export interface ProjectLinks {
@@ -273,6 +284,12 @@ export interface ProjectDetailData {
   proofPoint?: string
   chapters: ProjectChapter[]
 }
+
+// Figma's embed player wants its own `/embed` URL wrapping the
+// original prototype share link, not that link directly.
+const URBAN_SEOUL_FIGMA_PROTOTYPE_URL =
+  'https://www.figma.com/proto/XoG68LTl5lgCZEqyfbTMT4/Ramirez_GD400_P2_Site?node-id=1-2&p=f&viewport=267%2C214%2C0.14&t=AwWkFFg2YmEBvwg7-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=7%3A88&page-id=0%3A1'
+const URBAN_SEOUL_FIGMA_EMBED_URL = `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(URBAN_SEOUL_FIGMA_PROTOTYPE_URL)}`
 
 export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   'contra-coffee-sticker-pack': {
@@ -1115,9 +1132,21 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     },
     chapters: [
       {
+        layout: 'full-width',
+        imagesOnCard: false,
+        images: [
+          {
+            src: usLogoWordmark,
+            alt: 'The urbanseoul. wordmark, paired with "with new balance"',
+            width: 2212,
+            height: 416,
+          },
+        ],
+      },
+      {
         label: 'Ideation',
         collapsible: true,
-        text: 'Instead of leaning on obvious neon, the identity blends New Balance’s vintage, action-oriented roots with the cool, late-night feel of KRNB — a palette of cyanotype blue, teal, and near-black capturing the city after dark, anchored by light gray for breathing room. The tagline, “Under the K: coming to you live,” plays on the festival’s setting beneath the bridge and the closeness of a live set.',
+        text: 'Pulling from vintage New Balance and KRNB’s love for tactile design, the two came together naturally in the festival’s branding. Both reject mainstream hype in favor of understated authenticity, tactile textures, and deep roots in streetwear subculture. New Balance’s grainy print textures, neutral tones, and classic silhouettes give the identity a grounded, timeless foundation, while KRNB’s moody, late-night aesthetic adds the cool, nocturnal edge. Rather than leaning on obvious neon, the palette of cyanotype blue, teal, and near-black captures the city after dark, anchored by light gray for breathing room. The wordmark pairs a heavy, bold “URBAN” with a light, lowercase “seoul.,” balancing the weight of the city with the softness of the music.',
         layout: 'full-page',
         images: [
           {
@@ -1129,58 +1158,66 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
       },
       {
-        label: 'Logo & Typography',
-        collapsible: true,
-        text: 'The wordmark pairs a heavy, bold “URBAN” with a light, lowercase “seoul.,” balancing the weight of the city with the softness of the music — set in Scale VF for headers, Zuume Italic for subheaders, and ZT Formom’s editorial feel for body copy.',
-        layout: 'contained',
-        images: [],
-      },
-      {
         label: 'Teaser Campaign',
         collapsible: true,
-        text: 'Teaser posters built around a cyanotype-style heart in halftone carry bilingual Korean and English lines that read like late-night lyrics, placed in subway cars and bus shelters to meet fans on their daily commute. A scribbled May calendar with sticker-style marks turns the festival date into something to circle.',
+        text: [
+          'Teaser posters meet fans on their daily commute in subway cars and bus shelters, using two different looks to build anticipation.',
+          'Cyanotype Poster: This poster pairs retro print aesthetics with a nocturnal KRNB mood, using risograph and photocopy textures, halftone dots, and distressed borders in cobalt blue, cyan, and white. A bold sans-serif “URBAN seoul.” sits above an italic editorial serif “with new balance” that nods to classic New Balance print ads. Lyrics from DPR Live’s song “Thinking to Myself” hint at who’s headlining in a subtle, tasteful way, set over darker blue halftone blocks that read like late-night lyrics. The heart at the bottom is a textured take on Colde’s “Love Part 2” ocean-wave heart, bringing New Balance’s editorial style together with the raw emotion of underground KRNB.',
+          'Calendar Poster: This poster turns a vintage spiral-bound calendar into a DIY “save the date,” with paper grain, ink smudges, and stray pen marks for a lived-in, Y2K zine feel. “May” is underlined in marker, and “31” and “01” are circled in loose ink, so the festival dates feel like something to mark down. The tilted “URBAN seoul.” cutout sits on dark navy with a teal “with new balance” strip, while a circular “UNDER THE K” sticker and a “COMING TO YOU LIVE” speech bubble act as an insider nod to DPR Live headlining.',
+        ],
         layout: 'two-up',
         images: [
-          {
-            src: usTeaserBusStop,
-            alt: 'An urbanseoul. bus-shelter poster styled as a torn calendar page',
-            width: 2000,
-            height: 1389,
-          },
           {
             src: usTeaserSubway,
             alt: 'An urbanseoul. subway car poster with a cyanotype halftone heart',
             width: 2000,
             height: 1389,
           },
-        ],
-      },
-      {
-        label: 'Social & Signage',
-        collapsible: true,
-        text: [
-          'Organic socials mix crowd shots, portraits, sneakers, and handwritten “coming to you live” lettering, while paid stories spotlight New Balance drops “sold at urbanseoul.”',
-          'On-site, the identity extends to taxi toppers, barricade banners, a signature wristband, and a ticket with a matching digital pass.',
-        ],
-        layout: 'phone-row',
-        images: [
           {
-            src: usStoryPost,
-            alt: 'An urbanseoul. Instagram Story announcing tickets',
-            width: 941,
-            height: 1671,
+            src: usTeaserBusStop,
+            alt: 'An urbanseoul. bus-shelter poster styled as a torn calendar page',
+            width: 2000,
+            height: 1389,
           },
         ],
         moreImages: [
           {
-            layout: 'full-page',
+            layout: 'two-up',
             images: [
               {
-                src: usSocialPhones,
-                alt: 'The urbanseoul. Instagram profile grid next to a paid New Balance story ad',
+                src: usPosterCyanotype,
+                alt: 'The original Cyanotype teaser poster design, full bleed',
+                width: 1165,
+                height: 1800,
+              },
+              {
+                src: usPosterCalendar,
+                alt: 'The original Calendar teaser poster design, full bleed',
+                width: 1165,
+                height: 1800,
               },
             ],
           },
+        ],
+      },
+      {
+        label: 'Social & Signage',
+        layout: 'two-up',
+        images: [
+          {
+            src: usSocialStories,
+            alt: 'urbanseoul. Instagram Stories: a New Balance 574 drop and a ticket announcement',
+            width: 1800,
+            height: 1201,
+          },
+          {
+            src: usSocialFeedPaid,
+            alt: 'The urbanseoul. Instagram profile grid next to a paid New Balance feed ad',
+            width: 1800,
+            height: 1201,
+          },
+        ],
+        moreImages: [
           {
             layout: 'two-up',
             images: [
@@ -1220,29 +1257,44 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       {
         label: 'Merch',
         collapsible: true,
-        text: 'Two merch lines support the festival: idol merch — a hoodie, windbreaker, tank, and cap worn by the artists — and vintage-inspired pieces like a zip jacket, tee, and hoodie, all tied together by a chrome star motif. Accessories like keychain straps and totes carry the “coming to you live” lettering.',
-        layout: 'full-page-two-up',
+        text: [
+          'The urbanseoul. merch merges 1990s athletic heritage with Y2K cyber-grunge, turning the festival’s poster graphics into wearable streetwear in off-white, charcoal, forest teal, deep navy, slate blue, and metallic silver. The lookbook features the festival’s headliners wearing the pieces: DPR Live in the teal hoodie and embroidered cap, IU in the navy and white color-blocked windbreaker, and BIBI in the white tank with chrome embossed lettering. Seeing the performers in the designs builds cultural credibility and invites fans to style the same looks. The vintage-inspired line adds a cream track jacket with asymmetrical paneling, a black hoodie stamped with a chrome star, and an off-white graphic tee.',
+          'The accessories carry the posters’ mixed-media textures into everyday festival keepsakes. A crisp white tote features a glossy liquid-chrome “COMING TO YOU LIVE,” while a grey tote pairs a distressed blue halftone logo with a sketchy star. Three faux-leather strap keychains bring the print graphics into hardware: a black strap with halftone gradients and blurred “SEOUL” type, a slate-blue strap with clean white branding, and a distressed off-white strap with the “COMING TO YOU LIVE” badge and ink smudges from the calendar poster.',
+        ],
+        layout: 'cluster',
+        imagesOnCard: false,
         images: [
           {
-            src: usMerchIdolHoodie,
-            alt: 'A model wearing an urbanseoul. idol-merch hoodie and cap',
-            width: 2000,
-            height: 1389,
+            src: usMerchModelDprlive,
+            alt: 'DPR Live wearing the urbanseoul. teal hoodie and embroidered cap',
+            width: 1254,
+            height: 1254,
+            size: 'lg',
           },
           {
-            src: usMerchIdolWindbreaker,
-            alt: 'A model wearing an urbanseoul. idol-merch windbreaker',
-            width: 2000,
-            height: 1389,
+            src: usMerchModelIu,
+            alt: 'IU wearing the urbanseoul. navy and white color-blocked windbreaker',
+            width: 1024,
+            height: 1536,
+            size: 'md',
+          },
+          {
+            src: usMerchModelBibi,
+            alt: 'BIBI wearing the urbanseoul. white tank with chrome embossed lettering',
+            width: 1024,
+            height: 1536,
+            size: 'md',
           },
         ],
         moreImages: [
           {
-            layout: 'full-page',
+            layout: 'full-width',
             images: [
               {
-                src: usMerchVintageFlatlay,
-                alt: 'The urbanseoul. vintage-inspired zip jacket, tee, and hoodie, laid flat',
+                src: usMerchVintageCutout,
+                alt: 'The urbanseoul. vintage-inspired cream track jacket, off-white tee, and black hoodie',
+                width: 1800,
+                height: 1165,
               },
             ],
           },
@@ -1250,16 +1302,29 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             layout: 'two-up',
             images: [
               {
-                src: usMerchTote,
-                alt: 'An urbanseoul. tote bag reading "coming to you live"',
-                width: 2000,
-                height: 1389,
+                src: usMerchToteWhiteCutout,
+                alt: 'The urbanseoul. white tote with a glossy liquid-chrome "coming to you live"',
+                width: 1800,
+                height: 1250,
               },
               {
-                src: usMerchKeychain,
-                alt: 'An urbanseoul. keychain strap reading "coming to you live"',
-                width: 2000,
-                height: 1389,
+                src: usMerchToteGreyCutout,
+                alt: 'The urbanseoul. grey tote with a distressed halftone logo and sketchy star',
+                width: 1800,
+                height: 1250,
+              },
+            ],
+          },
+          {
+            layout: 'full-width',
+            images: [
+              {
+                video: usKeychainLoop,
+                poster: usKeychainLoopPoster,
+                videoMode: 'loop',
+                alt: 'A looping animation cycling through the three urbanseoul. keychain straps',
+                width: 1200,
+                height: 834,
               },
             ],
           },
@@ -1276,8 +1341,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'The urbanseoul. mobile website prototype: tickets, store, product detail, and artist pages',
           },
         ],
+        links: [{ label: 'View Full Prototype', href: URBAN_SEOUL_FIGMA_PROTOTYPE_URL }],
+        figmaEmbed: { url: URBAN_SEOUL_FIGMA_EMBED_URL, title: 'urbanseoul. mobile website prototype' },
+      },
+      {
+        label: 'Brand Guide',
+        text: 'The full brand guide, page by page.',
+        layout: 'full-bleed',
+        images: [],
         brandGuide: {
-          title: 'urbanseoul. Brand Guide',
+          title: 'urbanseoul. x New Balance',
           pageCount: 31,
           basePath: '/brand-guides/urban-seoul',
           pdfHref: '/brand-guides/urban-seoul/brand-guide.pdf',

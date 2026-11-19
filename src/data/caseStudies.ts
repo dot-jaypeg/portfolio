@@ -195,8 +195,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Branding & Advertising',
     client: 'New Balance',
     image: urbanSeoulImg,
-    coverWidth: 901,
-    coverHeight: 1600,
+    coverWidth: 1165,
+    coverHeight: 1800,
     accent: '#4f6f93',
     description:
       'A cohesive festival identity for urbanseoul., an immersive Korean R&B music festival presented by New Balance at Under the K Bridge Park in Brooklyn.',

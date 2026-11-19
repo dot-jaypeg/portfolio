@@ -197,6 +197,27 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           />
         </div>
       )}
+      {chapter.figmaEmbed && (
+        <div data-reveal className="mt-10 flex justify-center px-6 md:px-10">
+          <div className="w-[300px] shrink-0">
+            <div
+              className="relative overflow-hidden rounded-[2.75rem] border-[4px] border-cream/20 bg-ink shadow-xl shadow-black/40"
+              style={{ aspectRatio: '9 / 19.5' }}
+            >
+              <iframe
+                src={chapter.figmaEmbed.url}
+                title={chapter.figmaEmbed.title}
+                loading="lazy"
+                allowFullScreen
+                className="h-full w-full border-0"
+              />
+              <div className="pointer-events-none absolute inset-x-0 top-[10px] flex justify-center">
+                <div className="h-[9px] w-[72px] rounded-full bg-ink" />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
