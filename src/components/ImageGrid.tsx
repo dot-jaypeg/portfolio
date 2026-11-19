@@ -14,6 +14,7 @@ export type ImageGridLayout =
   | 'grid-3'
   | 'phone-row'
   | 'macbook-row'
+  | 'full-width'
 
 // Plays once its container scrolls into view, pauses once it scrolls
 // back out -- starts muted (autoplay triggered by scroll, not a real
@@ -469,6 +470,19 @@ export function ImageGrid({
   if (layout === 'contained') {
     return (
       <div className="mx-auto mt-6 max-w-2xl px-6 md:px-10">
+        <Figure image={images[0]} card={card} />
+      </div>
+    )
+  }
+
+  if (layout === 'full-width') {
+    // Like `contained`, but no max-width cap -- fills the same width
+    // the chapter's own text column does (just `px-6 md:px-10`), for
+    // a wide single image (a diagram, a node graph) that reads as too
+    // small boxed into `contained`'s narrower column but doesn't need
+    // `full-bleed`'s true edge-to-edge treatment either.
+    return (
+      <div className="mt-6 w-full px-6 md:px-10">
         <Figure image={images[0]} card={card} />
       </div>
     )

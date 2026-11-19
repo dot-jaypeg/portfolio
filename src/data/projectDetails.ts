@@ -74,15 +74,15 @@ import usMerch1 from '../assets/images/projects/detail/urban-seoul/merch-1.jpg'
 import usMerch2 from '../assets/images/projects/detail/urban-seoul/merch-2.jpg'
 import usSocial from '../assets/images/projects/detail/urban-seoul/social.jpg'
 
-import jadeRenderHero from '../assets/images/projects/detail/jade-sword/expanded-1.jpg'
-import jadeRenderAlt from '../assets/images/projects/detail/jade-sword/expanded-2.jpg'
-import jadeConceptSketch from '../assets/images/projects/detail/jade-sword/concept-sketch.jpg'
+import jadeConceptSketch from '../assets/images/projects/detail/jade-sword/concept-sketch.png'
 import jadeModelShaded from '../assets/images/projects/detail/jade-sword/model-shaded.jpg'
 import jadeModelWireframeFull from '../assets/images/projects/detail/jade-sword/model-wireframe-full.jpg'
 import jadeModelWireframeDetail from '../assets/images/projects/detail/jade-sword/model-wireframe-detail.jpg'
 import jadeTexturingGraph from '../assets/images/projects/detail/jade-sword/texturing-shader-graph.jpg'
-import jadeTurntable from '../assets/images/projects/detail/jade-sword/render-turntable.mp4'
-import jadeTurntablePoster from '../assets/images/projects/detail/jade-sword/render-turntable-poster.jpg'
+import jadeResearchRender02 from '../assets/images/projects/detail/jade-sword/research-render-02.png'
+import jadeResearchRender03 from '../assets/images/projects/detail/jade-sword/research-render-03.png'
+import jadeResearchRender04 from '../assets/images/projects/detail/jade-sword/research-render-04.png'
+import jadeFinalRender from '../assets/images/projects/detail/jade-sword/final-render.jpg'
 
 import bagguSwatches from '../assets/images/projects/detail/baggu/swatches.jpg'
 
@@ -1072,27 +1072,58 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     heroBold: 'Autodesk Maya',
     heroTagline: ', designed to serve both animation and game design needs.',
     tags: ['3D Modeling', 'Texturing', 'Game Art'],
-    intro:
-      'Built with a focus on detail and functionality, the final render is a versatile, visually compelling asset ready for use across animation and game design.',
+    // No intro paragraph for this one -- the hero sentence already
+    // covers it, and the brief's own "built with a focus on detail
+    // and functionality..." line read as filler underneath it.
+    intro: [],
     chapters: [
       {
         label: 'Research',
         collapsible: true,
         text: 'Strong weapon design starts with silhouette, proportion, and material rendering — each piece needs to feel functional and consistent with its world. Many of Genshin Impact’s weapons draw on real swords, polearms, and artifacts, so historical and cultural reference was a key first step. Real jade swords were ceremonial, carved from tough but brittle nephrite or jadeite with abrasives like quartz sand, then finished with carvings, gold inlays, or bronze fittings symbolizing power and purity. Texturing followed the game’s anime-inspired look — stylized shading and painterly effects over hyper-realistic detail.',
-        layout: 'full-bleed',
-        images: [],
+        // Early render passes, transparent cutouts -- `imagesOnCard:
+        // false` drops the card backdrop that would otherwise show as
+        // an unwanted grey box around each one.
+        layout: 'trio',
+        imagesOnCard: false,
+        images: [
+          {
+            src: jadeResearchRender02,
+            alt: 'Jade Sword early render pass, variant one',
+            width: 1200,
+            height: 1200,
+          },
+          {
+            src: jadeResearchRender03,
+            alt: 'Jade Sword early render pass, variant two',
+            width: 1200,
+            height: 1200,
+          },
+          {
+            src: jadeResearchRender04,
+            alt: 'Jade Sword early render pass, variant three',
+            width: 1200,
+            height: 1200,
+          },
+        ],
       },
       {
         label: 'Ideating & Concepting',
         collapsible: true,
         text: 'The concept began in Procreate, inspired by Genshin Impact’s own weapon designs. Where the game’s swords lean organic and symmetrical, this one takes an asymmetrical approach — closer to a natural, unpolished form. Sketching refined the details before modeling began, locking in the accuracy and depth the final render needed.',
+        // The sketch's own paper background is removed -- just the
+        // linework, recolored to the site's cream so it stays
+        // visible against the dark page instead of reading as faint
+        // purple-on-white. `imagesOnCard: false` for the same reason
+        // as Research above: no backdrop behind a transparent cutout.
         layout: 'contained',
+        imagesOnCard: false,
         images: [
           {
             src: jadeConceptSketch,
             alt: 'Jade Sword concept sketch with material callouts',
-            width: 1600,
-            height: 1600,
+            width: 1187,
+            height: 1830,
           },
         ],
       },
@@ -1100,25 +1131,31 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Modeling & Editing',
         collapsible: true,
         text: 'In Maya, the model started from basic polysurface shapes — cubes, spheres, cylinders — then took form through extrusion, beveling, and vertex adjustments.',
-        layout: 'trio',
+        // Same flush/parallax pairing Contra's, NSU's, and Resonance's
+        // own chapters use -- `full-page-two-up` crops each shot to
+        // fill its half of the viewport-height box regardless of its
+        // own native ratio, so the three screenshots' slightly
+        // different proportions are a non-issue here.
+        layout: 'full-page-two-up',
         images: [
           {
             src: jadeModelShaded,
             alt: 'Jade Sword base model, shaded viewport',
-            width: 937,
-            height: 619,
           },
           {
             src: jadeModelWireframeFull,
             alt: 'Jade Sword full model wireframe',
-            width: 836,
-            height: 617,
           },
+        ],
+        moreImages: [
           {
-            src: jadeModelWireframeDetail,
-            alt: 'Jade Sword hilt and gemstone wireframe detail',
-            width: 827,
-            height: 645,
+            layout: 'full-page',
+            images: [
+              {
+                src: jadeModelWireframeDetail,
+                alt: 'Jade Sword hilt and gemstone wireframe detail',
+              },
+            ],
           },
         ],
       },
@@ -1126,7 +1163,9 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'UV Mapping & Texturing',
         collapsible: true,
         text: 'The hardest stage was UV mapping — unwrapping the model’s surface onto a 2D plane so textures apply accurately. Planar, cylindrical, and automatic projections were adjusted to avoid stretching or distortion, then textures were applied and refined in Arnold through techniques like bump mapping.',
-        layout: 'contained',
+        // `full-width` instead of `contained` -- this node graph reads
+        // as too small boxed into `contained`'s narrower column.
+        layout: 'full-width',
         images: [
           {
             src: jadeTexturingGraph,
@@ -1137,38 +1176,18 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
       },
       {
-        label: 'Rendered Model',
+        label: 'Final Render',
         collapsible: true,
         text: [
           'Dome lighting with an HDRI gave the final render soft, natural light and environmental reflections, completed in Maya’s Arnold renderer with exposure, sampling, and resolution tuned for the final output.',
           'The elongated, jagged blade carries a dark jade texture for an ethereal, mystical look, its sharp curves and asymmetry keeping the design organic rather than polished. At the hilt, a glowing crystalline gemstone sits inside leaf-like extensions, while dragon-scaled, metallic gold detailing on the handle adds a fierce, battle-ready contrast.',
         ],
-        layout: 'full-page-two-up',
+        layout: 'full-page',
         tall: true,
         images: [
           {
-            src: jadeRenderHero,
-            alt: 'Jade Sword final render, dark starfield background',
-          },
-          {
-            src: jadeRenderAlt,
-            alt: 'Jade Sword final render, alternate angle over water',
-          },
-        ],
-        moreImages: [
-          {
-            // Closing on the turntable -- real audio, so `autoplay`
-            // (muted on scroll-in, controls to unmute) rather than a
-            // silent loop.
-            layout: 'full-page',
-            images: [
-              {
-                video: jadeTurntable,
-                poster: jadeTurntablePoster,
-                videoMode: 'autoplay',
-                alt: 'Jade Sword turntable render reveal',
-              },
-            ],
+            src: jadeFinalRender,
+            alt: 'Jade Sword final render, over water at dusk',
           },
         ],
       },
