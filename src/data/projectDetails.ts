@@ -1087,7 +1087,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Brand Guide',
-        collapsible: true,
         text: 'The full brand guide, page by page.',
         layout: 'full-bleed',
         images: [],
