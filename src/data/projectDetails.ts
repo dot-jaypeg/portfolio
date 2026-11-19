@@ -63,13 +63,16 @@ import nsuBeachDayRecap from '../assets/images/projects/detail/nikkei-student-un
 import nsuBeachDayRecapPoster from '../assets/images/projects/detail/nikkei-student-union/beach-day-recap-poster.jpg'
 
 import fetchBrandTraits from '../assets/images/projects/detail/fetch-doggy-deli/packaging-1.jpg'
-import fetchMenuMockup from '../assets/images/projects/detail/fetch-doggy-deli/packaging-2.jpg'
 import fetchFrenchieMark from '../assets/images/projects/detail/fetch-doggy-deli/branding-frenchie-mark.jpg'
-import fetchMenuSpecSheet from '../assets/images/projects/detail/fetch-doggy-deli/menu-pink.jpg'
-import fetchPackagingCups from '../assets/images/projects/detail/fetch-doggy-deli/packaging-cups-social.jpg'
-import fetchTruckHero from '../assets/images/projects/detail/fetch-doggy-deli/truck-hero.jpg'
-import fetchTruckComposite from '../assets/images/projects/detail/fetch-doggy-deli/truck-composite.jpg'
-import fetchSocialPhones from '../assets/images/projects/detail/fetch-doggy-deli/social-phones-composite.jpg'
+import fetchMotif1 from '../assets/images/projects/detail/fetch-doggy-deli/motif-frenchie-01.png'
+import fetchMotif2 from '../assets/images/projects/detail/fetch-doggy-deli/motif-frenchie-02.png'
+import fetchMotif3 from '../assets/images/projects/detail/fetch-doggy-deli/motif-frenchie-03.png'
+import fetchMenuMockupPink from '../assets/images/projects/detail/fetch-doggy-deli/menu-mockup-pink.jpg'
+import fetchMenuFlatPink from '../assets/images/projects/detail/fetch-doggy-deli/menu-flat-pink.jpg'
+import fetchMenuFlatGreen from '../assets/images/projects/detail/fetch-doggy-deli/menu-flat-green.jpg'
+import fetchTruckSide from '../assets/images/projects/detail/fetch-doggy-deli/truck-side.jpg'
+import fetchSocialOrganic from '../assets/images/projects/detail/fetch-doggy-deli/social-organic.jpg'
+import fetchSocialPaid from '../assets/images/projects/detail/fetch-doggy-deli/social-paid.jpg'
 
 import usIntroCrowd from '../assets/images/projects/detail/urban-seoul/intro-crowd.jpg'
 import usIdeationPhoto from '../assets/images/projects/detail/urban-seoul/ideation-campaign-photo.jpg'
@@ -991,6 +994,15 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       'Inspired by a beloved Frenchie named Yuki, fetch! was built for dog-loving places like SoCal, where park time often gets cut short when a dog needs a snack or a meal. fetch! solves that with fresh food and treats made exclusively for dogs, using natural, local ingredients — fuel to keep playing, and a reason to stay at the park a little longer.',
     chapters: [
       {
+        layout: 'cluster',
+        imagesOnCard: false,
+        images: [
+          { src: fetchMotif1, alt: 'fetch! line-drawn Frenchie motif, playing', width: 370, height: 268, size: 'sm' },
+          { src: fetchMotif2, alt: 'fetch! line-drawn Frenchie motif, stretching', width: 439, height: 360, size: 'sm' },
+          { src: fetchMotif3, alt: 'fetch! line-drawn Frenchie motif, curled up', width: 255, height: 314, size: 'sm' },
+        ],
+      },
+      {
         label: 'Branding',
         collapsible: true,
         text: 'The identity is built on three traits: loyal, playful, and fresh. A palette of deep green, hot pink, cream, and lime keeps it lively and park-ready. Park Lane Italic gives headings an editorial charm, while Sofia Pro keeps body copy clean and friendly, anchored by the tagline "the doggy deli." The wordmark’s lowercase letterforms carry subtle fur-like details, paired with a loose line-drawn Frenchie illustration inspired by Yuki.',
@@ -1013,23 +1025,22 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         layout: 'full-page-two-up',
         images: [
           {
-            src: fetchMenuMockup,
+            src: fetchMenuMockupPink,
             alt: 'fetch! menu card mockup',
           },
           {
-            src: fetchPackagingCups,
-            alt: 'fetch! paw-print cup and bone broth pouch packaging',
+            src: fetchMenuFlatPink,
+            alt: 'fetch! menu, pink flat design',
           },
         ],
         moreImages: [
           {
-            layout: 'full-width',
+            layout: 'full-page',
+            tall: true,
             images: [
               {
-                src: fetchMenuSpecSheet,
-                alt: 'fetch! full menu spec sheet',
-                width: 2000,
-                height: 1399,
+                src: fetchMenuFlatGreen,
+                alt: 'fetch! menu, green flat design',
               },
             ],
           },
@@ -1043,19 +1054,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         tall: true,
         images: [
           {
-            src: fetchTruckHero,
-            alt: 'fetch! food truck, front view, staged in a dog park',
-          },
-        ],
-        moreImages: [
-          {
-            layout: 'full-page',
-            images: [
-              {
-                src: fetchTruckComposite,
-                alt: 'fetch! food truck, front, service window, and aerial park views',
-              },
-            ],
+            src: fetchTruckSide,
+            alt: 'fetch! food truck, side view, staged in a dog park',
           },
         ],
       },
@@ -1066,8 +1066,19 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         layout: 'full-page',
         images: [
           {
-            src: fetchSocialPhones,
-            alt: 'fetch! Instagram feed post, story, and profile grid mockups',
+            src: fetchSocialOrganic,
+            alt: 'fetch! organic Instagram profile and highlight covers',
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'full-page',
+            images: [
+              {
+                src: fetchSocialPaid,
+                alt: 'fetch! paid Instagram feed ad and story ad',
+              },
+            ],
           },
         ],
       },
