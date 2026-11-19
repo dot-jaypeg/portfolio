@@ -87,7 +87,13 @@ function AutoplayInViewVideo({
         const el = ref.current
         if (el) el.muted = !el.muted
       }}
-      className={`cursor-pointer ${className}`}
+      // In-page sizing can be `object-cover`/`object-contain` cropped
+      // or letterboxed to fit whatever box it's sitting in, but the
+      // browser's own fullscreen view should always show the file's
+      // real aspect ratio untouched -- `object-contain` there
+      // letterboxes instead of cropping, for landscape and portrait
+      // sources alike.
+      className={`cursor-pointer ${className} [&:fullscreen]:object-contain [&:-webkit-full-screen]:object-contain`}
     />
   )
 }
@@ -132,7 +138,16 @@ function Media({
       return <AutoplayInViewVideo image={image} className={className} observeRef={observeRef} />
     }
     return (
-      <video src={image.video} poster={image.poster} controls preload="none" aria-label={image.alt} className={className} />
+      <video
+        src={image.video}
+        poster={image.poster}
+        controls
+        preload="none"
+        aria-label={image.alt}
+        // See AutoplayInViewVideo's own note -- same fullscreen
+        // override, same reason.
+        className={`${className} [&:fullscreen]:object-contain [&:-webkit-full-screen]:object-contain`}
+      />
     )
   }
   if (image.src) {
