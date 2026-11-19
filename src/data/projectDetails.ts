@@ -514,49 +514,52 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Incubus: Vinyls',
         collapsible: true,
         text: 'Five campaigns were pitched for Incubus: a Halloween post tied to Drive’s Surf’s Up moment, an end-of-year Wrapped recap, a 2025 tour recap to reopen the band’s YouTube channel, Spotify DMs to thank top listeners, and influencer vinyl unboxings ahead of the vinyl release.',
-        // The vinyl clip's own phone mockup leads the chapter --
-        // `autoplay` (muted on scroll-in, click to unmute, audio
-        // track restored) rather than a silent loop.
-        layout: 'phone-row',
+        // Neither of these is actually a screenshotted app post the
+        // way A7X's/Deftones' assets are, so a phone mockup was never
+        // quite honest framing for them -- big and flush instead,
+        // same full-page-two-up treatment as AFI's and A7X's own
+        // leads, puts the two strongest images (the shelf, the vinyl
+        // close-up) on equal footing instead of one being a small
+        // phone adrift in its own mostly-empty row.
+        layout: 'full-page-two-up',
         images: [
           {
+            src: incubusVinylShelf,
+            alt: 'Shelf of Incubus vinyl records',
+          },
+          {
+            // `autoplay` (muted on scroll-in, click to unmute, audio
+            // track restored) rather than a silent loop, since this
+            // is the one pitched specifically as an unboxing video.
             video: incubusVinylClip,
             poster: incubusVinylPoster,
             videoMode: 'autoplay',
             alt: 'Incubus vinyl record close-up, pitched for an unboxing campaign',
-            width: 608,
-            height: 1080,
           },
+        ],
+        links: [
+          { label: 'Instagram Post', href: 'https://www.instagram.com/reel/DRVZMkKkhVl/?dmpr=MTY2cW5vdXZwZzVseA==' },
+          { label: 'TikTok Post', href: 'https://www.tiktok.com/t/ZPNRVHRox/' },
         ],
         moreImages: [
           {
-            // The vinyl shelf photo and the Brandon Boyd b-roll,
-            // paired plain (not mocked up) below the phone -- the
-            // b-roll has no audio track at all (not just muted),
-            // since it's pure atmosphere, not something worth
-            // unmuting.
-            layout: 'full-page-two-up',
+            // The Brandon Boyd b-roll closes the chapter as a small,
+            // plain aside instead of competing for attention with the
+            // pitch's own two lead images -- no audio track at all
+            // (not just muted), since it's pure atmosphere, not
+            // something meant to be unmuted.
+            layout: 'contained',
             images: [
-              {
-                src: incubusVinylShelf,
-                alt: 'Shelf of Incubus vinyl records',
-              },
               {
                 video: brandonCloseup,
                 poster: brandonCloseupPoster,
                 videoMode: 'loop',
                 alt: 'Brandon Boyd performing live, close-up b-roll',
+                width: 960,
+                height: 720,
               },
             ],
           },
-        ],
-        // Stacked beside the (single, otherwise lonely-looking) phone
-        // mockup instead of centered below the whole row, to balance
-        // the row out rather than leave the rest of it empty.
-        linksInline: true,
-        links: [
-          { label: 'Instagram Post', href: 'https://www.instagram.com/reel/DRVZMkKkhVl/?dmpr=MTY2cW5vdXZwZzVseA==' },
-          { label: 'TikTok Post', href: 'https://www.tiktok.com/t/ZPNRVHRox/' },
         ],
       },
     ],
