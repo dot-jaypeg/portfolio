@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { gsap, ScrollTrigger } from '../lib/gsap'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import type { ProjectChapter as ProjectChapterData } from '../data/projectDetails'
@@ -162,6 +162,22 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           <ImageGrid layout={block.layout} images={block.images} card={card} tall={block.tall} />
         </div>
       ))}
+      {chapter.links && chapter.links.length > 0 && (
+        <div data-reveal className="mt-10 flex flex-wrap gap-4 px-6 md:px-10">
+          {chapter.links.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+              style={{ '--pill-accent': accent, '--pill-fg': accent, borderColor: `${accent}66` } as CSSProperties}
+              className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider text-[var(--pill-fg)] uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      )}
     </section>
   )
 }

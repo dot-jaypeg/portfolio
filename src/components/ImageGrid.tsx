@@ -12,6 +12,7 @@ export type ImageGridLayout =
   | 'cluster'
   | 'contained'
   | 'grid-3'
+  | 'phone-row'
 
 // Plays once its container scrolls into view, pauses once it scrolls
 // back out -- starts muted (autoplay triggered by scroll, not a real
@@ -298,6 +299,31 @@ function Figure({
   )
 }
 
+// A literal phone-shaped frame around a real screenshot (a reposted
+// Instagram story, a feed post with its own like/comment counts) --
+// the screenshot already carries its own status bar and app chrome,
+// so this just gives it a bezel/corner radius to read as a device
+// sitting on the page instead of a bare cropped image. `rounded-2xl`
+// here is a deliberate exception to the rest of the site's sharp
+// corners -- it's describing an actual phone's shape, not a generic
+// card.
+function PhoneMockup({ image }: { image: ProjectImage }) {
+  const hasMedia = Boolean(image.src || image.video)
+  return (
+    <div className="mx-auto w-full max-w-[260px]">
+      <div
+        className="overflow-hidden rounded-[2rem] border-[6px] border-cream/15 bg-ink shadow-xl shadow-black/40"
+        style={{ aspectRatio: hasMedia ? `${image.width} / ${image.height}` : '9 / 19.5' }}
+      >
+        <Media image={image} className="h-full w-full object-cover" />
+      </div>
+      {image.caption && (
+        <p className="font-body mt-3 text-center text-xs tracking-[0.08em] text-cream/40">{image.caption}</p>
+      )}
+    </div>
+  )
+}
+
 // Literal, statically-greppable class strings -- Tailwind's scanner
 // needs the full utility name to appear in source text, so this can't
 // be built with a template literal like `w-${size}`.
@@ -380,6 +406,20 @@ export function ImageGrid({
       <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-3 md:gap-10 md:px-10">
         {images.map((image, i) => (
           <Figure key={`${image.alt}-${i}`} image={image} card={card} />
+        ))}
+      </div>
+    )
+  }
+
+  if (layout === 'phone-row') {
+    // Centered row of phone-framed screenshots/videos -- wraps on
+    // narrow viewports instead of a fixed column count, since each
+    // phone has its own fixed max-width rather than sharing a grid
+    // track.
+    return (
+      <div className="mx-auto mt-6 flex max-w-5xl flex-wrap justify-center gap-10 px-6 md:px-10">
+        {images.map((image, i) => (
+          <PhoneMockup key={`${image.alt}-${i}`} image={image} />
         ))}
       </div>
     )

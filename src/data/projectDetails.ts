@@ -17,17 +17,19 @@ import chapmanStickerPoster from '../assets/images/projects/detail/contra-coffee
 import visionCards from '../assets/images/projects/detail/afi-marketing-campaign/vision-cards.jpg'
 import membershipCards from '../assets/images/projects/detail/afi-marketing-campaign/membership-cards.mp4'
 import membershipCardsPoster from '../assets/images/projects/detail/afi-marketing-campaign/membership-cards-poster.jpg'
-import a7xMerchStory from '../assets/images/projects/detail/afi-marketing-campaign/a7x-merch-story.jpg'
-import a7xHalloweenMask from '../assets/images/projects/detail/afi-marketing-campaign/a7x-halloween-mask.jpg'
 import deftonesMerchStory from '../assets/images/projects/detail/afi-marketing-campaign/deftones-merch-story.jpg'
 import incubusVinylShelf from '../assets/images/projects/detail/afi-marketing-campaign/incubus-vinyl-shelf.jpg'
 import incubusVinylShelf2 from '../assets/images/projects/detail/afi-marketing-campaign/incubus-vinyl-shelf-2.jpg'
 import incubusVinylVideo from '../assets/images/projects/work-covers/afi-work.mp4'
 import incubusVinylPoster from '../assets/images/projects/work-covers/afi-work-poster.jpg'
 import afiLiveCloseup from '../assets/images/projects/detail/afi-marketing-campaign/afi-live-closeup.jpg'
-import afiLiveFullStage from '../assets/images/projects/detail/afi-marketing-campaign/afi-live-fullstage.jpg'
-import a7xMerchStory2 from '../assets/images/projects/detail/afi-marketing-campaign/a7x-merch-story-2.jpg'
+import afiLiveBassist from '../assets/images/projects/detail/afi-marketing-campaign/afi-live-bassist.jpg'
+import a7xStoryMockup1 from '../assets/images/projects/detail/afi-marketing-campaign/a7x-story-mockup-1.jpg'
+import a7xStoryMockup2 from '../assets/images/projects/detail/afi-marketing-campaign/a7x-story-mockup-2.jpg'
+import a7xStoryMockup3 from '../assets/images/projects/detail/afi-marketing-campaign/a7x-story-mockup-3.jpg'
 import deftonesMerchStory2 from '../assets/images/projects/detail/afi-marketing-campaign/deftones-merch-story-2.jpg'
+import brandonCloseup from '../assets/images/projects/detail/afi-marketing-campaign/brandon-closeup.mp4'
+import brandonCloseupPoster from '../assets/images/projects/detail/afi-marketing-campaign/brandon-closeup-poster.jpg'
 
 import resonancePoster from '../assets/images/projects/detail/ui-design-for-resonance/poster.jpg'
 import splash1 from '../assets/images/projects/detail/ui-design-for-resonance/splash-1.jpg'
@@ -148,6 +150,11 @@ export interface ProjectChapter extends ProjectImageBlock {
   // renders small (a notch above the label itself) in a dropdown
   // instead of the standard big editorial paragraph. Requires `label`.
   collapsible?: boolean
+  // Pill link buttons (same style as ProjectHero's "Visit Site") below
+  // this chapter's images/moreImages -- for a link specific to what
+  // this chapter is about (a campaign's own site, the artist's own
+  // Instagram) rather than the project-level link in the hero.
+  links?: { label: string; href: string }[]
 }
 
 export interface ProjectLinks {
@@ -359,16 +366,15 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     // reads better bolded into the hero sentence.
     heroBold: 'Velvet Hammer Music Management',
     heroTagline: ', supporting Incubus, AFI, Avenged Sevenfold, and Deftones.',
-    tags: ['Digital Marketing', 'Social Media', 'Merch Promotion'],
+    tags: ['Digital Marketing', 'Social Media', 'Merchandising'],
     intro:
       'Velvet Hammer is a music management company representing hard rock, alternative metal, and post-grunge artists. The internship centered on the digital side of the roster, developing creative campaigns, Instagram content, visual assets, and brand guidelines alongside managers and the marketing team. Each artist called for a different voice, so the work moved between fan-club identity, merch promotion, weekly content strategy, and overall daily management of each band.',
     introImage: {
       // Same overview placement as NSU's lead photo -- a single
       // establishing shot above the first chapter, not scoped to any
-      // one artist. AFI's own stage backdrop happens to carry the
-      // same radiating sun mark the Despair Faction cards reuse below.
+      // one artist.
       src: afiLiveCloseup,
-      alt: 'AFI performing live, with the Despair Faction sun mark on the backdrop',
+      alt: 'AFI performing live on stage, full band silhouetted',
     },
     chapters: [
       {
@@ -381,13 +387,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         layout: 'full-page-two-up',
         images: [
           {
-            // Silent product-rotation clip through all five colorways
-            // -- no dialogue/narration worth unmuting, so `loop`
-            // (always muted, no controls) instead of `autoplay`.
-            video: membershipCards,
-            poster: membershipCardsPoster,
-            videoMode: 'loop',
-            alt: 'AFI Despair Faction membership cards in five colorways',
+            src: afiLiveBassist,
+            alt: 'AFI performing live, bassist in the foreground with the sun-mark backdrop',
           },
           {
             src: visionCards,
@@ -396,98 +397,131 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
         moreImages: [
           {
-            // Closing on the full stage shot -- same sun mark backdrop
-            // as the overview photo, now with the whole band in frame.
+            // Closing on the membership cards' own product-rotation
+            // clip -- silent, no dialogue worth unmuting, so `loop`
+            // rather than `autoplay`.
             layout: 'full-page',
             images: [
               {
-                src: afiLiveFullStage,
-                alt: 'AFI performing live on stage with full band and sun-mark backdrop',
+                video: membershipCards,
+                poster: membershipCardsPoster,
+                videoMode: 'loop',
+                alt: 'AFI Despair Faction membership cards in five colorways',
               },
             ],
           },
         ],
+        links: [
+          { label: 'holyvisions.net', href: 'https://holyvisions.net' },
+          { label: 'despairfaction.io', href: 'https://despairfaction.io' },
+        ],
       },
       {
-        label: 'Avenged Sevenfold: Merch and Promotions',
+        label: 'A7X: Social Media Promos',
         collapsible: true,
         text: 'Story graphics promoted the Magic merch collection, pulling the painted artwork across tees and hoodies. A Deathbat Halloween mask offer, free with a $75 purchase, used a worn-paper, typewriter style to match the band’s darker visual identity. Pitched ideas rounded out the work, including a Guess the Riff TikTok challenge, a custom Discord emoji pack, and tour vlogs.',
-        layout: 'full-page-two-up',
+        // Real phone screenshots of the posts themselves (status bar,
+        // app chrome, and for the third one, its own engagement
+        // numbers) -- `phone-row` frames each one like a device sitting
+        // on the page instead of a bare cropped image.
+        layout: 'phone-row',
         images: [
           {
-            src: a7xMerchStory,
-            alt: 'Avenged Sevenfold Magic merch collection story graphic',
+            src: a7xStoryMockup1,
+            alt: 'Screenshot of the Deathbat Halloween mask offer reposted as an Instagram story',
+            width: 461,
+            height: 1000,
           },
           {
-            src: a7xHalloweenMask,
-            alt: 'Avenged Sevenfold free Deathbat Halloween mask offer',
+            src: a7xStoryMockup2,
+            alt: 'Screenshot of the Magic merch collection Instagram story',
+            width: 461,
+            height: 1000,
           },
-        ],
-        moreImages: [
           {
-            // A second, differently-laid-out pass at the same merch
-            // collection -- closing the chapter tall, same as AFI's.
-            layout: 'full-page',
-            tall: true,
-            images: [
-              {
-                src: a7xMerchStory2,
-                alt: 'Avenged Sevenfold Magic merch collection, alternate story layout',
-              },
-            ],
+            src: a7xStoryMockup3,
+            alt: 'Screenshot of the Deathbat Halloween mask offer feed post, with its like and share counts',
+            width: 461,
+            height: 1000,
           },
         ],
       },
       {
-        label: 'Deftones: Private Music Merch',
+        label: 'Deftones: Private Music',
         collapsible: true,
         text: 'Story graphics for Deftones tour and Private Music merch showcased tees, hoodies, CD, and vinyl on a dark, glowing background. The layouts built on the album artwork’s white serpent and the band’s green and lavender palette, keeping the products as the focus.',
-        // Two distinct layout passes on the same merch set, paired
-        // flush like AFI's and A7X's own chapters, in place of the
-        // single small `contained` card this used to be.
-        layout: 'full-page-two-up',
-        tall: true,
+        // Same phone-mockup treatment as A7X's chapter -- these are
+        // Instagram story graphics too, just not screenshotted with
+        // the app chrome baked in like A7X's were.
+        layout: 'phone-row',
         images: [
           {
             src: deftonesMerchStory,
             alt: 'Deftones Private Music tour merch story graphic',
+            width: 900,
+            height: 1600,
           },
           {
             src: deftonesMerchStory2,
             alt: 'Deftones Private Music tour merch, alternate story layout',
+            width: 900,
+            height: 1600,
           },
         ],
+        // TODO: add the Instagram link once confirmed -- not guessing
+        // the exact handle/URL for a real band's account.
+        links: [],
       },
       {
-        label: 'Incubus: Content Strategy',
+        label: 'Incubus: Vinyls',
         collapsible: true,
         text: 'Five campaigns were pitched for Incubus: a Halloween post tied to Drive’s Surf’s Up moment, an end-of-year Wrapped recap, a 2025 tour recap to reopen the band’s YouTube channel, Spotify DMs to thank top listeners, and influencer vinyl unboxings ahead of the vinyl release.',
         layout: 'full-page-two-up',
         images: [
           {
-            // Silent b-roll of the vinyl, same clip used as this
-            // project's own /work cover -- `loop` rather than
-            // `autoplay` for the same reason as the membership cards.
-            video: incubusVinylVideo,
-            poster: incubusVinylPoster,
-            videoMode: 'loop',
-            alt: 'Incubus vinyl record close-up, pitched for an unboxing campaign',
-          },
-          {
             src: incubusVinylShelf,
             alt: 'Shelf of Incubus vinyl records',
+          },
+          {
+            src: incubusVinylShelf2,
+            alt: 'A second angle of the Incubus vinyl record shelf',
           },
         ],
         moreImages: [
           {
-            layout: 'full-page',
+            // Both pitched-video ideas on their own phone mockups --
+            // separate from the shelf photos above so they read as
+            // pitched ideas, not two more photos in the pair. The
+            // vinyl clip gets `autoplay` (muted on scroll-in, click to
+            // unmute) like other project videos; the raw performance
+            // b-roll has no audio track at all (not just muted), since
+            // it's pure atmosphere, not something worth unmuting, and
+            // a phone-size frame keeps it from reading as the single
+            // biggest thing on the page.
+            layout: 'phone-row',
             images: [
               {
-                src: incubusVinylShelf2,
-                alt: 'A second angle of the Incubus vinyl record shelf',
+                video: incubusVinylVideo,
+                poster: incubusVinylPoster,
+                videoMode: 'autoplay',
+                alt: 'Incubus vinyl record close-up, pitched for an unboxing campaign',
+                width: 608,
+                height: 1080,
+              },
+              {
+                video: brandonCloseup,
+                poster: brandonCloseupPoster,
+                videoMode: 'loop',
+                alt: 'Brandon Boyd performing live, close-up b-roll',
+                width: 960,
+                height: 720,
               },
             ],
           },
+        ],
+        links: [
+          { label: 'Instagram', href: 'https://www.instagram.com/reel/DRVZMkKkhVl/?dmpr=MTY2cW5vdXZwZzVseA==' },
+          { label: 'TikTok', href: 'https://www.tiktok.com/t/ZPNRVHRox/' },
         ],
       },
     ],
