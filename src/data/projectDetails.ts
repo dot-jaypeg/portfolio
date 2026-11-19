@@ -1074,13 +1074,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           {
             src: fetchSocialOrganic,
             alt: 'fetch! organic Instagram profile and highlight covers',
-            width: 1300,
-            height: 1678,
+            width: 1377,
+            height: 1760,
           },
           {
             src: fetchSocialPaid,
             alt: 'fetch! paid Instagram feed ad and story ad',
-            width: 1550,
+            width: 1565,
             height: 2000,
           },
         ],
