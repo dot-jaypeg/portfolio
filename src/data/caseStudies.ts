@@ -231,7 +231,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: 'chi-cha',
     title: 'Chi-Cha Beverage Campaign',
-    category: 'Digital Marketing',
+    category: 'Branding & Digital Marketing',
     client: 'Chi-Cha',
     image: chichaImg,
     coverWidth: 720,
@@ -241,7 +241,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     heroSkipCoverVideo: true,
     accent: '#e391a8',
     description:
-      'A retro-arcade-themed digital push for Chi-Cha -- display ads, social posts, and a direct mailer all built around one playful visual world.',
+      'A cohesive brand identity and marketing campaign for chi-cha, a Japanese-owned matcha company selling portable juice boxes for an energy boost without the hassle of preparation.',
   },
   {
     slug: 'protocol-of-betrayal',
@@ -258,6 +258,6 @@ export const CASE_STUDIES: CaseStudy[] = [
     // right -- centering it (the default) crops half of him out.
     imagePosition: 'right center',
     description:
-      'A Star Wars-inspired cinematic short, built in Unreal Engine from lighting and environment to the final animated sequence.',
+      'A 3D animation built in Unreal Engine, exploring a Star Wars story all its own — a new narrative inside a galaxy far, far away, with a twist nobody sees coming.',
   },
 ]

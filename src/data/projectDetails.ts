@@ -112,7 +112,23 @@ import chichaVideoAd1Poster from '../assets/images/projects/detail/chi-cha/video
 import chichaVideoAd2 from '../assets/images/projects/detail/chi-cha/video-ad-2.mp4'
 import chichaVideoAd2Poster from '../assets/images/projects/detail/chi-cha/video-ad-2-poster.jpg'
 
-import protocolOfBetrayalImg from '../assets/images/projects/star-wars.jpg'
+import protocolCorridorStakeout from '../assets/images/projects/detail/protocol-of-betrayal/corridor-stakeout.jpg'
+import protocolAlleyApproach from '../assets/images/projects/detail/protocol-of-betrayal/alley-approach.jpg'
+import protocolNeonSkyline from '../assets/images/projects/detail/protocol-of-betrayal/neon-skyline.jpg'
+import protocolLowAngleWatch from '../assets/images/projects/detail/protocol-of-betrayal/low-angle-watch.jpg'
+import protocolHoloTerminal from '../assets/images/projects/detail/protocol-of-betrayal/holo-terminal.jpg'
+import protocolTieFighterModel from '../assets/images/projects/detail/protocol-of-betrayal/tie-fighter-model.png'
+import protocolStormtrooperModels from '../assets/images/projects/detail/protocol-of-betrayal/stormtrooper-models.png'
+import protocolStormtrooperWireframePose from '../assets/images/projects/detail/protocol-of-betrayal/stormtrooper-wireframe-pose.jpg'
+import protocolRiggingViewport from '../assets/images/projects/detail/protocol-of-betrayal/rigging-viewport.jpg'
+import protocolTieFighterInEngine from '../assets/images/projects/detail/protocol-of-betrayal/tie-fighter-in-engine.jpg'
+import protocolPlanetWireframe from '../assets/images/projects/detail/protocol-of-betrayal/planet-wireframe.jpg'
+import protocolSequencerStormtroopers from '../assets/images/projects/detail/protocol-of-betrayal/sequencer-stormtroopers.jpg'
+import protocolSequencerTieFighter from '../assets/images/projects/detail/protocol-of-betrayal/sequencer-tie-fighter.jpg'
+import protocolIntroTitleCard from '../assets/images/projects/detail/protocol-of-betrayal/intro-title-card.jpg'
+import protocolOpeningCrawl from '../assets/images/projects/detail/protocol-of-betrayal/opening-crawl.jpg'
+import protocolFullShortVideo from '../assets/images/projects/detail/protocol-of-betrayal/full-short.mp4'
+import protocolFullShortPoster from '../assets/images/projects/detail/protocol-of-betrayal/full-short-poster.jpg'
 
 import type { ImageGridLayout } from '../components/ImageGrid'
 
@@ -1365,17 +1381,42 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   },
 
   'chi-cha': {
-    heroLead: 'A retro-arcade-themed digital push for',
-    heroTagline: ', built around one playful visual world across display ads, social, and a direct mailer.',
-    tags: ['Digital Marketing', 'Campaign', 'Social'],
+    heroLead: 'A cohesive brand identity and marketing campaign for',
+    heroBold: 'chi-cha',
+    heroTagline:
+      ', a Japanese-owned matcha company selling portable juice boxes for an energy boost without the hassle of preparation.',
+    tags: ['Branding', 'Digital Marketing', 'Campaign'],
     intro:
-      'Chi-Cha wanted a beverage campaign that felt like its own little arcade world — bold color, chunky type, and enough consistency that a static ad and an Instagram story clearly belonged to the same brand.',
+      "Being a college student or professional in a fast-paced world is exhausting — chi-cha offers a quick, convenient, delicious caffeine boost in a portable, recyclable juice box. This project covers the brand's full marketing push, from the product itself to the campaign around it.",
+    introImage: {
+      src: chichaLifestylePhoto,
+      alt: 'chi-cha juice box in hand at the Getty Center',
+      width: 1333,
+      height: 2000,
+    },
     chapters: [
       {
-        label: 'Display & Static Ads',
+        label: 'Concepting',
         collapsible: true,
-        text: 'Display and static placements shared one arcade-inspired palette, built to stop a scroll without straying from the brand.',
-        layout: 'two-up',
+        text: "chi-cha's concept touches on matcha's culturally traditional roots, so the identity and advertising needed care and respect. The goal: a strong, recognizable presence in a competitive market, consistent across mailers, social, video ads, and the website — authentic storytelling that sets chi-cha apart while honoring matcha's heritage.",
+        layout: 'contained',
+        images: [],
+      },
+      {
+        label: 'Brand Name',
+        collapsible: true,
+        text: 'The name blends "Chi" (energy, Chinese) and "Cha" (tea, Japanese) for a vibrant, flavorful boost — with a playful double meaning, since "Chi" can also mean "to consume," so the name reads as "consume matcha." The hyphen nods to Japanese honorifics, guiding pronunciation and building a personal connection with the brand.',
+        layout: 'contained',
+        images: [],
+      },
+      {
+        label: 'Campaign',
+        collapsible: true,
+        text: [
+          'The pixelated design draws from Japanese video games like Super Mario Bros. and Pokémon — playful and energizing, while staying connected to matcha drinkers. Retro type sets the tone, echoing konbini juice-box packaging, with a green palette accented by pastels for a vibrant finish.',
+          'That identity carries across the whole campaign — the small, portable box, mailers, Instagram and TikTok content, video ads, display and popup placements, and the website all pull from the same pixel-inspired world.',
+        ],
+        layout: 'full-page-two-up',
         images: [
           {
             src: chichaDisplay,
@@ -1390,45 +1431,76 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             height: 1291,
           },
         ],
-      },
-      {
-        label: 'Social',
-        collapsible: true,
-        text: 'Stories and feed posts carried the same world into a faster, more disposable format.',
-        layout: 'two-up',
-        images: [
-          {
-            src: chichaIgStories,
-            alt: 'Chi-Cha Instagram stories design',
-            width: 2000,
-            height: 1334,
-          },
-          {
-            src: chichaSocialPosts,
-            alt: 'Chi-Cha social media post designs',
-            width: 2000,
-            height: 1334,
-          },
-        ],
-      },
-      {
-        label: 'Direct Mailer & Packaging',
-        collapsible: true,
-        text: 'The campaign closed the loop with a physical mailer and a packaging mockup, keeping the same voice off-screen.',
-        layout: 'full-page',
-        images: [
-          {
-            src: chichaMailer,
-            alt: 'Chi-Cha direct mailer design',
-          },
-        ],
         moreImages: [
           {
-            layout: 'full-page',
+            layout: 'two-up',
             images: [
+              {
+                src: chichaIgStories,
+                alt: 'Chi-Cha Instagram stories design',
+                width: 2000,
+                height: 1334,
+              },
+              {
+                src: chichaSocialPosts,
+                alt: 'Chi-Cha social media post designs',
+                width: 2000,
+                height: 1334,
+              },
+            ],
+          },
+          {
+            layout: 'full-page-two-up',
+            images: [
+              {
+                video: chichaVideoAd1,
+                poster: chichaVideoAd1Poster,
+                videoMode: 'autoplay',
+                alt: 'Chi-Cha video ad, museum and gallery lifestyle spot',
+                width: 960,
+                height: 960,
+              },
+              {
+                video: chichaVideoAd2,
+                poster: chichaVideoAd2Poster,
+                videoMode: 'autoplay',
+                alt: 'Chi-Cha video ad, on-the-go lifestyle spot',
+                width: 960,
+                height: 960,
+              },
+            ],
+          },
+          {
+            layout: 'macbook-row',
+            images: [
+              {
+                src: chichaSiteHero,
+                alt: 'chi-cha e-commerce site, pixel-art landing hero',
+                width: 2000,
+                height: 1292,
+              },
+              {
+                src: chichaSiteShop,
+                alt: 'chi-cha e-commerce site, product shop grid',
+                width: 2000,
+                height: 1292,
+              },
+            ],
+          },
+          {
+            layout: 'two-up',
+            images: [
+              {
+                src: chichaMailer,
+                alt: 'Chi-Cha direct mailer design',
+                width: 2000,
+                height: 1466,
+              },
               {
                 src: chichaPackagingMockup,
                 alt: 'Chi-Cha blueberry packaging mockup',
+                width: 2000,
+                height: 1466,
               },
             ],
           },
@@ -1438,8 +1510,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   },
 
   'protocol-of-betrayal': {
-    heroLead: 'A Star Wars-inspired cinematic short for',
-    heroTagline: ', built in Unreal Engine from lighting and environment to the final animated sequence.',
+    heroLead: 'A 3D animation built in Unreal Engine, exploring',
+    heroBold: 'a Star Wars story all its own',
+    heroTagline:
+      ' — a new narrative inside a galaxy far, far away, with a twist nobody sees coming.',
     // `imagePosition: 'right center'` (caseStudies.ts) was tuned for
     // the old static still, whose character sits off-center right --
     // the work-cover video that now plays here instead frames him
@@ -1448,35 +1522,177 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     heroImagePosition: 'center',
     tags: ['3D', 'Motion', 'Cinematics'],
     intro:
-      'A personal short built end to end in Unreal Engine — environment, lighting, and character animation — aimed at one finished cinematic beat rather than a full scene.',
+      'Protocol of Betrayal honors the franchise while charting new territory. The story follows a fugitive and an ancient relic through the slums of Nar Vayal — a planet built from scratch for the universe.',
+    introImage: {
+      src: protocolCorridorStakeout,
+      alt: 'A stormtrooper and droid in a neon-lit corridor on Nar Vayal',
+      width: 1010,
+      height: 568,
+    },
     chapters: [
       {
-        label: 'The Shot',
+        label: 'The Franchise',
         collapsible: true,
-        text: 'Lighting and camera did most of the storytelling here, built to sell the moment in a single continuous shot.',
-        layout: 'full-bleed',
+        text: "Star Wars has run for nearly five decades since George Lucas's original 1977 film — a galaxy of Jedi and Sith now under Disney, carried forward by shows like The Mandalorian and Ahsoka. Protocol of Betrayal is an original entry built inside that universe.",
+        layout: 'contained',
+        images: [],
+      },
+      {
+        label: 'Storytelling',
+        collapsible: true,
+        text: "Nar Vayal is built on atmosphere — neon-lit alleys, rain-slicked streets, and volumetric lighting doing as much storytelling as the plot. Low-angle shots make the stormtroopers intimidating, tracking shots build suspense, and small details — the droid R3-MY's expressive beeping, a disciplined patrol formation, a flickering hologram — foreshadow what's coming.",
+        layout: 'full-page',
         images: [
           {
-            src: protocolOfBetrayalImg,
-            alt: 'Protocol of Betrayal cinematic still, Unreal Engine',
-            width: 1600,
-            height: 899,
+            src: protocolAlleyApproach,
+            alt: 'A stormtrooper and droid approaching a rain-soaked neon street',
+            width: 1010,
+            height: 568,
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'trio',
+            images: [
+              {
+                src: protocolNeonSkyline,
+                alt: "An elevated view of Nar Vayal's rain-slicked, neon-signed skyline",
+                width: 1457,
+                height: 568,
+              },
+              {
+                src: protocolLowAngleWatch,
+                alt: 'A low-angle shot of a stormtrooper standing watch, framed for intimidation',
+                width: 1010,
+                height: 568,
+              },
+              {
+                src: protocolHoloTerminal,
+                alt: 'A stormtrooper interacting with a holographic terminal',
+                width: 854,
+                height: 480,
+              },
+            ],
           },
         ],
       },
       {
-        label: 'Environment & Lighting',
+        label: 'Ideating & Concepting',
         collapsible: true,
-        text: 'Placeholder chapter — add a render or screenshot of the environment build and lighting setup once you have one.',
+        text: 'With decades of canon already written, inventing a new Star Wars storyline from scratch was the hardest part. The script went through multiple rewrites before the plot — and its twist — came together.',
         layout: 'contained',
-        images: [{ alt: 'Add an environment or lighting render' }],
+        images: [],
       },
       {
-        label: 'Character Animation',
+        label: 'Building & Animating',
         collapsible: true,
-        text: 'Placeholder chapter — add an animation still, turntable, or breakdown shot once you have one.',
-        layout: 'contained',
-        images: [{ alt: 'Add a character animation still' }],
+        text: 'Nar Vayal is an original planet, built from the ground up with Coruscant, Naboo, and Cloud City as reference points. Animating the TIE fighter and droid models convincingly, with limited resources, took just as much iteration.',
+        layout: 'two-up',
+        imagesOnCard: false,
+        images: [
+          {
+            src: protocolTieFighterModel,
+            alt: 'A finished 3D TIE fighter model on a transparent background',
+            width: 1080,
+            height: 1080,
+            fit: 'contain',
+          },
+          {
+            src: protocolStormtrooperModels,
+            alt: 'Two finished stormtrooper character models on a transparent background',
+            width: 500,
+            height: 500,
+            fit: 'contain',
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'two-up',
+            images: [
+              {
+                src: protocolStormtrooperWireframePose,
+                alt: 'A stormtrooper model in a T-pose inside the 3D viewport',
+                width: 604,
+                height: 665,
+              },
+              {
+                src: protocolRiggingViewport,
+                alt: 'A stormtrooper model and camera rig inside the animation viewport',
+                width: 1457,
+                height: 568,
+              },
+            ],
+          },
+          {
+            layout: 'two-up',
+            images: [
+              {
+                src: protocolTieFighterInEngine,
+                alt: 'The TIE fighter model flying past a nebula in Unreal Engine',
+                width: 1457,
+                height: 568,
+              },
+              {
+                src: protocolPlanetWireframe,
+                alt: "A wireframe construction view of Nar Vayal's rain-soaked streets",
+                width: 1457,
+                height: 568,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: 'Editing & Rendering',
+        collapsible: true,
+        text: "Editing meant sequencing the full short and weaving in the classic Star Wars intro crawl, set to John Williams' score. From there it was rigging, lighting, and camera work — polish pass after polish pass — to make it feel authentic to the franchise.",
+        layout: 'two-up',
+        images: [
+          {
+            src: protocolSequencerStormtroopers,
+            alt: "Unreal Engine's Sequencer showing the stormtrooper animation tracks",
+            width: 1920,
+            height: 1029,
+          },
+          {
+            src: protocolSequencerTieFighter,
+            alt: "Unreal Engine's Sequencer showing the TIE fighter's camera cuts",
+            width: 1920,
+            height: 1029,
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'two-up',
+            images: [
+              {
+                src: protocolIntroTitleCard,
+                alt: 'The classic Star Wars logo opening the short',
+                width: 854,
+                height: 480,
+              },
+              {
+                src: protocolOpeningCrawl,
+                alt: 'The opening crawl introducing Protocol of Betrayal',
+                width: 854,
+                height: 480,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        layout: 'full-page',
+        images: [
+          {
+            video: protocolFullShortVideo,
+            poster: protocolFullShortPoster,
+            videoMode: 'controls',
+            alt: 'The complete Protocol of Betrayal animated short',
+            width: 854,
+            height: 480,
+          },
+        ],
       },
     ],
   },
