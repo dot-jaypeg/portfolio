@@ -3,6 +3,7 @@ import { gsap, ScrollTrigger } from '../lib/gsap'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import type { ProjectChapter as ProjectChapterData } from '../data/projectDetails'
 import { ImageGrid, type ImageGridLayout } from './ImageGrid'
+import { BrandGuideViewer } from './BrandGuideViewer'
 
 // Layouts that manage their own top/bottom margin internally (see
 // ImageGrid) instead of relying on this wrapper's `mt-10` -- a
@@ -180,6 +181,16 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           {!block.linksInline && <BlockLinks links={block.links} accent={accent} />}
         </div>
       ))}
+      {chapter.brandGuide && (
+        <div data-reveal className="mt-10">
+          <BrandGuideViewer
+            title={chapter.brandGuide.title}
+            pageCount={chapter.brandGuide.pageCount}
+            basePath={chapter.brandGuide.basePath}
+            pdfHref={chapter.brandGuide.pdfHref}
+          />
+        </div>
+      )}
     </section>
   )
 }

@@ -175,6 +175,12 @@ export interface ProjectChapter extends ProjectImageBlock {
   // renders small (a notch above the label itself) in a dropdown
   // instead of the standard big editorial paragraph. Requires `label`.
   collapsible?: boolean
+  // Renders a page-flip viewer (BrandGuideViewer) below this
+  // chapter's images -- `pageCount` pre-rendered page JPGs are
+  // expected at `${basePath}/page-01.jpg` etc. in /public (see
+  // scripts used to generate public/brand-guides/<slug>/), with
+  // `pdfHref` offering the original file as a direct download.
+  brandGuide?: { title: string; pageCount: number; basePath: string; pdfHref: string }
 }
 
 export interface ProjectLinks {
