@@ -118,13 +118,6 @@ export interface ProjectImage {
   // a `full-page-two-up` pair's tall column) for 'cover' to show the
   // whole thing without cropping into the actual subject.
   fit?: 'cover' | 'contain'
-  // `phone-row` layout only -- draws a fake status bar + home
-  // indicator over the image. Real phone screenshots (A7X's) already
-  // carry that chrome baked into the image itself, so adding it again
-  // would look doubled; a flat graphic (Deftones' story art, a plain
-  // video) needs it drawn on top to read as a phone screen rather
-  // than just a framed rectangle. Defaults to false.
-  phoneChrome?: boolean
 }
 
 // One image block: a layout plus the images it renders. A chapter's
@@ -404,23 +397,9 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
         moreImages: [
           {
-            // The holyvisions.net tarot site itself, captured as a
-            // full browser screenshot -- a laptop mockup instead of a
-            // phone one, since that's the device this came from.
-            layout: 'macbook-row',
-            images: [
-              {
-                src: afiHolyVisionsSite,
-                alt: 'The holyvisions.net digital tarot site, with a pulled card revealed',
-                width: 2000,
-                height: 1071,
-              },
-            ],
-          },
-          {
-            // Closing on the membership cards' own product-rotation
-            // clip -- silent, no dialogue worth unmuting, so `loop`
-            // rather than `autoplay`.
+            // The membership cards' own product-rotation clip --
+            // silent, no dialogue worth unmuting, so `loop` rather
+            // than `autoplay`.
             layout: 'full-page',
             images: [
               {
@@ -428,6 +407,21 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
                 poster: membershipCardsPoster,
                 videoMode: 'loop',
                 alt: 'AFI Despair Faction membership cards in five colorways',
+              },
+            ],
+          },
+          {
+            // Closing on the holyvisions.net tarot site itself,
+            // captured as a full browser screenshot -- a laptop
+            // mockup instead of a phone one, since that's the device
+            // this came from.
+            layout: 'macbook-row',
+            images: [
+              {
+                src: afiHolyVisionsSite,
+                alt: 'The holyvisions.net digital tarot site, with a pulled card revealed',
+                width: 2000,
+                height: 1071,
               },
             ],
           },
@@ -478,21 +472,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         layout: 'phone-row',
         images: [
           {
-            // `phoneChrome` -- unlike A7X's screenshots, this is flat
-            // story art with no status bar of its own, so without it
-            // the frame just reads as a framed rectangle, not a phone.
             src: deftonesMerchStory,
             alt: 'Deftones Private Music tour merch story graphic',
             width: 900,
             height: 1600,
-            phoneChrome: true,
           },
           {
             src: deftonesMerchStory2,
             alt: 'Deftones Private Music tour merch, alternate story layout',
             width: 900,
             height: 1600,
-            phoneChrome: true,
           },
         ],
         links: [{ label: 'Instagram', href: 'https://www.instagram.com/deftones/?hl=en' }],
@@ -502,9 +491,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         collapsible: true,
         text: 'Five campaigns were pitched for Incubus: a Halloween post tied to Drive’s Surf’s Up moment, an end-of-year Wrapped recap, a 2025 tour recap to reopen the band’s YouTube channel, Spotify DMs to thank top listeners, and influencer vinyl unboxings ahead of the vinyl release.',
         // The vinyl clip's own phone mockup leads the chapter --
-        // `phoneChrome` since it's a plain video with no status bar of
-        // its own, and `autoplay` (muted on scroll-in, click to
-        // unmute, audio track restored) rather than a silent loop.
+        // `autoplay` (muted on scroll-in, click to unmute, audio
+        // track restored) rather than a silent loop.
         layout: 'phone-row',
         images: [
           {
@@ -514,7 +502,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'Incubus vinyl record close-up, pitched for an unboxing campaign',
             width: 608,
             height: 1080,
-            phoneChrome: true,
           },
         ],
         moreImages: [

@@ -300,42 +300,23 @@ function Figure({
   )
 }
 
-// A literal phone-shaped frame around a screenshot or video -- always
-// a fixed 9:16 screen, regardless of the source image's own ratio
-// (object-cover crops to fill it), so every phone mockup on the page
-// reads as the same device instead of a different shape per image.
-// `rounded-[2.75rem]` + the thick bezel are a deliberate exception to
-// the rest of the site's sharp corners, since this is describing an
-// actual phone's shape, not a generic card. A real screenshot (A7X's)
-// already carries its own status bar and app chrome, so the frame
-// alone is enough; a flat graphic or plain video (Deftones', the
-// vinyl clip) needs `image.phoneChrome` to draw a fake status bar and
-// home indicator on top, or it just reads as a framed rectangle
-// instead of a phone screen.
+// A literal phone-shaped frame around a real screenshot (a reposted
+// Instagram story, a feed post with its own like/comment counts) --
+// the screenshot already carries its own status bar and app chrome,
+// so this just gives it a bezel/corner radius to read as a device
+// sitting on the page instead of a bare cropped image. `rounded-2xl`
+// here is a deliberate exception to the rest of the site's sharp
+// corners -- it's describing an actual phone's shape, not a generic
+// card.
 function PhoneMockup({ image }: { image: ProjectImage }) {
+  const hasMedia = Boolean(image.src || image.video)
   return (
-    <div className="mx-auto w-full max-w-[320px]">
+    <div className="mx-auto w-full max-w-[260px]">
       <div
-        className="relative overflow-hidden rounded-[2.75rem] border-[10px] border-ink bg-ink shadow-2xl shadow-black/50 ring-1 ring-cream/10"
-        style={{ aspectRatio: '9 / 16' }}
+        className="overflow-hidden rounded-[2rem] border-[6px] border-cream/15 bg-ink shadow-xl shadow-black/40"
+        style={{ aspectRatio: hasMedia ? `${image.width} / ${image.height}` : '9 / 19.5' }}
       >
         <Media image={image} className="h-full w-full object-cover" />
-        {image.phoneChrome && (
-          <>
-            <div className="absolute inset-x-0 top-0 flex items-center justify-between px-6 pt-2 text-[11px] font-semibold text-cream mix-blend-difference">
-              <span>9:41</span>
-              <span className="flex h-[9px] w-[19px] items-center rounded-[3px] border border-cream p-[1.5px]">
-                <span className="h-full w-[70%] rounded-[1px] bg-cream" />
-              </span>
-            </div>
-            <div className="absolute inset-x-0 top-1 flex justify-center">
-              <div className="h-5 w-24 rounded-full bg-ink" />
-            </div>
-            <div className="absolute inset-x-0 bottom-1.5 flex justify-center">
-              <div className="h-1 w-28 rounded-full bg-cream/70" />
-            </div>
-          </>
-        )}
       </div>
       {image.caption && (
         <p className="font-body mt-3 text-center text-xs tracking-[0.08em] text-cream/40">{image.caption}</p>
@@ -461,15 +442,13 @@ export function ImageGrid({
     // Centered row of phone-framed screenshots/videos -- wraps on
     // narrow viewports instead of a fixed column count, since each
     // phone has its own fixed max-width rather than sharing a grid
-    // track. `max-w-6xl` (not -5xl) so three phones at this size fit
-    // one row on a normal desktop viewport instead of wrapping to
-    // 2-then-1. `mt-10`/`mb-10` (not just `mt-6`) -- this block is its
+    // track. `mt-10`/`mb-10` (not just `mt-6`) -- this block is its
     // own self-contained unit of spacing now, since the chapter
     // wrapper around `moreImages` skips its usual margin for
     // `phone-row`/`macbook-row` (see ProjectChapter) to avoid doubling
     // up with this.
     return (
-      <div className="mx-auto mt-10 mb-10 flex max-w-6xl flex-wrap justify-center gap-10 px-6 md:px-10">
+      <div className="mx-auto mt-10 mb-10 flex max-w-5xl flex-wrap justify-center gap-10 px-6 md:px-10">
         {images.map((image, i) => (
           <PhoneMockup key={`${image.alt}-${i}`} image={image} />
         ))}
