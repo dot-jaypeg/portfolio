@@ -1419,13 +1419,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     heroTagline: ', introducing comic and Spider-Man motifs to reusable bags and accessories through vibrant, unique patterns.',
     tags: ['Surface Pattern', 'Textile', 'Branding'],
     intro:
-      'BAGGU is known for environmentally conscious, practical-meets-stylish reusable bags and accessories. This collection, the "Spiderverse Set," brings the bold energy of the Spider-Verse into that world — a fusion of both brands for fans and everyday users alike.',
+      'BAGGU is celebrated for its environmentally conscious approach to crafting reusable bags and accessories that seamlessly blend practicality with style. They are deeply committed to sustainability, with a core mission to minimize waste and environmental impact throughout their operations and product lifecycle. Whether it’s their iconic reusable shopping bags or their range of backpacks, totes, and pouches, BAGGU’s aesthetic exudes a timeless appeal that resonates with eco-conscious consumers seeking both functionality and fashion-forward design.',
     chapters: [
       {
         label: 'Tone',
         collapsible: true,
         text: [
-          'The project balanced BAGGU’s minimalist aesthetic with the bold, comic-inspired style of the films — visually striking yet wearable patterns for kids, students, and young adults who want both function and self-expression. Dynamic, eye-catching illustrations needed to excite Spider-Man fans while still working for everyday use.',
+          'The project balanced BAGGU’s minimalist aesthetic with the bold, comic-inspired style of the films, aiming for visually striking yet wearable patterns for kids, students, and young adults who want both function and self-expression. Dynamic, eye-catching illustrations needed to excite Spider-Man fans while still working for everyday use.',
           'BAGGU is deeply committed to sustainability, built around reusable bags, backpacks, totes, and pouches with a timeless appeal that resonates with eco-conscious consumers seeking both function and fashion-forward design.',
         ],
         layout: 'contained',
@@ -1442,8 +1442,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'The Patterns',
         collapsible: true,
         text: [
-          'The collection features four patterns — Sunflower, Anomaly, Earth-1610, and Webcomic — inspired by Marvel’s Across the Spider-Verse: graffiti art, Spider-Man motifs, and comic panel onomatopoeia, aimed at kids, teens, and young adults who want fun, electric designs that still reach the inner child.',
-          'Colors are pulled straight from the film — neon purple, teal, and red run through every design for cohesiveness. Each pattern is different, but the shared palette and Spider-Man theme bring the set together as one collection.',
+          'The collection features four patterns: Sunflower, Anomaly, Earth-1610, and Webcomic, inspired by Marvel’s Across the Spider-Verse through graffiti art, Spider-Man motifs, and comic panel onomatopoeia. The patterns aim at kids, teens, and young adults who want fun, electric designs that still reach the inner child.',
+          'Colors are pulled straight from the film, with neon purple, teal, and red running through every design for cohesiveness. Each pattern is different, but the shared palette and Spider-Man theme bring the set together as one collection.',
         ],
         // The product mockups cycle through all four named patterns
         // (including Sunflower, which has no standalone static file),
@@ -1474,19 +1474,19 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             images: [
               {
                 src: bagguPatternAnomaly,
-                alt: 'Anomaly pattern — comic-burst zigzags in teal, red, and purple',
+                alt: 'Anomaly pattern, comic-burst zigzags in teal, red, and purple',
                 width: 1400,
                 height: 1400,
               },
               {
                 src: bagguPatternWebcomic,
-                alt: 'Webcomic pattern — comic panel onomatopoeia in purple and blue',
+                alt: 'Webcomic pattern, comic panel onomatopoeia in purple and blue',
                 width: 1400,
                 height: 1400,
               },
               {
                 src: bagguPatternEarth1610,
-                alt: 'Earth-1610 pattern — glitched neon cityscape',
+                alt: 'Earth-1610 pattern, glitched neon cityscape',
                 width: 1400,
                 height: 1400,
               },
