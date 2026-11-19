@@ -1428,7 +1428,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           'The project balanced BAGGU’s minimalist aesthetic with the bold, comic-inspired style of the films, aiming for visually striking yet wearable patterns for kids, students, and young adults who want both function and self-expression. Dynamic, eye-catching illustrations needed to excite Spider-Man fans while still working for everyday use.',
           'BAGGU is deeply committed to sustainability, built around reusable bags, backpacks, totes, and pouches with a timeless appeal that resonates with eco-conscious consumers seeking both function and fashion-forward design.',
         ],
-        layout: 'contained',
+        // `full-width` instead of `contained` -- a study sketch still
+        // reads as too small/isolated boxed into contained's narrower
+        // column, with too much bare page around it.
+        layout: 'full-width',
         images: [
           {
             src: bagguToneGraffiti,
@@ -1445,10 +1448,50 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           'The collection features four patterns: Sunflower, Anomaly, Earth-1610, and Webcomic, inspired by Marvel’s Across the Spider-Verse through graffiti art, Spider-Man motifs, and comic panel onomatopoeia. The patterns aim at kids, teens, and young adults who want fun, electric designs that still reach the inner child.',
           'Colors are pulled straight from the film, with neon purple, teal, and red running through every design for cohesiveness. Each pattern is different, but the shared palette and Spider-Man theme bring the set together as one collection.',
         ],
-        // The product mockups cycle through all four named patterns
-        // (including Sunflower, which has no standalone static file),
-        // so they lead the chapter big and flush before the static
-        // swatches below.
+        // All four static pattern pieces together as one even 2x2
+        // set (Sunflower has no standalone file -- it only appears in
+        // the product mockups below) instead of a trio plus one
+        // image left stranded on its own afterward.
+        layout: 'two-up',
+        images: [
+          {
+            src: bagguPatternAnomaly,
+            alt: 'Anomaly pattern, comic-burst zigzags in teal, red, and purple',
+            width: 1400,
+            height: 1400,
+          },
+          {
+            src: bagguPatternWebcomic,
+            alt: 'Webcomic pattern, comic panel onomatopoeia in purple and blue',
+            width: 1400,
+            height: 1400,
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'two-up',
+            images: [
+              {
+                src: bagguPatternEarth1610,
+                alt: 'Earth-1610 pattern, glitched neon cityscape',
+                width: 1400,
+                height: 1400,
+              },
+              {
+                src: bagguPatternNeonSpider,
+                alt: 'Additional pattern exploration, neon spider motif',
+                caption: 'Additional pattern exploration',
+                width: 1400,
+                height: 1400,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: 'In Use',
+        collapsible: true,
+        text: 'Applied to BAGGU’s own bags and pouches, the patterns carry from flat artwork into something you’d actually sling over a shoulder.',
         layout: 'full-page-two-up',
         images: [
           {
@@ -1466,45 +1509,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             alt: 'BAGGU x Spiderverse pouch mockup, pattern close-ups',
             width: 1600,
             height: 1112,
-          },
-        ],
-        moreImages: [
-          {
-            layout: 'grid-3',
-            images: [
-              {
-                src: bagguPatternAnomaly,
-                alt: 'Anomaly pattern, comic-burst zigzags in teal, red, and purple',
-                width: 1400,
-                height: 1400,
-              },
-              {
-                src: bagguPatternWebcomic,
-                alt: 'Webcomic pattern, comic panel onomatopoeia in purple and blue',
-                width: 1400,
-                height: 1400,
-              },
-              {
-                src: bagguPatternEarth1610,
-                alt: 'Earth-1610 pattern, glitched neon cityscape',
-                width: 1400,
-                height: 1400,
-              },
-            ],
-          },
-          {
-            // A supplementary pattern exploration -- not one of the
-            // four named patterns, so it closes the chapter on its
-            // own rather than sitting in the trio above as a fourth.
-            layout: 'contained',
-            images: [
-              {
-                src: bagguPatternNeonSpider,
-                alt: 'Additional pattern exploration, neon spider motif',
-                width: 1400,
-                height: 1400,
-              },
-            ],
           },
         ],
       },
