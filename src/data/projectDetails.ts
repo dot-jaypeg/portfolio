@@ -130,6 +130,12 @@ export interface ProjectImageBlock {
   // `full-page` only -- use a taller-than-viewport box, for a square
   // or portrait source a plain viewport-height crop cuts too hard.
   tall?: boolean
+  // Pill link buttons (same style as ProjectHero's "Visit Site")
+  // right below THIS block specifically -- the chapter's own primary
+  // block or any one `moreImages` entry can carry its own, so a link
+  // can sit next to the particular image/mockup it's actually about
+  // instead of always trailing the whole chapter.
+  links?: { label: string; href: string }[]
 }
 
 export interface ProjectChapter extends ProjectImageBlock {
@@ -150,11 +156,6 @@ export interface ProjectChapter extends ProjectImageBlock {
   // renders small (a notch above the label itself) in a dropdown
   // instead of the standard big editorial paragraph. Requires `label`.
   collapsible?: boolean
-  // Pill link buttons (same style as ProjectHero's "Visit Site") below
-  // this chapter's images/moreImages -- for a link specific to what
-  // this chapter is about (a campaign's own site, the artist's own
-  // Instagram) rather than the project-level link in the hero.
-  links?: { label: string; href: string }[]
 }
 
 export interface ProjectLinks {
@@ -424,11 +425,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
                 height: 1071,
               },
             ],
+            links: [
+              { label: 'holyvisions.net', href: 'https://holyvisions.net' },
+              { label: 'despairfaction.io', href: 'https://despairfaction.io' },
+            ],
           },
-        ],
-        links: [
-          { label: 'holyvisions.net', href: 'https://holyvisions.net' },
-          { label: 'despairfaction.io', href: 'https://despairfaction.io' },
         ],
       },
       {
@@ -472,16 +473,24 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         layout: 'phone-row',
         images: [
           {
+            // `contain`, not the default `cover` -- the phone frame's
+            // real-iPhone ratio is narrower than this graphic's own
+            // ~9:16, so cover would crop its sides. Letterboxing shows
+            // the whole thing instead, and disappears into the
+            // phone's own near-black bezel since the graphic's
+            // background is already near-black.
             src: deftonesMerchStory,
             alt: 'Deftones Private Music tour merch story graphic',
             width: 900,
             height: 1600,
+            fit: 'contain',
           },
           {
             src: deftonesMerchStory2,
             alt: 'Deftones Private Music tour merch, alternate story layout',
             width: 900,
             height: 1600,
+            fit: 'contain',
           },
         ],
         links: [{ label: 'Instagram', href: 'https://www.instagram.com/deftones/?hl=en' }],

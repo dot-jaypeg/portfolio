@@ -316,13 +316,15 @@ function Figure({
 }
 
 // A literal phone-shaped frame -- always a fixed, real-iPhone screen
-// ratio (~9:19.5, object-cover crops to fit) instead of each image's
-// own ratio, plus a Dynamic Island cutout, so this reads as an actual
-// device regardless of what's inside. A7X's screenshots are already
-// shot at this exact ratio, so this is a no-op crop for them; it's
-// Deftones'/the vinyl clip's more square ~9:16 source that needs the
-// crop to stop looking like a plain rounded rectangle. `rounded-[2.75rem]`
-// is a deliberate exception to the rest of the site's sharp corners --
+// ratio (~9:19.5), plus a Dynamic Island cutout, so this reads as an
+// actual device regardless of what's inside. A7X's screenshots are
+// already shot at this exact ratio, so object-cover is a no-op crop
+// for them; a more square ~9:16 source normally gets cropped to fit
+// too, unless `image.fit: 'contain'` says to letterbox it instead
+// (Deftones' story graphics, whose own background is already near-
+// black, so the letterbox bars disappear into the phone's bezel
+// instead of reading as empty space). `rounded-[2.75rem]` is a
+// deliberate exception to the rest of the site's sharp corners --
 // it's describing an actual phone's shape, not a generic card.
 function PhoneMockup({ image }: { image: ProjectImage }) {
   return (
@@ -331,7 +333,7 @@ function PhoneMockup({ image }: { image: ProjectImage }) {
         className="relative overflow-hidden rounded-[2.75rem] border-[4px] border-cream/20 bg-ink shadow-xl shadow-black/40"
         style={{ aspectRatio: '9 / 19.5' }}
       >
-        <Media image={image} className="h-full w-full object-cover" />
+        <Media image={image} className={`h-full w-full ${image.fit === 'contain' ? 'object-contain' : 'object-cover'}`} />
         <div className="absolute inset-x-0 top-[10px] flex justify-center">
           <div className="h-[9px] w-[72px] rounded-full bg-ink" />
         </div>

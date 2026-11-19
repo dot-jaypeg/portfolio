@@ -159,27 +159,37 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
       <div data-reveal>
         <ImageGrid layout={chapter.layout} images={chapter.images} card={card} tall={chapter.tall} />
       </div>
+      <BlockLinks links={chapter.links} accent={accent} />
       {chapter.moreImages?.map((block, i) => (
         <div data-reveal key={i} className={SELF_SPACED_LAYOUTS.has(block.layout) ? '' : 'mt-10'}>
           <ImageGrid layout={block.layout} images={block.images} card={card} tall={block.tall} />
+          <BlockLinks links={block.links} accent={accent} />
         </div>
       ))}
-      {chapter.links && chapter.links.length > 0 && (
-        <div data-reveal className="mt-10 flex flex-wrap gap-4 px-6 md:px-10">
-          {chapter.links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              target="_blank"
-              rel="noreferrer"
-              style={{ '--pill-accent': accent, '--pill-fg': accent, borderColor: `${accent}66` } as CSSProperties}
-              className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider text-[var(--pill-fg)] uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-      )}
     </section>
+  )
+}
+
+// Pill link buttons (same style as ProjectHero's "Visit Site") right
+// below whichever block they're attached to -- a chapter's primary
+// block or any one `moreImages` entry, so a link can sit next to the
+// particular image/mockup it's actually about.
+function BlockLinks({ links, accent }: { links?: { label: string; href: string }[]; accent: string }) {
+  if (!links || links.length === 0) return null
+  return (
+    <div data-reveal className="mt-10 flex flex-wrap gap-4 px-6 md:px-10">
+      {links.map((link) => (
+        <a
+          key={link.href}
+          href={link.href}
+          target="_blank"
+          rel="noreferrer"
+          style={{ '--pill-accent': accent, '--pill-fg': accent, borderColor: `${accent}66` } as CSSProperties}
+          className="font-geist rounded-full border px-6 py-3 text-xs font-medium tracking-wider text-[var(--pill-fg)] uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
   )
 }
