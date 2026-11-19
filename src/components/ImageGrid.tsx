@@ -510,7 +510,7 @@ export function ImageGrid({
     return (
       <div className="mt-10 mb-10 flex flex-wrap items-end justify-center gap-10 px-6 md:px-10">
         {images.map((image, i) => (
-          <Media key={`${image.alt}-${i}`} image={image} className="h-[48vh] max-h-[620px] w-auto" />
+          <Media key={`${image.alt}-${i}`} image={image} className="h-[62vh] max-h-[780px] w-auto" />
         ))}
       </div>
     )
