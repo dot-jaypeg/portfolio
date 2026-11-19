@@ -517,8 +517,17 @@ export function ImageGrid({
     // wrapper around `moreImages` skips its usual margin for
     // `phone-row`/`macbook-row` (see ProjectChapter) to avoid doubling
     // up with this.
+    //
+    // With `inlineLinks` (a lone phone plus a button column, Incubus'
+    // case), center-align reads as an arbitrary floating pair in the
+    // middle of the page -- `justify-start`, and dropping the
+    // `mx-auto`/`max-w-5xl` centering, lines its left edge up with
+    // the chapter text above it and the nav/logo above that instead
+    // (both just `px-6 md:px-10`, no max-width of their own).
     return (
-      <div className="mx-auto mt-10 mb-10 flex max-w-5xl flex-wrap items-center justify-center gap-10 px-6 md:px-10">
+      <div
+        className={`mt-10 mb-10 flex flex-wrap items-center gap-10 px-6 md:px-10 ${inlineLinks ? 'justify-start' : 'mx-auto max-w-5xl justify-center'}`}
+      >
         {images.map((image, i) => (
           <PhoneMockup key={`${image.alt}-${i}`} image={image} />
         ))}
