@@ -328,7 +328,13 @@ function Figure({
 // it's describing an actual phone's shape, not a generic card.
 function PhoneMockup({ image }: { image: ProjectImage }) {
   return (
-    <div className="mx-auto w-full max-w-[260px]">
+    // Fixed width, not `w-full max-w-[...]` -- that combination's
+    // `mx-auto` was a flex-item auto-margin self-centering trick that
+    // fought with a sibling link column (see `linksInline`), grabbing
+    // all the row's free space as its own margin instead of leaving
+    // `justify-center` on the parent to center the whole group. The
+    // parent row already centers a lone phone the same way.
+    <div className="w-[260px] shrink-0">
       <div
         className="relative overflow-hidden rounded-[2.75rem] border-[4px] border-cream/20 bg-ink shadow-xl shadow-black/40"
         style={{ aspectRatio: '9 / 19.5' }}
@@ -337,10 +343,49 @@ function PhoneMockup({ image }: { image: ProjectImage }) {
         <div className="absolute inset-x-0 top-[10px] flex justify-center">
           <div className="h-[9px] w-[72px] rounded-full bg-ink" />
         </div>
+        {image.storyOverlay && <InstagramStoryChrome username={image.storyOverlay} />}
       </div>
       {image.caption && (
         <p className="font-body mt-3 text-center text-xs tracking-[0.08em] text-cream/40">{image.caption}</p>
       )}
+    </div>
+  )
+}
+
+// Drawn-on Instagram Story UI -- a progress segment, account row, and
+// reply bar -- for a flat graphic that was never actually
+// screenshotted inside the app (A7X's real screenshots already carry
+// all of this baked in, so they never need it). `mix-blend-difference`
+// on the text/icons keeps them legible against whatever's directly
+// behind them, light or dark, without needing a scrim.
+function InstagramStoryChrome({ username }: { username: string }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 text-cream mix-blend-difference">
+      <div className="absolute inset-x-3 top-[22px] h-[2px] overflow-hidden rounded-full bg-cream/40">
+        <div className="h-full w-full bg-cream" />
+      </div>
+      <div className="absolute inset-x-3 top-[30px] flex items-center gap-2">
+        <div className="h-6 w-6 shrink-0 rounded-full border border-cream/70" />
+        <span className="font-body text-[11px] font-semibold">{username}</span>
+        <span className="font-body text-[11px] opacity-60">17h</span>
+        <span className="ml-auto text-[13px] leading-none opacity-80">&times;</span>
+      </div>
+      <div className="absolute inset-x-3 bottom-3 flex items-center gap-2">
+        <div className="font-body flex-1 truncate rounded-full border border-cream/50 px-3 py-1.5 text-[10px] opacity-70">
+          Send message
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="shrink-0">
+          <path
+            d="M12 21s-7-4.35-9.5-8.5C.5 9 2 5 6 5c2 0 3.5 1.2 4 2.5.5-1.3 2-2.5 4-2.5 4 0 5.5 4 3.5 7.5C19 16.65 12 21 12 21Z"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="shrink-0">
+          <path d="M21 3 2 11l7 3 3 7 9-18Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        </svg>
+      </div>
     </div>
   )
 }

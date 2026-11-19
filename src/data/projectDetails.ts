@@ -118,6 +118,13 @@ export interface ProjectImage {
   // a `full-page-two-up` pair's tall column) for 'cover' to show the
   // whole thing without cropping into the actual subject.
   fit?: 'cover' | 'contain'
+  // `phone-row` only -- the account name to show in a drawn-on-top
+  // Instagram Story UI (progress segment, account row, a reply bar
+  // with heart/send icons), for a flat graphic that was never
+  // actually screenshotted inside the app, so it reads as a story the
+  // way a real screenshot (A7X's) already does on its own. Omit for
+  // no overlay.
+  storyOverlay?: string
 }
 
 // One image block: a layout plus the images it renders. A chapter's
@@ -490,12 +497,14 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             width: 900,
             height: 1600,
             fit: 'contain',
+            storyOverlay: 'deftones',
           },
           {
             src: deftonesMerchStory2,
             alt: 'Deftones Private Music tour merch, alternate story layout',
             width: 900,
             height: 1600,
+            storyOverlay: 'deftones',
             fit: 'contain',
           },
         ],
