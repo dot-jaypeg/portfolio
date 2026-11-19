@@ -67,7 +67,7 @@ function CollapsibleChapterText({
           {label}
         </span>
         <span className="flex items-center gap-2">
-          <span className="font-geist text-red text-xs font-medium tracking-[0.1em] uppercase">
+          <span className="font-geist text-cream text-xs font-medium tracking-[0.1em] uppercase">
             {isOpen ? 'Hide details' : 'See details'}
           </span>
           <span style={{ color: accent }}>

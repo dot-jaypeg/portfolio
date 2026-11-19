@@ -19,11 +19,11 @@ import membershipCards from '../assets/images/projects/detail/afi-marketing-camp
 import membershipCardsPoster from '../assets/images/projects/detail/afi-marketing-campaign/membership-cards-poster.jpg'
 import deftonesMerchStory from '../assets/images/projects/detail/afi-marketing-campaign/deftones-merch-story.jpg'
 import incubusVinylShelf from '../assets/images/projects/detail/afi-marketing-campaign/incubus-vinyl-shelf.jpg'
-import incubusVinylShelf2 from '../assets/images/projects/detail/afi-marketing-campaign/incubus-vinyl-shelf-2.jpg'
-import incubusVinylVideo from '../assets/images/projects/work-covers/afi-work.mp4'
+import incubusVinylClip from '../assets/images/projects/detail/afi-marketing-campaign/incubus-vinyl-clip.mp4'
 import incubusVinylPoster from '../assets/images/projects/work-covers/afi-work-poster.jpg'
 import afiLiveCloseup from '../assets/images/projects/detail/afi-marketing-campaign/afi-live-closeup.jpg'
 import afiLiveBassist from '../assets/images/projects/detail/afi-marketing-campaign/afi-live-bassist.jpg'
+import afiHolyVisionsSite from '../assets/images/projects/detail/afi-marketing-campaign/afi-holyvisions-site.jpg'
 import a7xStoryMockup1 from '../assets/images/projects/detail/afi-marketing-campaign/a7x-story-mockup-1.jpg'
 import a7xStoryMockup2 from '../assets/images/projects/detail/afi-marketing-campaign/a7x-story-mockup-2.jpg'
 import a7xStoryMockup3 from '../assets/images/projects/detail/afi-marketing-campaign/a7x-story-mockup-3.jpg'
@@ -118,6 +118,13 @@ export interface ProjectImage {
   // a `full-page-two-up` pair's tall column) for 'cover' to show the
   // whole thing without cropping into the actual subject.
   fit?: 'cover' | 'contain'
+  // `phone-row` layout only -- draws a fake status bar + home
+  // indicator over the image. Real phone screenshots (A7X's) already
+  // carry that chrome baked into the image itself, so adding it again
+  // would look doubled; a flat graphic (Deftones' story art, a plain
+  // video) needs it drawn on top to read as a phone screen rather
+  // than just a framed rectangle. Defaults to false.
+  phoneChrome?: boolean
 }
 
 // One image block: a layout plus the images it renders. A chapter's
@@ -397,6 +404,20 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
         moreImages: [
           {
+            // The holyvisions.net tarot site itself, captured as a
+            // full browser screenshot -- a laptop mockup instead of a
+            // phone one, since that's the device this came from.
+            layout: 'macbook-row',
+            images: [
+              {
+                src: afiHolyVisionsSite,
+                alt: 'The holyvisions.net digital tarot site, with a pulled card revealed',
+                width: 2000,
+                height: 1071,
+              },
+            ],
+          },
+          {
             // Closing on the membership cards' own product-rotation
             // clip -- silent, no dialogue worth unmuting, so `loop`
             // rather than `autoplay`.
@@ -456,65 +477,63 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         layout: 'phone-row',
         images: [
           {
+            // `phoneChrome` -- unlike A7X's screenshots, this is flat
+            // story art with no status bar of its own, so without it
+            // the frame just reads as a framed rectangle, not a phone.
             src: deftonesMerchStory,
             alt: 'Deftones Private Music tour merch story graphic',
             width: 900,
             height: 1600,
+            phoneChrome: true,
           },
           {
             src: deftonesMerchStory2,
             alt: 'Deftones Private Music tour merch, alternate story layout',
             width: 900,
             height: 1600,
+            phoneChrome: true,
           },
         ],
-        // TODO: add the Instagram link once confirmed -- not guessing
-        // the exact handle/URL for a real band's account.
-        links: [],
+        links: [{ label: 'Instagram', href: 'https://www.instagram.com/deftones/?hl=en' }],
       },
       {
         label: 'Incubus: Vinyls',
         collapsible: true,
         text: 'Five campaigns were pitched for Incubus: a Halloween post tied to Drive’s Surf’s Up moment, an end-of-year Wrapped recap, a 2025 tour recap to reopen the band’s YouTube channel, Spotify DMs to thank top listeners, and influencer vinyl unboxings ahead of the vinyl release.',
-        layout: 'full-page-two-up',
+        // The vinyl clip's own phone mockup leads the chapter --
+        // `phoneChrome` since it's a plain video with no status bar of
+        // its own, and `autoplay` (muted on scroll-in, click to
+        // unmute, audio track restored) rather than a silent loop.
+        layout: 'phone-row',
         images: [
           {
-            src: incubusVinylShelf,
-            alt: 'Shelf of Incubus vinyl records',
-          },
-          {
-            src: incubusVinylShelf2,
-            alt: 'A second angle of the Incubus vinyl record shelf',
+            video: incubusVinylClip,
+            poster: incubusVinylPoster,
+            videoMode: 'autoplay',
+            alt: 'Incubus vinyl record close-up, pitched for an unboxing campaign',
+            width: 608,
+            height: 1080,
+            phoneChrome: true,
           },
         ],
         moreImages: [
           {
-            // Both pitched-video ideas on their own phone mockups --
-            // separate from the shelf photos above so they read as
-            // pitched ideas, not two more photos in the pair. The
-            // vinyl clip gets `autoplay` (muted on scroll-in, click to
-            // unmute) like other project videos; the raw performance
-            // b-roll has no audio track at all (not just muted), since
-            // it's pure atmosphere, not something worth unmuting, and
-            // a phone-size frame keeps it from reading as the single
-            // biggest thing on the page.
-            layout: 'phone-row',
+            // The vinyl shelf photo and the Brandon Boyd b-roll,
+            // paired plain (not mocked up) below the phone -- the
+            // b-roll has no audio track at all (not just muted),
+            // since it's pure atmosphere, not something worth
+            // unmuting.
+            layout: 'full-page-two-up',
             images: [
               {
-                video: incubusVinylVideo,
-                poster: incubusVinylPoster,
-                videoMode: 'autoplay',
-                alt: 'Incubus vinyl record close-up, pitched for an unboxing campaign',
-                width: 608,
-                height: 1080,
+                src: incubusVinylShelf,
+                alt: 'Shelf of Incubus vinyl records',
               },
               {
                 video: brandonCloseup,
                 poster: brandonCloseupPoster,
                 videoMode: 'loop',
                 alt: 'Brandon Boyd performing live, close-up b-roll',
-                width: 960,
-                height: 720,
               },
             ],
           },
