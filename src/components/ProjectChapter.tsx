@@ -2,7 +2,13 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { gsap, ScrollTrigger } from '../lib/gsap'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import type { ProjectChapter as ProjectChapterData } from '../data/projectDetails'
-import { ImageGrid } from './ImageGrid'
+import { ImageGrid, type ImageGridLayout } from './ImageGrid'
+
+// Layouts that manage their own top/bottom margin internally (see
+// ImageGrid) instead of relying on this wrapper's `mt-10` -- a
+// `moreImages` block in one of these skips that margin, or it'd
+// double up with the layout's own spacing.
+const SELF_SPACED_LAYOUTS = new Set<ImageGridLayout>(['full-page', 'full-page-two-up', 'phone-row', 'macbook-row'])
 
 // Points down closed, flips to point up open -- a plain chevron
 // instead of a +/x morph, which reads as a more standard (and less
@@ -154,11 +160,7 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
         <ImageGrid layout={chapter.layout} images={chapter.images} card={card} tall={chapter.tall} />
       </div>
       {chapter.moreImages?.map((block, i) => (
-        <div
-          data-reveal
-          key={i}
-          className={block.layout === 'full-page' || block.layout === 'full-page-two-up' ? '' : 'mt-10'}
-        >
+        <div data-reveal key={i} className={SELF_SPACED_LAYOUTS.has(block.layout) ? '' : 'mt-10'}>
           <ImageGrid layout={block.layout} images={block.images} card={card} tall={block.tall} />
         </div>
       ))}

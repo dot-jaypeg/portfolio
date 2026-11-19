@@ -466,6 +466,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             height: 1000,
           },
         ],
+        links: [{ label: 'Instagram', href: 'https://www.instagram.com/a7xworld/?hl=en' }],
       },
       {
         label: 'Deftones: Private Music',
@@ -539,8 +540,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           },
         ],
         links: [
-          { label: 'Instagram', href: 'https://www.instagram.com/reel/DRVZMkKkhVl/?dmpr=MTY2cW5vdXZwZzVseA==' },
-          { label: 'TikTok', href: 'https://www.tiktok.com/t/ZPNRVHRox/' },
+          { label: 'Instagram Post', href: 'https://www.instagram.com/reel/DRVZMkKkhVl/?dmpr=MTY2cW5vdXZwZzVseA==' },
+          { label: 'TikTok Post', href: 'https://www.tiktok.com/t/ZPNRVHRox/' },
         ],
       },
     ],

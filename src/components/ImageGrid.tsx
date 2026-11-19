@@ -300,7 +300,10 @@ function Figure({
   )
 }
 
-// A literal phone-shaped frame around a screenshot or video --
+// A literal phone-shaped frame around a screenshot or video -- always
+// a fixed 9:16 screen, regardless of the source image's own ratio
+// (object-cover crops to fill it), so every phone mockup on the page
+// reads as the same device instead of a different shape per image.
 // `rounded-[2.75rem]` + the thick bezel are a deliberate exception to
 // the rest of the site's sharp corners, since this is describing an
 // actual phone's shape, not a generic card. A real screenshot (A7X's)
@@ -310,12 +313,11 @@ function Figure({
 // home indicator on top, or it just reads as a framed rectangle
 // instead of a phone screen.
 function PhoneMockup({ image }: { image: ProjectImage }) {
-  const hasMedia = Boolean(image.src || image.video)
   return (
     <div className="mx-auto w-full max-w-[320px]">
       <div
         className="relative overflow-hidden rounded-[2.75rem] border-[10px] border-ink bg-ink shadow-2xl shadow-black/50 ring-1 ring-cream/10"
-        style={{ aspectRatio: hasMedia ? `${image.width} / ${image.height}` : '9 / 19.5' }}
+        style={{ aspectRatio: '9 / 16' }}
       >
         <Media image={image} className="h-full w-full object-cover" />
         {image.phoneChrome && (
@@ -459,9 +461,15 @@ export function ImageGrid({
     // Centered row of phone-framed screenshots/videos -- wraps on
     // narrow viewports instead of a fixed column count, since each
     // phone has its own fixed max-width rather than sharing a grid
-    // track.
+    // track. `max-w-6xl` (not -5xl) so three phones at this size fit
+    // one row on a normal desktop viewport instead of wrapping to
+    // 2-then-1. `mt-10`/`mb-10` (not just `mt-6`) -- this block is its
+    // own self-contained unit of spacing now, since the chapter
+    // wrapper around `moreImages` skips its usual margin for
+    // `phone-row`/`macbook-row` (see ProjectChapter) to avoid doubling
+    // up with this.
     return (
-      <div className="mx-auto mt-6 flex max-w-5xl flex-wrap justify-center gap-10 px-6 md:px-10">
+      <div className="mx-auto mt-10 mb-10 flex max-w-6xl flex-wrap justify-center gap-10 px-6 md:px-10">
         {images.map((image, i) => (
           <PhoneMockup key={`${image.alt}-${i}`} image={image} />
         ))}
@@ -471,7 +479,7 @@ export function ImageGrid({
 
   if (layout === 'macbook-row') {
     return (
-      <div className="mx-auto mt-6 flex max-w-6xl flex-wrap justify-center gap-10 px-6 md:px-10">
+      <div className="mx-auto mt-10 mb-10 flex max-w-6xl flex-wrap justify-center gap-10 px-6 md:px-10">
         {images.map((image, i) => (
           <MacbookMockup key={`${image.alt}-${i}`} image={image} />
         ))}
