@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject } from 'react'
+import { useEffect, useRef, type CSSProperties, type RefObject } from 'react'
 import type { ProjectImage } from '../data/projectDetails'
 import { useScrollParallax } from '../hooks/useScrollParallax'
 
@@ -405,6 +405,8 @@ export function ImageGrid({
   images,
   card = true,
   tall = false,
+  inlineLinks,
+  accent,
 }: {
   layout: ImageGridLayout
   images: ProjectImage[]
@@ -413,6 +415,9 @@ export function ImageGrid({
   card?: boolean
   // `full-page` only -- see the note above.
   tall?: boolean
+  // `phone-row` only -- see ProjectImageBlock's `linksInline` note.
+  inlineLinks?: { label: string; href: string }[]
+  accent?: string
 }) {
   if (images.length === 0) return null
 
@@ -468,10 +473,26 @@ export function ImageGrid({
     // `phone-row`/`macbook-row` (see ProjectChapter) to avoid doubling
     // up with this.
     return (
-      <div className="mx-auto mt-10 mb-10 flex max-w-5xl flex-wrap justify-center gap-10 px-6 md:px-10">
+      <div className="mx-auto mt-10 mb-10 flex max-w-5xl flex-wrap items-center justify-center gap-10 px-6 md:px-10">
         {images.map((image, i) => (
           <PhoneMockup key={`${image.alt}-${i}`} image={image} />
         ))}
+        {inlineLinks && inlineLinks.length > 0 && (
+          <div className="flex flex-col gap-4">
+            {inlineLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                style={{ '--pill-accent': accent, '--pill-fg': accent, borderColor: `${accent}66` } as CSSProperties}
+                className="font-geist rounded-full border px-6 py-3 text-center text-xs font-medium tracking-wider text-[var(--pill-fg)] uppercase transition-colors duration-300 hover:bg-[var(--pill-accent)] hover:text-ink"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     )
   }

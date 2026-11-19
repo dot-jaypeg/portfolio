@@ -157,13 +157,27 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
         </div>
       )}
       <div data-reveal>
-        <ImageGrid layout={chapter.layout} images={chapter.images} card={card} tall={chapter.tall} />
+        <ImageGrid
+          layout={chapter.layout}
+          images={chapter.images}
+          card={card}
+          tall={chapter.tall}
+          inlineLinks={chapter.linksInline ? chapter.links : undefined}
+          accent={accent}
+        />
       </div>
-      <BlockLinks links={chapter.links} accent={accent} />
+      {!chapter.linksInline && <BlockLinks links={chapter.links} accent={accent} />}
       {chapter.moreImages?.map((block, i) => (
         <div data-reveal key={i} className={SELF_SPACED_LAYOUTS.has(block.layout) ? '' : 'mt-10'}>
-          <ImageGrid layout={block.layout} images={block.images} card={card} tall={block.tall} />
-          <BlockLinks links={block.links} accent={accent} />
+          <ImageGrid
+            layout={block.layout}
+            images={block.images}
+            card={card}
+            tall={block.tall}
+            inlineLinks={block.linksInline ? block.links : undefined}
+            accent={accent}
+          />
+          {!block.linksInline && <BlockLinks links={block.links} accent={accent} />}
         </div>
       ))}
     </section>

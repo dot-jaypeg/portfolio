@@ -136,6 +136,12 @@ export interface ProjectImageBlock {
   // can sit next to the particular image/mockup it's actually about
   // instead of always trailing the whole chapter.
   links?: { label: string; href: string }[]
+  // `phone-row` only -- stacks `links` vertically and sits that stack
+  // beside the phone mockup(s) in the same row, instead of the
+  // default horizontal row of pills underneath. For a single phone
+  // that otherwise leaves the rest of the row empty, balancing it
+  // against a column of buttons instead.
+  linksInline?: boolean
 }
 
 export interface ProjectChapter extends ProjectImageBlock {
@@ -535,6 +541,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             ],
           },
         ],
+        // Stacked beside the (single, otherwise lonely-looking) phone
+        // mockup instead of centered below the whole row, to balance
+        // the row out rather than leave the rest of it empty.
+        linksInline: true,
         links: [
           { label: 'Instagram Post', href: 'https://www.instagram.com/reel/DRVZMkKkhVl/?dmpr=MTY2cW5vdXZwZzVseA==' },
           { label: 'TikTok Post', href: 'https://www.tiktok.com/t/ZPNRVHRox/' },
