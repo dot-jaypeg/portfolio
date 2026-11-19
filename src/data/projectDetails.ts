@@ -71,8 +71,8 @@ import fetchMenuMockupPink from '../assets/images/projects/detail/fetch-doggy-de
 import fetchMenuFlatPink from '../assets/images/projects/detail/fetch-doggy-deli/menu-flat-pink.jpg'
 import fetchMenuFlatGreen from '../assets/images/projects/detail/fetch-doggy-deli/menu-flat-green.jpg'
 import fetchTruckSide from '../assets/images/projects/detail/fetch-doggy-deli/truck-side.jpg'
-import fetchSocialOrganic from '../assets/images/projects/detail/fetch-doggy-deli/social-organic.jpg'
-import fetchSocialPaid from '../assets/images/projects/detail/fetch-doggy-deli/social-paid.jpg'
+import fetchSocialOrganic from '../assets/images/projects/detail/fetch-doggy-deli/social-organic.png'
+import fetchSocialPaid from '../assets/images/projects/detail/fetch-doggy-deli/social-paid.png'
 
 import usIntroCrowd from '../assets/images/projects/detail/urban-seoul/intro-crowd.jpg'
 import usIdeationPhoto from '../assets/images/projects/detail/urban-seoul/ideation-campaign-photo.jpg'
@@ -997,9 +997,9 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         layout: 'cluster',
         imagesOnCard: false,
         images: [
-          { src: fetchMotif1, alt: 'fetch! line-drawn Frenchie motif, playing', width: 370, height: 268, size: 'sm' },
+          { src: fetchMotif1, alt: 'fetch! line-drawn Frenchie motif, playing', width: 370, height: 303, size: 'sm' },
           { src: fetchMotif2, alt: 'fetch! line-drawn Frenchie motif, stretching', width: 439, height: 360, size: 'sm' },
-          { src: fetchMotif3, alt: 'fetch! line-drawn Frenchie motif, curled up', width: 255, height: 314, size: 'sm' },
+          { src: fetchMotif3, alt: 'fetch! line-drawn Frenchie motif, curled up', width: 383, height: 314, size: 'sm' },
         ],
       },
       {
@@ -1022,27 +1022,25 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Menu & Packaging',
         collapsible: true,
         text: 'The menu is full of pup-safe sandwiches with playful names — the Pawstrami, Bark-B-Q Sliders, Pupperoni Panini — plus treats and "From the Bowl" options. Packaging carries illustrated bowls, paw-print cups and lids, and "bone appétit." bone broth pouches, rounded out by a biscuit bar and a paw-shaped pawsicle. Takeaway boxes carry the tagline "bring it back for seconds."',
-        layout: 'full-page-two-up',
+        layout: 'trio',
         images: [
           {
             src: fetchMenuMockupPink,
             alt: 'fetch! menu card mockup',
+            width: 2000,
+            height: 1334,
           },
           {
             src: fetchMenuFlatPink,
             alt: 'fetch! menu, pink flat design',
+            width: 2000,
+            height: 1399,
           },
-        ],
-        moreImages: [
           {
-            layout: 'full-page',
-            tall: true,
-            images: [
-              {
-                src: fetchMenuFlatGreen,
-                alt: 'fetch! menu, green flat design',
-              },
-            ],
+            src: fetchMenuFlatGreen,
+            alt: 'fetch! menu, green flat design',
+            width: 935,
+            height: 2000,
           },
         ],
       },
@@ -1063,22 +1061,20 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Socials',
         collapsible: true,
         text: 'Organic content mixes food shots, park scenes, and candid dog moments, while paid ads announce park locations and the LA launch. A consistent profile, highlight covers, and feed grid keep it cohesive — carrying the "come back for seconds" spirit.',
-        layout: 'full-page',
+        layout: 'two-up',
+        imagesOnCard: false,
         images: [
           {
             src: fetchSocialOrganic,
             alt: 'fetch! organic Instagram profile and highlight covers',
+            width: 1719,
+            height: 2000,
           },
-        ],
-        moreImages: [
           {
-            layout: 'full-page',
-            images: [
-              {
-                src: fetchSocialPaid,
-                alt: 'fetch! paid Instagram feed ad and story ad',
-              },
-            ],
+            src: fetchSocialPaid,
+            alt: 'fetch! paid Instagram feed ad and story ad',
+            width: 2000,
+            height: 1256,
           },
         ],
       },
