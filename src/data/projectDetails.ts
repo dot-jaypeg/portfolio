@@ -379,7 +379,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     ],
   },
 
-  'afi-marketing-campaign': {
+  'velvet-hammer-music': {
     heroLead: 'A digital marketing and creative internship for',
     // Overrides `client` ('Velvet Hammer Music') to match the brief's
     // own "Velvet Hammer Music Management" -- the more formal name

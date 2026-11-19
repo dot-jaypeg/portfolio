@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { AllWork } from './pages/AllWork'
 import { Gallery } from './pages/Gallery'
@@ -19,6 +19,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/work" element={<AllWork />} />
         <Route path="/work/:slug" element={<ProjectDetail />} />
+        {/* The project formerly at this slug was renamed to
+            velvet-hammer-music -- redirect instead of 404ing for
+            anyone who already bookmarked or shared the old link. */}
+        <Route path="/work/afi-marketing-campaign" element={<Navigate to="/work/velvet-hammer-music" replace />} />
         <Route path="/gallery" element={<Gallery />} />
       </Routes>
     </>

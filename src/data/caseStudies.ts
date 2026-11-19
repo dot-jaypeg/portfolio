@@ -113,12 +113,10 @@ export const CASE_STUDIES: CaseStudy[] = [
       'A cohesive collection for Contra Coffee & Tea designed to function as their Spring Y2K Merch Drop.',
   },
   {
-    // Slug kept as-is (afi-marketing-campaign) even though the
-    // project itself is now framed around the whole Velvet Hammer
-    // roster, not just AFI -- renaming the slug would be a URL
-    // change, not just a copy change, so it's left alone unless asked
-    // for separately.
-    slug: 'afi-marketing-campaign',
+    // Renamed from afi-marketing-campaign to match the title change --
+    // the old URL now redirects here (see App.tsx) instead of 404ing
+    // for anyone who already bookmarked or shared the old link.
+    slug: 'velvet-hammer-music',
     title: 'Velvet Hammer Music',
     category: 'Digital Marketing',
     client: 'Velvet Hammer Music',
