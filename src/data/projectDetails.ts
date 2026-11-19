@@ -62,10 +62,14 @@ import nsuGm12121 from '../assets/images/projects/detail/nikkei-student-union/gm
 import nsuBeachDayRecap from '../assets/images/projects/detail/nikkei-student-union/beach-day-recap.mp4'
 import nsuBeachDayRecapPoster from '../assets/images/projects/detail/nikkei-student-union/beach-day-recap-poster.jpg'
 
-import packaging1 from '../assets/images/projects/detail/fetch-doggy-deli/packaging-1.jpg'
-import packaging2 from '../assets/images/projects/detail/fetch-doggy-deli/packaging-2.jpg'
-import fetchTruck from '../assets/images/projects/detail/fetch-doggy-deli/truck.jpg'
-import fetchSocial from '../assets/images/projects/detail/fetch-doggy-deli/social.jpg'
+import fetchBrandTraits from '../assets/images/projects/detail/fetch-doggy-deli/packaging-1.jpg'
+import fetchMenuMockup from '../assets/images/projects/detail/fetch-doggy-deli/packaging-2.jpg'
+import fetchFrenchieMark from '../assets/images/projects/detail/fetch-doggy-deli/branding-frenchie-mark.jpg'
+import fetchMenuSpecSheet from '../assets/images/projects/detail/fetch-doggy-deli/menu-pink.jpg'
+import fetchPackagingCups from '../assets/images/projects/detail/fetch-doggy-deli/packaging-cups-social.jpg'
+import fetchTruckHero from '../assets/images/projects/detail/fetch-doggy-deli/truck-hero.jpg'
+import fetchTruckComposite from '../assets/images/projects/detail/fetch-doggy-deli/truck-composite.jpg'
+import fetchSocialPhones from '../assets/images/projects/detail/fetch-doggy-deli/social-phones-composite.jpg'
 
 import usPoster1 from '../assets/images/projects/detail/urban-seoul/poster-1.jpg'
 import usPoster2 from '../assets/images/projects/detail/urban-seoul/poster-2.jpg'
@@ -84,7 +88,15 @@ import jadeResearchRender03 from '../assets/images/projects/detail/jade-sword/re
 import jadeResearchRender04 from '../assets/images/projects/detail/jade-sword/research-render-04.png'
 import jadeFinalRender from '../assets/images/projects/detail/jade-sword/final-render.jpg'
 
-import bagguSwatches from '../assets/images/projects/detail/baggu/swatches.jpg'
+import bagguToneGraffiti from '../assets/images/projects/detail/baggu/tone-graffiti.jpg'
+import bagguMockup01 from '../assets/images/projects/detail/baggu/product-mockup-01.mp4'
+import bagguMockup01Poster from '../assets/images/projects/detail/baggu/product-mockup-01-poster.jpg'
+import bagguMockup02 from '../assets/images/projects/detail/baggu/product-mockup-02.mp4'
+import bagguMockup02Poster from '../assets/images/projects/detail/baggu/product-mockup-02-poster.jpg'
+import bagguPatternAnomaly from '../assets/images/projects/detail/baggu/pattern-anomaly.jpg'
+import bagguPatternWebcomic from '../assets/images/projects/detail/baggu/pattern-webcomic.jpg'
+import bagguPatternEarth1610 from '../assets/images/projects/detail/baggu/pattern-earth-1610.jpg'
+import bagguPatternNeonSpider from '../assets/images/projects/detail/baggu/pattern-neon-spider.jpg'
 
 import chichaDisplay from '../assets/images/projects/detail/chi-cha/display-ad.jpg'
 import chichaStatic from '../assets/images/projects/detail/chi-cha/static-ad.jpg'
@@ -92,6 +104,13 @@ import chichaIgStories from '../assets/images/projects/detail/chi-cha/ig-stories
 import chichaSocialPosts from '../assets/images/projects/detail/chi-cha/social-posts.jpg'
 import chichaMailer from '../assets/images/projects/detail/chi-cha/direct-mailer.jpg'
 import chichaPackagingMockup from '../assets/images/projects/detail/chi-cha/packaging-mockup.jpg'
+import chichaLifestylePhoto from '../assets/images/projects/detail/chi-cha/lifestyle-photo.jpg'
+import chichaSiteHero from '../assets/images/projects/detail/chi-cha/site-hero.jpg'
+import chichaSiteShop from '../assets/images/projects/detail/chi-cha/site-shop.jpg'
+import chichaVideoAd1 from '../assets/images/projects/detail/chi-cha/video-ad-1.mp4'
+import chichaVideoAd1Poster from '../assets/images/projects/detail/chi-cha/video-ad-1-poster.jpg'
+import chichaVideoAd2 from '../assets/images/projects/detail/chi-cha/video-ad-2.mp4'
+import chichaVideoAd2Poster from '../assets/images/projects/detail/chi-cha/video-ad-2-poster.jpg'
 
 import protocolOfBetrayalImg from '../assets/images/projects/star-wars.jpg'
 
@@ -938,59 +957,106 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   },
 
   'fetch-doggy-deli': {
-    heroLead: 'Brand identity and packaging for',
-    heroBold: 'fetch! doggy deli',
-    heroTagline:
-      ', a doggy deli built to feel as playful as the product itself — menus, truck wrap, and packaging all pulling from one voice.',
+    heroLead: 'A cohesive brand identity for',
+    heroBold: 'fetch!',
+    heroTagline: ', a specialty food truck dedicated entirely to dogs, serving pup-safe sandwiches and snacks as a dog-friendly deli.',
     tags: ['Branding', 'Packaging', 'Advertising'],
     intro:
-      'fetch! doggy deli is a concept built end to end: naming, mark, packaging system, and the vehicle that would actually deliver it. The goal was a brand that reads as fun on a bag of treats and still holds up wrapped around a truck.',
+      'Inspired by a beloved Frenchie named Yuki, fetch! was built for dog-loving places like SoCal, where park time often gets cut short when a dog needs a snack or a meal. fetch! solves that with fresh food and treats made exclusively for dogs, using natural, local ingredients — fuel to keep playing, and a reason to stay at the park a little longer.',
     chapters: [
       {
-        label: 'Packaging System',
+        label: 'Branding',
         collapsible: true,
-        text: 'Color-coded labels do the sorting across the lineup, so the shelf reads as one family instead of a scramble.',
-        layout: 'two-up',
+        text: 'The identity is built on three traits: loyal, playful, and fresh. A palette of deep green, hot pink, cream, and lime keeps it lively and park-ready. Park Lane Italic gives headings an editorial charm, while Sofia Pro keeps body copy clean and friendly, anchored by the tagline "the doggy deli." The wordmark’s lowercase letterforms carry subtle fur-like details, paired with a loose line-drawn Frenchie illustration inspired by Yuki.',
+        layout: 'full-page-two-up',
         images: [
           {
-            src: packaging1,
-            alt: 'fetch! doggy deli packaging, variant one',
-            width: 2000,
-            height: 1294,
+            src: fetchBrandTraits,
+            alt: 'fetch! brand traits: loyal, playful, fresh',
           },
           {
-            src: packaging2,
-            alt: 'fetch! doggy deli packaging, variant two',
-            width: 2000,
-            height: 1294,
+            src: fetchFrenchieMark,
+            alt: 'fetch! line-drawn Frenchie mark, inspired by Yuki',
           },
         ],
       },
       {
-        label: 'On the Road',
+        label: 'Menu & Packaging',
         collapsible: true,
-        text: 'The identity had to survive being wrapped around a full-size vehicle without losing any of its detail.',
+        text: 'The menu is full of pup-safe sandwiches with playful names — the Pawstrami, Bark-B-Q Sliders, Pupperoni Panini — plus treats and "From the Bowl" options. Packaging carries illustrated bowls, paw-print cups and lids, and "bone appétit." bone broth pouches, rounded out by a biscuit bar and a paw-shaped pawsicle. Takeaway boxes carry the tagline "bring it back for seconds."',
+        layout: 'full-page-two-up',
+        images: [
+          {
+            src: fetchMenuMockup,
+            alt: 'fetch! menu card mockup',
+          },
+          {
+            src: fetchPackagingCups,
+            alt: 'fetch! paw-print cup and bone broth pouch packaging',
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'full-width',
+            images: [
+              {
+                src: fetchMenuSpecSheet,
+                alt: 'fetch! full menu spec sheet',
+                width: 2000,
+                height: 1399,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: 'Food Truck',
+        collapsible: true,
+        text: 'The truck is wrapped in a pattern of line-drawn Frenchies, with the menu beside the service window and the wordmark across the side. Staged in dog park scenes, it becomes a destination — bringing the brand to where it’s needed most.',
+        layout: 'full-page',
+        tall: true,
+        images: [
+          {
+            src: fetchTruckHero,
+            alt: 'fetch! food truck, front view, staged in a dog park',
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'full-page',
+            images: [
+              {
+                src: fetchTruckComposite,
+                alt: 'fetch! food truck, front, service window, and aerial park views',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: 'Socials',
+        collapsible: true,
+        text: 'Organic content mixes food shots, park scenes, and candid dog moments, while paid ads announce park locations and the LA launch. A consistent profile, highlight covers, and feed grid keep it cohesive — carrying the "come back for seconds" spirit.',
         layout: 'full-page',
         images: [
           {
-            src: fetchTruck,
-            alt: 'fetch! doggy deli delivery truck with full brand wrap',
+            src: fetchSocialPhones,
+            alt: 'fetch! Instagram feed post, story, and profile grid mockups',
           },
         ],
       },
       {
-        label: 'Social',
+        label: 'Brand Guide',
         collapsible: true,
-        text: 'Social carried the same playful tone into something people would actually stop scrolling for.',
-        layout: 'contained',
-        images: [
-          {
-            src: fetchSocial,
-            alt: 'fetch! doggy deli social media post',
-            width: 2000,
-            height: 1389,
-          },
-        ],
+        text: 'The full brand guide, page by page.',
+        layout: 'full-bleed',
+        images: [],
+        brandGuide: {
+          title: 'fetch! doggy deli',
+          pageCount: 23,
+          basePath: '/brand-guides/fetch-doggy-deli',
+          pdfHref: '/brand-guides/fetch-doggy-deli/brand-guide.pdf',
+        },
       },
     ],
   },
@@ -1201,32 +1267,99 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   },
 
   baggu: {
-    heroLead: 'Surface pattern design for',
-    heroTagline: ', a set of playful, trend-driven patterns built for the tote and pouch lineup.',
+    heroLead: 'A back-to-school collection for',
+    heroBold: 'BAGGU',
+    heroTagline: ', introducing comic and Spider-Man motifs to reusable bags and accessories through vibrant, unique patterns.',
     tags: ['Surface Pattern', 'Textile', 'Branding'],
     intro:
-      'Baggu needed patterns that could scale across a whole product line — totes, pouches, more — without the design feeling stretched or repetitive at different sizes.',
+      'BAGGU is known for environmentally conscious, practical-meets-stylish reusable bags and accessories. This collection, the "Spiderverse Set," brings the bold energy of the Spider-Verse into that world — a fusion of both brands for fans and everyday users alike.',
     chapters: [
       {
-        label: 'Pattern Swatches',
+        label: 'Tone',
         collapsible: true,
-        text: 'Each swatch was built as a tileable repeat first, so it could scale cleanly across any bag size without a visible seam.',
+        text: [
+          'The project balanced BAGGU’s minimalist aesthetic with the bold, comic-inspired style of the films — visually striking yet wearable patterns for kids, students, and young adults who want both function and self-expression. Dynamic, eye-catching illustrations needed to excite Spider-Man fans while still working for everyday use.',
+          'BAGGU is deeply committed to sustainability, built around reusable bags, backpacks, totes, and pouches with a timeless appeal that resonates with eco-conscious consumers seeking both function and fashion-forward design.',
+        ],
         layout: 'contained',
         images: [
           {
-            src: bagguSwatches,
-            alt: 'Baggu surface pattern swatches',
-            width: 2000,
-            height: 1390,
+            src: bagguToneGraffiti,
+            alt: 'Hand-drawn Spider-Man graffiti tag study',
+            width: 1400,
+            height: 1400,
           },
         ],
       },
       {
-        label: 'In Production',
+        label: 'The Patterns',
         collapsible: true,
-        text: 'Placeholder chapter — add a product shot of the pattern printed on an actual tote or pouch once one exists.',
-        layout: 'contained',
-        images: [{ alt: 'Add a product photo of the printed tote or pouch' }],
+        text: [
+          'The collection features four patterns — Sunflower, Anomaly, Earth-1610, and Webcomic — inspired by Marvel’s Across the Spider-Verse: graffiti art, Spider-Man motifs, and comic panel onomatopoeia, aimed at kids, teens, and young adults who want fun, electric designs that still reach the inner child.',
+          'Colors are pulled straight from the film — neon purple, teal, and red run through every design for cohesiveness. Each pattern is different, but the shared palette and Spider-Man theme bring the set together as one collection.',
+        ],
+        // The product mockups cycle through all four named patterns
+        // (including Sunflower, which has no standalone static file),
+        // so they lead the chapter big and flush before the static
+        // swatches below.
+        layout: 'full-page-two-up',
+        images: [
+          {
+            video: bagguMockup01,
+            poster: bagguMockup01Poster,
+            videoMode: 'loop',
+            alt: 'BAGGU x Spiderverse bag mockup cycling through all four patterns',
+            width: 1600,
+            height: 1112,
+          },
+          {
+            video: bagguMockup02,
+            poster: bagguMockup02Poster,
+            videoMode: 'loop',
+            alt: 'BAGGU x Spiderverse pouch mockup, pattern close-ups',
+            width: 1600,
+            height: 1112,
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'grid-3',
+            images: [
+              {
+                src: bagguPatternAnomaly,
+                alt: 'Anomaly pattern — comic-burst zigzags in teal, red, and purple',
+                width: 1400,
+                height: 1400,
+              },
+              {
+                src: bagguPatternWebcomic,
+                alt: 'Webcomic pattern — comic panel onomatopoeia in purple and blue',
+                width: 1400,
+                height: 1400,
+              },
+              {
+                src: bagguPatternEarth1610,
+                alt: 'Earth-1610 pattern — glitched neon cityscape',
+                width: 1400,
+                height: 1400,
+              },
+            ],
+          },
+          {
+            // A supplementary pattern exploration -- not one of the
+            // four named patterns, so it closes the chapter on its
+            // own rather than sitting in the trio above as a fourth.
+            layout: 'contained',
+            images: [
+              {
+                src: bagguPatternNeonSpider,
+                alt: 'Additional pattern exploration, neon spider motif',
+                width: 1400,
+                height: 1400,
+              },
+            ],
+          },
+        ],
       },
     ],
   },

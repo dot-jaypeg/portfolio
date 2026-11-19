@@ -2,7 +2,7 @@ import contraImg from '../assets/images/projects/contra-coffee-sticker-pack.jpg'
 import afiImg from '../assets/images/projects/afi-marketing-campaign.jpg'
 import resonanceImg from '../assets/images/projects/ui-design-for-resonance.jpg'
 import nsuImg from '../assets/images/projects/nikkei-student-union.jpg'
-import fetchImg from '../assets/images/projects/fetch-doggy-deli.jpg'
+import fetchImg from '../assets/images/projects/detail/fetch-doggy-deli/cover-wordmark-hero.jpg'
 import urbanSeoulImg from '../assets/images/projects/urbanseoul.jpg'
 import jadeSwordImg from '../assets/images/projects/jade-sword.jpg'
 import bagguImg from '../assets/images/projects/baggu.jpg'
@@ -182,12 +182,12 @@ export const CASE_STUDIES: CaseStudy[] = [
     category: 'Branding & Advertising',
     client: 'Academic',
     image: fetchImg,
-    coverWidth: 1600,
-    coverHeight: 1398,
+    coverWidth: 1750,
+    coverHeight: 1529,
     workCoverImage: fetchWorkImg,
     accent: '#45815a',
     description:
-      'A dog-friendly deli food truck for SoCal parks, fetch! doggy deli is a concept built end to end, from the name and mark to packaging, menus, and a truck wrap, with a playful brand voice and natural, local ingredients made for dogs.',
+      'A cohesive brand identity for fetch!, a specialty food truck dedicated entirely to dogs, serving pup-safe sandwiches and snacks as a dog-friendly deli.',
   },
   {
     slug: 'urban-seoul',
@@ -218,7 +218,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: 'baggu',
-    title: 'Baggu Surface Patterns',
+    title: 'BAGGU x Spiderverse Set',
     category: 'Surface Pattern Design',
     client: 'Baggu',
     image: bagguImg,
@@ -226,7 +226,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     coverHeight: 1112,
     accent: '#8b5cf6',
     description:
-      'A set of playful, trend-driven surface patterns designed for Baggu\'s tote and pouch lineup.',
+      'A back-to-school collection for BAGGU called the "Spiderverse Set," introducing comic and Spider-Man motifs to reusable bags and accessories through vibrant, unique patterns.',
   },
   {
     slug: 'chi-cha',
