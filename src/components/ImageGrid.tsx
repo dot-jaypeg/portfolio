@@ -300,23 +300,26 @@ function Figure({
   )
 }
 
-// A literal phone-shaped frame around a real screenshot (a reposted
-// Instagram story, a feed post with its own like/comment counts) --
-// the screenshot already carries its own status bar and app chrome,
-// so this just gives it a bezel/corner radius to read as a device
-// sitting on the page instead of a bare cropped image. `rounded-2xl`
-// here is a deliberate exception to the rest of the site's sharp
-// corners -- it's describing an actual phone's shape, not a generic
-// card.
+// A literal phone-shaped frame -- always a fixed, real-iPhone screen
+// ratio (~9:19.5, object-cover crops to fit) instead of each image's
+// own ratio, plus a Dynamic Island cutout, so this reads as an actual
+// device regardless of what's inside. A7X's screenshots are already
+// shot at this exact ratio, so this is a no-op crop for them; it's
+// Deftones'/the vinyl clip's more square ~9:16 source that needs the
+// crop to stop looking like a plain rounded rectangle. `rounded-[2.75rem]`
+// is a deliberate exception to the rest of the site's sharp corners --
+// it's describing an actual phone's shape, not a generic card.
 function PhoneMockup({ image }: { image: ProjectImage }) {
-  const hasMedia = Boolean(image.src || image.video)
   return (
     <div className="mx-auto w-full max-w-[260px]">
       <div
-        className="overflow-hidden rounded-[2rem] border-[6px] border-cream/15 bg-ink shadow-xl shadow-black/40"
-        style={{ aspectRatio: hasMedia ? `${image.width} / ${image.height}` : '9 / 19.5' }}
+        className="relative overflow-hidden rounded-[2.75rem] border-[4px] border-cream/20 bg-ink shadow-xl shadow-black/40"
+        style={{ aspectRatio: '9 / 19.5' }}
       >
         <Media image={image} className="h-full w-full object-cover" />
+        <div className="absolute inset-x-0 top-[10px] flex justify-center">
+          <div className="h-[9px] w-[72px] rounded-full bg-ink" />
+        </div>
       </div>
       {image.caption && (
         <p className="font-body mt-3 text-center text-xs tracking-[0.08em] text-cream/40">{image.caption}</p>
