@@ -1022,7 +1022,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Menu & Packaging',
         collapsible: true,
         text: 'The menu is full of pup-safe sandwiches with playful names — the Pawstrami, Bark-B-Q Sliders, Pupperoni Panini — plus treats and "From the Bowl" options. Packaging carries illustrated bowls, paw-print cups and lids, and "bone appétit." bone broth pouches, rounded out by a biscuit bar and a paw-shaped pawsicle. Takeaway boxes carry the tagline "bring it back for seconds."',
-        layout: 'trio',
+        layout: 'two-up',
         images: [
           {
             src: fetchMenuMockupPink,
@@ -1036,11 +1036,18 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             width: 2000,
             height: 1399,
           },
+        ],
+        moreImages: [
           {
-            src: fetchMenuFlatGreen,
-            alt: 'fetch! menu, green flat design',
-            width: 935,
-            height: 2000,
+            layout: 'contained',
+            images: [
+              {
+                src: fetchMenuFlatGreen,
+                alt: 'fetch! menu, green flat design',
+                width: 935,
+                height: 2000,
+              },
+            ],
           },
         ],
       },
@@ -1067,14 +1074,14 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           {
             src: fetchSocialOrganic,
             alt: 'fetch! organic Instagram profile and highlight covers',
-            width: 1719,
-            height: 2000,
+            width: 899,
+            height: 1648,
           },
           {
             src: fetchSocialPaid,
             alt: 'fetch! paid Instagram feed ad and story ad',
-            width: 2000,
-            height: 1256,
+            width: 1372,
+            height: 1247,
           },
         ],
       },
