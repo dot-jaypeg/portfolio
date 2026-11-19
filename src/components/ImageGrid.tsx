@@ -15,6 +15,7 @@ export type ImageGridLayout =
   | 'phone-row'
   | 'macbook-row'
   | 'full-width'
+  | 'row-match-height'
 
 // Plays once its container scrolls into view, pauses once it scrolls
 // back out -- starts muted (autoplay triggered by scroll, not a real
@@ -493,6 +494,23 @@ export function ImageGrid({
       <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-8 px-6 sm:grid-cols-2 md:gap-10 md:px-10">
         {images.slice(0, 2).map((image, i) => (
           <Figure key={`${image.alt}-${i}`} image={image} card={card} />
+        ))}
+      </div>
+    )
+  }
+
+  if (layout === 'row-match-height') {
+    // For images whose own aspect ratios differ too much for `two-up`'s
+    // equal-width columns to look balanced (e.g. one tall single-device
+    // mockup next to one wide multi-device mockup) -- matching width
+    // left the narrower one looking much bigger/smaller than the other
+    // depending on which axis got padded. Matching height instead (each
+    // image keeps its own real aspect ratio, auto width) means neither
+    // needs artificial padding to "look the same size".
+    return (
+      <div className="mt-10 mb-10 flex flex-wrap items-end justify-center gap-10 px-6 md:px-10">
+        {images.map((image, i) => (
+          <Media key={`${image.alt}-${i}`} image={image} className="h-[48vh] max-h-[620px] w-auto" />
         ))}
       </div>
     )

@@ -9,7 +9,13 @@ import { BrandGuideViewer } from './BrandGuideViewer'
 // ImageGrid) instead of relying on this wrapper's `mt-10` -- a
 // `moreImages` block in one of these skips that margin, or it'd
 // double up with the layout's own spacing.
-const SELF_SPACED_LAYOUTS = new Set<ImageGridLayout>(['full-page', 'full-page-two-up', 'phone-row', 'macbook-row'])
+const SELF_SPACED_LAYOUTS = new Set<ImageGridLayout>([
+  'full-page',
+  'full-page-two-up',
+  'phone-row',
+  'macbook-row',
+  'row-match-height',
+])
 
 // Points down closed, flips to point up open -- a plain chevron
 // instead of a +/x morph, which reads as a more standard (and less
