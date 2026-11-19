@@ -71,12 +71,22 @@ import fetchTruckHero from '../assets/images/projects/detail/fetch-doggy-deli/tr
 import fetchTruckComposite from '../assets/images/projects/detail/fetch-doggy-deli/truck-composite.jpg'
 import fetchSocialPhones from '../assets/images/projects/detail/fetch-doggy-deli/social-phones-composite.jpg'
 
-import usPoster1 from '../assets/images/projects/detail/urban-seoul/poster-1.jpg'
-import usPoster2 from '../assets/images/projects/detail/urban-seoul/poster-2.jpg'
-import usSignage1 from '../assets/images/projects/detail/urban-seoul/signage-1.jpg'
-import usMerch1 from '../assets/images/projects/detail/urban-seoul/merch-1.jpg'
-import usMerch2 from '../assets/images/projects/detail/urban-seoul/merch-2.jpg'
-import usSocial from '../assets/images/projects/detail/urban-seoul/social.jpg'
+import usIntroCrowd from '../assets/images/projects/detail/urban-seoul/intro-crowd.jpg'
+import usIdeationPhoto from '../assets/images/projects/detail/urban-seoul/ideation-campaign-photo.jpg'
+import usTeaserBusStop from '../assets/images/projects/detail/urban-seoul/teaser-poster-busstop.jpg'
+import usTeaserSubway from '../assets/images/projects/detail/urban-seoul/teaser-poster-subway.jpg'
+import usStoryPost from '../assets/images/projects/detail/urban-seoul/social-story-post.jpg'
+import usSocialPhones from '../assets/images/projects/detail/urban-seoul/social-phones-composite.jpg'
+import usSignageTicket from '../assets/images/projects/detail/urban-seoul/signage-ticket-pass.jpg'
+import usSignageWristband from '../assets/images/projects/detail/urban-seoul/signage-wristband.jpg'
+import usSignageBarricade from '../assets/images/projects/detail/urban-seoul/signage-barricade.jpg'
+import usSignageTaxiTopper from '../assets/images/projects/detail/urban-seoul/signage-taxi-topper.jpg'
+import usMerchIdolHoodie from '../assets/images/projects/detail/urban-seoul/merch-idol-hoodie.jpg'
+import usMerchIdolWindbreaker from '../assets/images/projects/detail/urban-seoul/merch-idol-windbreaker.jpg'
+import usMerchVintageFlatlay from '../assets/images/projects/detail/urban-seoul/merch-vintage-flatlay.jpg'
+import usMerchTote from '../assets/images/projects/detail/urban-seoul/merch-tote.jpg'
+import usMerchKeychain from '../assets/images/projects/detail/urban-seoul/merch-keychain.jpg'
+import usMobilePrototype from '../assets/images/projects/detail/urban-seoul/mobile-prototype-composite.jpg'
 
 import jadeConceptSketch from '../assets/images/projects/detail/jade-sword/concept-sketch.png'
 import jadeModelShaded from '../assets/images/projects/detail/jade-sword/model-shaded.jpg'
@@ -1078,79 +1088,187 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   },
 
   'urban-seoul': {
-    heroLead: 'Branding and campaign design for',
+    heroLead: 'A cohesive festival identity for',
     heroBold: 'urbanseoul.',
-    heroTagline:
-      ', a New Balance-presented Korean R&B festival at Under the K Bridge Park in Brooklyn.',
+    heroTagline: ', an immersive Korean R&B music festival presented by New Balance.',
     tags: ['Branding', 'Campaign', 'Signage', 'Merchandise'],
     intro:
-      'Presented by New Balance, urbanseoul. turns a one-night festival into a full lifestyle event — bus-stop ads and signage to pull people in, merch and tickets to give them something to leave with, all carrying one bold, neon-accented identity that blends New Balance’s vintage sports photography with KRNB’s sleek urban style.',
+      'urbanseoul. brings KRNB to Under the K Bridge Park in Brooklyn, turning a raw, industrial setting into a lifestyle hub where fans experience intimate live performances while celebrating sneaker and streetwear culture — built on New Balance’s heritage of authenticity and performance, paired with KRNB’s sleek, late-night mood.',
+    introImage: {
+      src: usIntroCrowd,
+      alt: 'A packed crowd at urbanseoul. under the Under the K Bridge Park overpass',
+      width: 1535,
+      height: 1024,
+    },
     chapters: [
       {
-        label: 'Posters & Signage',
+        label: 'Ideation',
         collapsible: true,
-        text: 'New Balance’s vintage sports photography and a neon-accented urban palette anchored every touchpoint, from bus-stop posters to the signage marking the event itself.',
-        layout: 'two-up',
+        text: 'Instead of leaning on obvious neon, the identity blends New Balance’s vintage, action-oriented roots with the cool, late-night feel of KRNB — a palette of cyanotype blue, teal, and near-black capturing the city after dark, anchored by light gray for breathing room. The tagline, “Under the K: coming to you live,” plays on the festival’s setting beneath the bridge and the closeness of a live set.',
+        layout: 'full-page',
         images: [
           {
-            src: usPoster1,
-            alt: 'Urban Seoul event poster, variant one',
-            width: 2000,
-            height: 1389,
-          },
-          {
-            src: usPoster2,
-            alt: 'Urban Seoul event poster, variant two',
+            src: usIdeationPhoto,
+            alt: 'A campaign photo of a KRNB artist wearing an urbanseoul. tank top',
             width: 2000,
             height: 1389,
           },
         ],
       },
       {
-        label: 'On-Site Signage',
+        label: 'Logo & Typography',
         collapsible: true,
-        text: 'Signage carried the identity from print into the physical space of the festival grounds at Under the K Bridge Park.',
-        layout: 'full-page',
+        text: 'The wordmark pairs a heavy, bold “URBAN” with a light, lowercase “seoul.,” balancing the weight of the city with the softness of the music — set in Scale VF for headers, Zuume Italic for subheaders, and ZT Formom’s editorial feel for body copy.',
+        layout: 'contained',
+        images: [],
+      },
+      {
+        label: 'Teaser Campaign',
+        collapsible: true,
+        text: 'Teaser posters built around a cyanotype-style heart in halftone carry bilingual Korean and English lines that read like late-night lyrics, placed in subway cars and bus shelters to meet fans on their daily commute. A scribbled May calendar with sticker-style marks turns the festival date into something to circle.',
+        layout: 'two-up',
         images: [
           {
-            src: usSignage1,
-            alt: 'Urban Seoul on-site event signage',
+            src: usTeaserBusStop,
+            alt: 'An urbanseoul. bus-shelter poster styled as a torn calendar page',
+            width: 2000,
+            height: 1389,
+          },
+          {
+            src: usTeaserSubway,
+            alt: 'An urbanseoul. subway car poster with a cyanotype halftone heart',
+            width: 2000,
+            height: 1389,
+          },
+        ],
+      },
+      {
+        label: 'Social & Signage',
+        collapsible: true,
+        text: [
+          'Organic socials mix crowd shots, portraits, sneakers, and handwritten “coming to you live” lettering, while paid stories spotlight New Balance drops “sold at urbanseoul.”',
+          'On-site, the identity extends to taxi toppers, barricade banners, a signature wristband, and a ticket with a matching digital pass.',
+        ],
+        layout: 'phone-row',
+        images: [
+          {
+            src: usStoryPost,
+            alt: 'An urbanseoul. Instagram Story announcing tickets',
+            width: 941,
+            height: 1671,
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'full-page',
+            images: [
+              {
+                src: usSocialPhones,
+                alt: 'The urbanseoul. Instagram profile grid next to a paid New Balance story ad',
+              },
+            ],
+          },
+          {
+            layout: 'two-up',
+            images: [
+              {
+                src: usSignageTicket,
+                alt: 'An urbanseoul. digital ticket pass next to the matching physical ticket',
+                width: 2000,
+                height: 1389,
+              },
+              {
+                src: usSignageWristband,
+                alt: 'An urbanseoul. signature event wristband',
+                width: 2000,
+                height: 1389,
+              },
+            ],
+          },
+          {
+            layout: 'two-up',
+            images: [
+              {
+                src: usSignageBarricade,
+                alt: 'urbanseoul. barricade banners on-site at Under the K Bridge Park',
+                width: 2000,
+                height: 1389,
+              },
+              {
+                src: usSignageTaxiTopper,
+                alt: 'An urbanseoul. taxi topper ad',
+                width: 2000,
+                height: 1389,
+              },
+            ],
           },
         ],
       },
       {
         label: 'Merch',
         collapsible: true,
-        text: 'Merch kept the same neon-accented energy, built to be worn past the night of the show.',
-        layout: 'two-up',
+        text: 'Two merch lines support the festival: idol merch — a hoodie, windbreaker, tank, and cap worn by the artists — and vintage-inspired pieces like a zip jacket, tee, and hoodie, all tied together by a chrome star motif. Accessories like keychain straps and totes carry the “coming to you live” lettering.',
+        layout: 'full-page-two-up',
         images: [
           {
-            src: usMerch1,
-            alt: 'Urban Seoul merchandise, variant one',
+            src: usMerchIdolHoodie,
+            alt: 'A model wearing an urbanseoul. idol-merch hoodie and cap',
             width: 2000,
             height: 1389,
           },
           {
-            src: usMerch2,
-            alt: 'Urban Seoul merchandise, variant two',
+            src: usMerchIdolWindbreaker,
+            alt: 'A model wearing an urbanseoul. idol-merch windbreaker',
             width: 2000,
             height: 1389,
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'full-page',
+            images: [
+              {
+                src: usMerchVintageFlatlay,
+                alt: 'The urbanseoul. vintage-inspired zip jacket, tee, and hoodie, laid flat',
+              },
+            ],
+          },
+          {
+            layout: 'two-up',
+            images: [
+              {
+                src: usMerchTote,
+                alt: 'An urbanseoul. tote bag reading "coming to you live"',
+                width: 2000,
+                height: 1389,
+              },
+              {
+                src: usMerchKeychain,
+                alt: 'An urbanseoul. keychain strap reading "coming to you live"',
+                width: 2000,
+                height: 1389,
+              },
+            ],
           },
         ],
       },
       {
-        label: 'Social',
+        label: 'Mobile Prototype',
         collapsible: true,
-        text: 'Social rounded out the campaign, keeping the same sneaker-culture energy in a scrollable format.',
-        layout: 'contained',
+        text: 'A fully prototyped mobile website lets fans access tickets, browse the lineup, shop vintage merch, and view exclusive New Balance drops — extending the identity from print and social into the festival experience itself.',
+        layout: 'full-width',
         images: [
           {
-            src: usSocial,
-            alt: 'Urban Seoul social media mockup',
-            width: 2000,
-            height: 1334,
+            src: usMobilePrototype,
+            alt: 'The urbanseoul. mobile website prototype: tickets, store, product detail, and artist pages',
           },
         ],
+        brandGuide: {
+          title: 'urbanseoul. Brand Guide',
+          pageCount: 31,
+          basePath: '/brand-guides/urban-seoul',
+          pdfHref: '/brand-guides/urban-seoul/brand-guide.pdf',
+        },
       },
     ],
   },

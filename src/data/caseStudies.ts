@@ -199,7 +199,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     coverHeight: 1600,
     accent: '#4f6f93',
     description:
-      'An immersive Korean R&B festival presented by New Balance at Under the K Bridge Park in Brooklyn, urbanseoul. blends New Balance’s bold, vintage sports photography with KRNB’s sleek, neon-accented urban style, turning live music and sneaker culture into one lifestyle hub.',
+      'A cohesive festival identity for urbanseoul., an immersive Korean R&B music festival presented by New Balance at Under the K Bridge Park in Brooklyn.',
   },
   {
     slug: 'jade-sword',
