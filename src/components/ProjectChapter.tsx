@@ -180,6 +180,7 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           images={chapter.images}
           card={card}
           tall={chapter.tall}
+          rowGap={chapter.rowGap}
           inlineLinks={chapter.linksInline ? chapter.links : undefined}
           accent={accent}
         />
@@ -197,6 +198,7 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
             images={block.images}
             card={card}
             tall={block.tall}
+            rowGap={block.rowGap}
             inlineLinks={block.linksInline ? block.links : undefined}
             accent={accent}
           />

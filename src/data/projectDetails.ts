@@ -122,7 +122,7 @@ import chichaStatic from '../assets/images/projects/detail/chi-cha/static-ad.jpg
 import chichaIgStoryCutout from '../assets/images/projects/detail/chi-cha/ig-story-cutout.png'
 import chichaIgFeedCutout from '../assets/images/projects/detail/chi-cha/ig-feed-cutout.png'
 import chichaMailer from '../assets/images/projects/detail/chi-cha/direct-mailer.jpg'
-import chichaPackagingMockup from '../assets/images/projects/detail/chi-cha/packaging-mockup.jpg'
+import chichaConceptingBoxes from '../assets/images/projects/detail/chi-cha/concepting-16x9.jpg'
 import chichaLogo from '../assets/images/projects/detail/chi-cha/chicha-logo.png'
 import chichaProductMockup from '../assets/images/projects/detail/chi-cha/product-mockup-lavender.png'
 import chichaBrandNameBoxes from '../assets/images/projects/detail/chi-cha/brandname-boxes.jpg'
@@ -174,6 +174,10 @@ export interface ProjectImage {
   // `cluster` layout only -- how wide this image renders relative to
   // the others in the same free-wrapping group. Defaults to 'md'.
   size?: 'sm' | 'md' | 'lg' | 'xl'
+  // `cluster`/`Figure` only -- a fixed, static tilt in degrees (not
+  // the hover-only tilt `interactive` gives a cluster). For a sticker/
+  // product cutout posed at a deliberate angle rather than dead level.
+  rotate?: number
   // Defaults to 'cover' (crops to fill its box) everywhere. 'contain'
   // letterboxes instead -- for a source whose own aspect ratio is too
   // different from its box's (e.g. a landscape product shot sitting in
@@ -199,6 +203,11 @@ export interface ProjectImageBlock {
   // `full-page` only -- use a taller-than-viewport box, for a square
   // or portrait source a plain viewport-height crop cuts too hard.
   tall?: boolean
+  // `full-page-two-up` only -- a real gutter (plus its own margin and
+  // a max-width) between the two columns, instead of the default
+  // flush, edge-to-edge treatment, for a pair that should read as
+  // visibly separate rather than one image split in two.
+  rowGap?: boolean
   // Pill link buttons (same style as ProjectHero's "Visit Site")
   // right below THIS block specifically -- the chapter's own primary
   // block or any one `moreImages` entry can carry its own, so a link
@@ -1619,9 +1628,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       "Being a college student or professional in a fast-paced world is exhausting — chi-cha offers a quick, convenient, delicious caffeine boost in a portable, recyclable juice box. This project covers the brand's full marketing push, from the product itself to the campaign around it.",
     chapters: [
       {
-        layout: 'contained-lg',
+        layout: 'logo-lockup',
         imagesOnCard: false,
         images: [
+          {
+            src: chichaProductMockup,
+            alt: 'A pixel-art render of the chi-cha lavender matcha latte box',
+            width: 286,
+            height: 495,
+            rotate: -6,
+          },
           {
             src: chichaLogo,
             alt: 'The chi-cha pixel-art wordmark',
@@ -1629,31 +1645,18 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             height: 192,
           },
         ],
-        moreImages: [
-          {
-            layout: 'contained',
-            images: [
-              {
-                src: chichaProductMockup,
-                alt: 'A pixel-art render of the chi-cha lavender matcha latte box',
-                width: 286,
-                height: 495,
-              },
-            ],
-          },
-        ],
       },
       {
         label: 'Concepting',
         collapsible: true,
         text: "chi-cha's concept touches on matcha's culturally traditional roots, so the identity and advertising needed care and respect. The goal: a strong, recognizable presence in a competitive market, consistent across mailers, social, video ads, and the website — authentic storytelling that sets chi-cha apart while honoring matcha's heritage.",
-        layout: 'contained',
+        layout: 'full-width-parallax',
         images: [
           {
-            src: chichaPackagingMockup,
-            alt: 'chi-cha blueberry packaging mockup',
-            width: 2000,
-            height: 1466,
+            src: chichaConceptingBoxes,
+            alt: 'chi-cha blueberry matcha latte boxes, three in a row',
+            width: 1800,
+            height: 1012,
           },
         ],
       },
@@ -1679,21 +1682,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           'That identity carries across the whole campaign — the small, portable box, mailers, Instagram and TikTok content, video ads, display and popup placements, and the website all pull from the same pixel-inspired world.',
         ],
         imagesOnCard: false,
-        layout: 'two-up',
+        layout: 'macbook-row',
         images: [
           {
-            src: chichaDisplay,
-            alt: 'chi-cha display ad',
-            caption: 'Display Ad',
-            width: 2000,
-            height: 1500,
-          },
-          {
-            src: chichaStatic,
-            alt: 'chi-cha static ad',
-            caption: 'Static Ad',
-            width: 2000,
-            height: 1291,
+            video: chichaSiteTour,
+            poster: chichaSiteTourPoster,
+            videoMode: 'loop',
+            alt: 'chi-cha official website tour',
+            caption: 'Official Website Tour',
+            width: 1600,
+            height: 1034,
           },
         ],
         moreImages: [
@@ -1717,7 +1715,39 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             ],
           },
           {
+            // A shared width/height across all three (not each
+            // image's own real dimensions) -- `trio`'s columns size to
+            // each Figure's own declared ratio, so giving all three
+            // the SAME declared ratio here crops each into one
+            // uniform card size instead of three different heights.
+            layout: 'trio',
+            images: [
+              {
+                src: chichaMailer,
+                alt: 'chi-cha direct mailer design',
+                caption: 'Direct Mailer',
+                width: 1500,
+                height: 1000,
+              },
+              {
+                src: chichaStatic,
+                alt: 'chi-cha static ad',
+                caption: 'Static Ad',
+                width: 1500,
+                height: 1000,
+              },
+              {
+                src: chichaDisplay,
+                alt: 'chi-cha display ad',
+                caption: 'Display Ad',
+                width: 1500,
+                height: 1000,
+              },
+            ],
+          },
+          {
             layout: 'full-page-two-up',
+            rowGap: true,
             blockCaption: 'Click to unmute',
             images: [
               {
@@ -1735,32 +1765,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
                 alt: 'chi-cha video ad, on-the-go lifestyle spot',
                 width: 960,
                 height: 960,
-              },
-            ],
-          },
-          {
-            layout: 'macbook-row',
-            images: [
-              {
-                video: chichaSiteTour,
-                poster: chichaSiteTourPoster,
-                videoMode: 'controls',
-                alt: 'chi-cha official website tour',
-                caption: 'Official Website Tour',
-                width: 1600,
-                height: 1034,
-              },
-            ],
-          },
-          {
-            layout: 'contained',
-            images: [
-              {
-                src: chichaMailer,
-                alt: 'chi-cha direct mailer design',
-                caption: 'Direct Mailer',
-                width: 2000,
-                height: 1466,
               },
             ],
           },
