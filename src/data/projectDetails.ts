@@ -444,6 +444,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         // a still.
         layout: 'full-page-two-up',
         tall: true,
+        blockCaption: 'Click to unmute',
         images: [
           {
             src: tshirtMockup,
@@ -680,6 +681,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         collapsible: true,
         text: 'Every match comes down to the Overdrive — a high-stakes ability that can turn a fight around, best saved for when it counts. Stay in the lead too long, though, and a spotlight turns you into the target: the whole lobby’s bounty.',
         layout: 'full-page',
+        blockCaption: 'Click to unmute',
         images: [
           {
             video: resonanceTrailer,

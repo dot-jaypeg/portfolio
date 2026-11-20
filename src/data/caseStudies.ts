@@ -238,7 +238,6 @@ export const CASE_STUDIES: CaseStudy[] = [
     coverHeight: 720,
     workCoverVideo: chichaWorkVideo,
     workCoverPoster: chichaWorkPoster,
-    heroSkipCoverVideo: true,
     accent: '#e391a8',
     description:
       'A cohesive brand identity and marketing campaign for chi-cha, a Japanese-owned matcha company selling portable juice boxes for an energy boost without the hassle of preparation.',
