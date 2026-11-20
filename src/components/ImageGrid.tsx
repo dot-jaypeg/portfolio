@@ -65,6 +65,27 @@ function AutoplayInViewVideo({
     return () => observer.disconnect()
   }, [observeRef])
 
+  // Re-mute once the visitor backs out of fullscreen (minimizing,
+  // Escape, the browser's own exit control) -- without this it keeps
+  // playing audibly back on the page, muted only ever having been
+  // meant for the fullscreen view itself.
+  useEffect(() => {
+    if (image.clickAction !== 'fullscreen') return
+    const el = ref.current
+    if (!el) return
+    const handleFullscreenChange = () => {
+      if (document.fullscreenElement !== el) {
+        el.muted = true
+      }
+    }
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange)
+    }
+  }, [image.clickAction])
+
   return (
     <video
       ref={ref}
@@ -111,7 +132,18 @@ function AutoplayInViewVideo({
       // real aspect ratio untouched -- `object-contain` there
       // letterboxes instead of cropping, for landscape and portrait
       // sources alike.
-      className={`cursor-pointer ${className} [&:fullscreen]:object-contain [&:-webkit-full-screen]:object-contain`}
+      //
+      // `cursor-auto` on `:fullscreen` specifically -- the site's own
+      // custom cursor dot hides the real OS cursor everywhere
+      // (`.custom-cursor-active * { cursor: none }` in index.css) and
+      // doesn't render inside the fullscreen element at all (fullscreen
+      // promotes just that element to its own top layer; the dot lives
+      // elsewhere in the tree), so without this override, fullscreen
+      // playback has no visible cursor at all to find the native
+      // controls with. A `:fullscreen` compound selector outweighs
+      // that plain class selector on specificity alone, no `!important`
+      // needed.
+      className={`cursor-pointer ${className} [&:fullscreen]:object-contain [&:fullscreen]:cursor-auto [&:-webkit-full-screen]:object-contain [&:-webkit-full-screen]:cursor-auto`}
     />
   )
 }
