@@ -45,11 +45,21 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
   // own component instead of going through ImageGrid.
   useScrollParallax(containerRef, wrapperRef, 10)
 
+  // This wrapper's own oversize (see `heroParallaxSlack`'s note) --
+  // inline style, not a literal Tailwind arbitrary-value class, since
+  // this needs to vary per project while still defaulting to the
+  // exact -15%/130% every other hero already renders at.
+  const parallaxSlack = detail.heroParallaxSlack ?? 15
+
   return (
     <header>
       {(coverVideo || coverImage) && (
         <div ref={containerRef} className="relative h-screen w-full overflow-hidden bg-cream/5">
-          <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
+          <div
+            ref={wrapperRef}
+            className="absolute inset-x-0 w-full"
+            style={{ top: `-${parallaxSlack}%`, height: `${100 + parallaxSlack * 2}%` }}
+          >
             {coverVideo ? (
               <video
                 ref={videoRef}

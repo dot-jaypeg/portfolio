@@ -80,8 +80,8 @@ import usPosterCyanotype from '../assets/images/projects/detail/urban-seoul/post
 import usPosterCalendar from '../assets/images/projects/detail/urban-seoul/poster-calendar.jpg'
 import usTeaserBusStop from '../assets/images/projects/detail/urban-seoul/teaser-poster-busstop.jpg'
 import usTeaserSubway from '../assets/images/projects/detail/urban-seoul/teaser-poster-subway.jpg'
-import usSocialStories from '../assets/images/projects/detail/urban-seoul/social-stories.jpg'
-import usSocialFeedPaid from '../assets/images/projects/detail/urban-seoul/social-feed-paid.jpg'
+import usSocialStories from '../assets/images/projects/detail/urban-seoul/social-stories-cutout.png'
+import usSocialFeedPaid from '../assets/images/projects/detail/urban-seoul/social-feed-paid-cutout.png'
 import usSignageTicket from '../assets/images/projects/detail/urban-seoul/signage-ticket-pass.jpg'
 import usSignageWristband from '../assets/images/projects/detail/urban-seoul/signage-wristband.jpg'
 import usSignageBarricade from '../assets/images/projects/detail/urban-seoul/signage-barricade.jpg'
@@ -262,6 +262,15 @@ export interface ProjectDetailData {
   // homepage WorkPanel crop, so reusing it here would recrop that too.
   // Defaults to `project.imagePosition ?? 'center'` when unset.
   heroImagePosition?: string
+  // Overrides the hero's parallax wrapper oversize (default 15, i.e.
+  // the wrapper spans -15%/130% of the container for scroll slack).
+  // That oversize offset itself eats into the image's own top edge --
+  // at the default 15, roughly the top 6% of a cover-fit image is
+  // clipped above the visible viewport before `heroImagePosition` is
+  // even applied, regardless of position. A photo with real content
+  // (a wordmark, a face) sitting in that exact top sliver needs this
+  // brought down to stay in frame.
+  heroParallaxSlack?: number
   tags: string[]
   // A second paragraph is rare -- most projects' intro is one line.
   // NSU's is written as two: a short overview sentence, then a longer
@@ -1123,8 +1132,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     // The Cyanotype poster's own wordmark sits in its top ~11% -- the
     // default center crop (cropping evenly off both the top and
     // bottom of a portrait image to fill the hero's landscape box)
-    // cut that off entirely. Biasing to the top keeps it in frame.
+    // cut that off entirely. Biasing to the top keeps it in frame, but
+    // the hero's own parallax wrapper is *itself* oversized by 15%
+    // top/bottom for scroll slack, which eats into the image's top
+    // edge before `heroImagePosition` is even applied -- bringing that
+    // down too is what actually gets the wordmark on screen.
     heroImagePosition: 'top',
+    heroParallaxSlack: 2,
     tags: ['Branding', 'Campaign', 'Signage', 'Merchandise'],
     intro:
       'urbanseoul. brings KRNB to Under the K Bridge Park in Brooklyn, turning a raw, industrial setting into a lifestyle hub where fans experience intimate live performances while celebrating sneaker and streetwear culture — built on New Balance’s heritage of authenticity and performance, paired with KRNB’s sleek, late-night mood.',
@@ -1200,19 +1214,20 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Social & Signage',
-        layout: 'row-match-height',
+        layout: 'two-up',
+        imagesOnCard: false,
         images: [
           {
             src: usSocialStories,
             alt: 'urbanseoul. Instagram Stories: a New Balance 574 drop and a ticket announcement',
-            width: 1800,
-            height: 1059,
+            width: 1166,
+            height: 1027,
           },
           {
             src: usSocialFeedPaid,
             alt: 'The urbanseoul. Instagram profile grid next to a paid New Balance feed ad',
-            width: 1800,
-            height: 1059,
+            width: 1164,
+            height: 1027,
           },
         ],
         moreImages: [
@@ -1288,13 +1303,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
               {
                 src: usMerchVintageCutout,
                 alt: 'The urbanseoul. vintage-inspired cream track jacket, off-white tee, and black hoodie',
-                width: 1800,
-                height: 1165,
+                width: 2000,
+                height: 734,
               },
             ],
           },
           {
-            layout: 'row-match-height',
+            layout: 'two-up',
             images: [
               {
                 src: usMerchToteWhiteCutout,
