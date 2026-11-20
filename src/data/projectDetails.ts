@@ -1514,10 +1514,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           'The project balanced BAGGU’s minimalist aesthetic with the bold, comic-inspired style of the films, aiming for visually striking yet wearable patterns for kids, students, and young adults who want both function and self-expression. Dynamic, eye-catching illustrations needed to excite Spider-Man fans while still working for everyday use.',
           'BAGGU is deeply committed to sustainability, built around reusable bags, backpacks, totes, and pouches with a timeless appeal that resonates with eco-conscious consumers seeking both function and fashion-forward design.',
         ],
-        // `full-width` instead of `contained` -- a study sketch still
-        // reads as too small/isolated boxed into contained's narrower
-        // column, with too much bare page around it.
-        layout: 'full-width',
+        // `contained-lg` -- `full-width` read too large for this
+        // video specifically (a sketch study needed that much room;
+        // this reveal clip doesn't).
+        layout: 'contained-lg',
         images: [
           {
             video: bagguToneSpiderverseSet,
@@ -1579,6 +1579,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             video: bagguMockup01,
             poster: bagguMockup01Poster,
             videoMode: 'loop',
+            // `full-page-two-up`'s box is a viewport-height column,
+            // not this clip's own 0.8 ratio -- `cover` was cropping
+            // into the bag/model to fill that mismatch. `contain`
+            // shows the whole mockup, letterboxed instead of cropped.
+            fit: 'contain',
             alt: 'BAGGU x Spiderverse bag mockup cycling through all four patterns',
             width: 658,
             height: 826,
@@ -1587,6 +1592,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             video: bagguMockup02,
             poster: bagguMockup02Poster,
             videoMode: 'loop',
+            fit: 'contain',
             alt: 'BAGGU x Spiderverse pouch mockup, pattern close-ups',
             width: 826,
             height: 824,

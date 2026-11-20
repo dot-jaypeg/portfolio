@@ -12,6 +12,7 @@ export type ImageGridLayout =
   | 'trio'
   | 'cluster'
   | 'contained'
+  | 'contained-lg'
   | 'grid-3'
   | 'phone-row'
   | 'macbook-row'
@@ -257,7 +258,14 @@ function FullPageMediaRow({ images, tall }: { images: ProjectImage[]; tall: bool
 // (name-labeled patterns, not just anonymous imagery), rendered
 // outside the overflow-hidden parallax box so the drift never clips
 // the label.
-function FullPageMediaQuadRow({ images, tall }: { images: ProjectImage[]; tall: boolean }) {
+//
+// `aspect-square`, not a vh-locked height like the other full-page
+// layouts -- these are square swatches in a quarter-width column, and
+// a viewport-tall box forced a drastic object-cover zoom that cropped
+// most of each pattern away. Squaring the box to its own (already
+// square) content needs only the parallax wrapper's usual 30% oversize
+// to crop, not an aspect-ratio mismatch on top of it.
+function FullPageMediaQuadRow({ images }: { images: ProjectImage[] }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRefA = useRef<HTMLDivElement>(null)
   const wrapperRefB = useRef<HTMLDivElement>(null)
@@ -285,7 +293,7 @@ function FullPageMediaQuadRow({ images, tall }: { images: ProjectImage[]; tall: 
         const { wrapperRef, boxRef } = slots[i]
         return (
           <div key={i} className="w-1/4">
-            <div ref={boxRef} className={`relative w-full overflow-hidden ${tall ? 'h-[150vh]' : 'h-[92vh]'}`}>
+            <div ref={boxRef} className="relative aspect-square w-full overflow-hidden">
               <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
                 <Media
                   image={image}
@@ -532,6 +540,18 @@ export function ImageGrid({
     )
   }
 
+  if (layout === 'contained-lg') {
+    // A middle ground between `contained` (max-w-2xl, 672px) and
+    // `full-width` (uncapped) -- for a single image/video that reads
+    // too large flush with the text column's full width but would be
+    // cramped at `contained`'s narrower cap.
+    return (
+      <div className="mx-auto mt-6 max-w-4xl px-6 md:px-10">
+        <Figure image={images[0]} card={card} />
+      </div>
+    )
+  }
+
   if (layout === 'full-width') {
     // Like `contained`, but no max-width cap -- fills the same width
     // the chapter's own text column does (just `px-6 md:px-10`), for
@@ -687,7 +707,7 @@ export function ImageGrid({
   if (layout === 'full-page-quad') {
     return (
       <div className="w-full">
-        <FullPageMediaQuadRow images={images} tall={tall} />
+        <FullPageMediaQuadRow images={images} />
       </div>
     )
   }
