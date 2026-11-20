@@ -133,21 +133,17 @@ import chichaVideoAd1Poster from '../assets/images/projects/detail/chi-cha/video
 import chichaVideoAd2 from '../assets/images/projects/detail/chi-cha/video-ad-2.mp4'
 import chichaVideoAd2Poster from '../assets/images/projects/detail/chi-cha/video-ad-2-poster.jpg'
 
-import protocolCorridorStakeout from '../assets/images/projects/detail/protocol-of-betrayal/corridor-stakeout.jpg'
-import protocolAlleyApproach from '../assets/images/projects/detail/protocol-of-betrayal/alley-approach.jpg'
-import protocolNeonSkyline from '../assets/images/projects/detail/protocol-of-betrayal/neon-skyline.jpg'
+import protocolIntroCover from '../assets/images/projects/detail/protocol-of-betrayal/intro-cover.jpg'
+import protocolCityscape from '../assets/images/projects/detail/protocol-of-betrayal/storytelling-cityscape.jpg'
+import protocolAlleyRain from '../assets/images/projects/detail/protocol-of-betrayal/alley-rain.jpg'
 import protocolLowAngleWatch from '../assets/images/projects/detail/protocol-of-betrayal/low-angle-watch.jpg'
-import protocolHoloTerminal from '../assets/images/projects/detail/protocol-of-betrayal/holo-terminal.jpg'
 import protocolTieFighterModel from '../assets/images/projects/detail/protocol-of-betrayal/tie-fighter-model.png'
 import protocolStormtrooperModels from '../assets/images/projects/detail/protocol-of-betrayal/stormtrooper-models.png'
 import protocolStormtrooperWireframePose from '../assets/images/projects/detail/protocol-of-betrayal/stormtrooper-wireframe-pose.jpg'
 import protocolRiggingViewport from '../assets/images/projects/detail/protocol-of-betrayal/rigging-viewport.jpg'
 import protocolTieFighterInEngine from '../assets/images/projects/detail/protocol-of-betrayal/tie-fighter-in-engine.jpg'
-import protocolPlanetWireframe from '../assets/images/projects/detail/protocol-of-betrayal/planet-wireframe.jpg'
+import protocolCameraRig from '../assets/images/projects/detail/protocol-of-betrayal/camera-rig.jpg'
 import protocolSequencerStormtroopers from '../assets/images/projects/detail/protocol-of-betrayal/sequencer-stormtroopers.jpg'
-import protocolSequencerTieFighter from '../assets/images/projects/detail/protocol-of-betrayal/sequencer-tie-fighter.jpg'
-import protocolIntroTitleCard from '../assets/images/projects/detail/protocol-of-betrayal/intro-title-card.jpg'
-import protocolOpeningCrawl from '../assets/images/projects/detail/protocol-of-betrayal/opening-crawl.jpg'
 import protocolFullShortVideo from '../assets/images/projects/detail/protocol-of-betrayal/full-short.mp4'
 import protocolFullShortPoster from '../assets/images/projects/detail/protocol-of-betrayal/full-short-poster.jpg'
 
@@ -1786,38 +1782,39 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     intro:
       'Protocol of Betrayal honors the franchise while charting new territory. The story follows a fugitive and an ancient relic through the slums of Nar Vayal — a planet built from scratch for the universe.',
     introImage: {
-      src: protocolCorridorStakeout,
+      src: protocolIntroCover,
       alt: 'A stormtrooper and droid in a neon-lit corridor on Nar Vayal',
-      width: 1010,
-      height: 568,
+      width: 854,
+      height: 480,
     },
     chapters: [
       {
-        label: 'The Franchise',
-        collapsible: true,
-        text: "Star Wars has run for nearly five decades since George Lucas's original 1977 film — a galaxy of Jedi and Sith now under Disney, carried forward by shows like The Mandalorian and Ahsoka. Protocol of Betrayal is an original entry built inside that universe.",
-        layout: 'contained',
-        images: [],
-      },
-      {
         label: 'Storytelling',
         collapsible: true,
-        text: "Nar Vayal is built on atmosphere — neon-lit alleys, rain-slicked streets, and volumetric lighting doing as much storytelling as the plot. Low-angle shots make the stormtroopers intimidating, tracking shots build suspense, and small details — the droid R3-MY's expressive beeping, a disciplined patrol formation, a flickering hologram — foreshadow what's coming.",
+        text: [
+          "Star Wars has run for nearly five decades since George Lucas's original 1977 film — a galaxy of Jedi and Sith now under Disney, carried forward by shows like The Mandalorian and Ahsoka. Protocol of Betrayal is an original entry built inside that universe.",
+          "Nar Vayal is built on atmosphere — neon-lit alleys, rain-slicked streets, and volumetric lighting doing as much storytelling as the plot. Low-angle shots make the stormtroopers intimidating, tracking shots build suspense, and small details — the droid R3-MY's expressive beeping, a disciplined patrol formation, a flickering hologram — foreshadow what's coming.",
+        ],
         layout: 'full-page',
         images: [
           {
-            src: protocolAlleyApproach,
-            alt: 'A stormtrooper and droid approaching a rain-soaked neon street',
-            width: 1010,
-            height: 568,
+            src: protocolCityscape,
+            alt: 'A hooded figure igniting a lightsaber beneath a planet-filled night sky',
+            width: 2000,
+            height: 1336,
           },
         ],
         moreImages: [
           {
+            // A shared width/height across all three (not each image's
+            // own real dimensions) -- `trio`'s columns size to each
+            // Figure's own declared ratio, so giving all three the
+            // SAME declared ratio crops each into one uniform card
+            // size instead of three different heights.
             layout: 'trio',
             images: [
               {
-                src: protocolNeonSkyline,
+                src: protocolAlleyRain,
                 alt: "An elevated view of Nar Vayal's rain-slicked, neon-signed skyline",
                 width: 1457,
                 height: 568,
@@ -1825,32 +1822,25 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
               {
                 src: protocolLowAngleWatch,
                 alt: 'A low-angle shot of a stormtrooper standing watch, framed for intimidation',
-                width: 1010,
+                width: 1457,
                 height: 568,
               },
               {
-                src: protocolHoloTerminal,
-                alt: 'A stormtrooper interacting with a holographic terminal',
-                width: 854,
-                height: 480,
+                src: protocolTieFighterInEngine,
+                alt: 'The TIE fighter model flying past a nebula in Unreal Engine',
+                width: 1457,
+                height: 568,
               },
             ],
           },
         ],
       },
       {
-        label: 'Ideating & Concepting',
-        collapsible: true,
-        text: 'With decades of canon already written, inventing a new Star Wars storyline from scratch was the hardest part. The script went through multiple rewrites before the plot — and its twist — came together.',
-        layout: 'contained',
-        images: [],
-      },
-      {
         label: 'Building & Animating',
         collapsible: true,
         text: 'Nar Vayal is an original planet, built from the ground up with Coruscant, Naboo, and Cloud City as reference points. Animating the TIE fighter and droid models convincingly, with limited resources, took just as much iteration.',
-        layout: 'two-up',
         imagesOnCard: false,
+        layout: 'two-up',
         images: [
           {
             src: protocolTieFighterModel,
@@ -1860,11 +1850,17 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             fit: 'contain',
           },
           {
-            src: protocolStormtrooperModels,
-            alt: 'Two finished stormtrooper character models on a transparent background',
-            width: 500,
-            height: 500,
-            fit: 'contain',
+            // A shared declared ratio (1300x1000, 1.3) across all four
+            // "regular imagery" shots here -- not each one's own real
+            // dimensions -- so `two-up`'s per-image aspect ratio crops
+            // every one into the same uniform card size instead of
+            // four different shapes. The two clip-art renders keep
+            // their own real ratio (with `fit: 'contain'`) since
+            // they're exempt from this.
+            src: protocolRiggingViewport,
+            alt: 'A stormtrooper model and camera rig inside the animation viewport',
+            width: 1300,
+            height: 1000,
           },
         ],
         moreImages: [
@@ -1872,16 +1868,17 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             layout: 'two-up',
             images: [
               {
-                src: protocolStormtrooperWireframePose,
-                alt: 'A stormtrooper model in a T-pose inside the 3D viewport',
-                width: 604,
-                height: 665,
+                src: protocolCameraRig,
+                alt: 'A stormtrooper model framed inside the camera rig viewport',
+                width: 1300,
+                height: 1000,
               },
               {
-                src: protocolRiggingViewport,
-                alt: 'A stormtrooper model and camera rig inside the animation viewport',
-                width: 1457,
-                height: 568,
+                src: protocolStormtrooperModels,
+                alt: 'Two finished stormtrooper character models on a transparent background',
+                width: 500,
+                height: 500,
+                fit: 'contain',
               },
             ],
           },
@@ -1889,16 +1886,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             layout: 'two-up',
             images: [
               {
-                src: protocolTieFighterInEngine,
-                alt: 'The TIE fighter model flying past a nebula in Unreal Engine',
-                width: 1457,
-                height: 568,
+                src: protocolSequencerStormtroopers,
+                alt: "Unreal Engine's Sequencer showing the stormtrooper animation tracks",
+                width: 1300,
+                height: 1000,
               },
               {
-                src: protocolPlanetWireframe,
-                alt: "A wireframe construction view of Nar Vayal's rain-soaked streets",
-                width: 1457,
-                height: 568,
+                src: protocolStormtrooperWireframePose,
+                alt: 'A stormtrooper model in a T-pose inside the 3D viewport',
+                width: 1300,
+                height: 1000,
               },
             ],
           },
@@ -1908,48 +1905,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Editing & Rendering',
         collapsible: true,
         text: "Editing meant sequencing the full short and weaving in the classic Star Wars intro crawl, set to John Williams' score. From there it was rigging, lighting, and camera work — polish pass after polish pass — to make it feel authentic to the franchise.",
-        layout: 'two-up',
-        images: [
-          {
-            src: protocolSequencerStormtroopers,
-            alt: "Unreal Engine's Sequencer showing the stormtrooper animation tracks",
-            width: 1920,
-            height: 1029,
-          },
-          {
-            src: protocolSequencerTieFighter,
-            alt: "Unreal Engine's Sequencer showing the TIE fighter's camera cuts",
-            width: 1920,
-            height: 1029,
-          },
-        ],
-        moreImages: [
-          {
-            layout: 'two-up',
-            images: [
-              {
-                src: protocolIntroTitleCard,
-                alt: 'The classic Star Wars logo opening the short',
-                width: 854,
-                height: 480,
-              },
-              {
-                src: protocolOpeningCrawl,
-                alt: 'The opening crawl introducing Protocol of Betrayal',
-                width: 854,
-                height: 480,
-              },
-            ],
-          },
-        ],
-      },
-      {
         layout: 'full-page',
+        blockCaption: 'Click to unmute',
         images: [
           {
             video: protocolFullShortVideo,
             poster: protocolFullShortPoster,
-            videoMode: 'controls',
+            videoMode: 'autoplay',
             alt: 'The complete Protocol of Betrayal animated short',
             width: 854,
             height: 480,

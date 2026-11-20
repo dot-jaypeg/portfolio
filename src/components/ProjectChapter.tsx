@@ -190,6 +190,9 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           real thing" rather than a button sitting above the actual
           embed. */}
       {!chapter.linksInline && !chapter.figmaEmbed && <BlockLinks links={chapter.links} accent={accent} />}
+      {chapter.blockCaption && (
+        <p className="font-body mt-4 text-center text-xs tracking-[0.08em] text-cream/40">{chapter.blockCaption}</p>
+      )}
       {chapter.moreImages?.map((block, i) => (
         <div data-reveal key={i} className={SELF_SPACED_LAYOUTS.has(block.layout) ? '' : 'mt-10'}>
           <ImageGrid
