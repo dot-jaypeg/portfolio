@@ -74,9 +74,8 @@ import fetchTruckSide from '../assets/images/projects/detail/fetch-doggy-deli/tr
 import fetchSocialOrganic from '../assets/images/projects/detail/fetch-doggy-deli/social-organic.png'
 import fetchSocialPaid from '../assets/images/projects/detail/fetch-doggy-deli/social-paid.png'
 
-import usIntroCrowd from '../assets/images/projects/detail/urban-seoul/intro-crowd.jpg'
 import usLogoWordmark from '../assets/images/projects/detail/urban-seoul/logo-wordmark.png'
-import usIdeationPhoto from '../assets/images/projects/detail/urban-seoul/ideation-campaign-photo.jpg'
+import usIdeationPhoto from '../assets/images/projects/detail/urban-seoul/ideation-venue-crowd.jpg'
 import usPosterCyanotype from '../assets/images/projects/detail/urban-seoul/poster-cyanotype.jpg'
 import usPosterCalendar from '../assets/images/projects/detail/urban-seoul/poster-calendar.jpg'
 import usTeaserBusStop from '../assets/images/projects/detail/urban-seoul/teaser-poster-busstop.jpg'
@@ -1121,15 +1120,14 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     heroLead: 'A cohesive festival identity for',
     heroBold: 'urbanseoul.',
     heroTagline: ', an immersive Korean R&B music festival presented by New Balance.',
+    // The Cyanotype poster's own wordmark sits in its top ~11% -- the
+    // default center crop (cropping evenly off both the top and
+    // bottom of a portrait image to fill the hero's landscape box)
+    // cut that off entirely. Biasing to the top keeps it in frame.
+    heroImagePosition: 'top',
     tags: ['Branding', 'Campaign', 'Signage', 'Merchandise'],
     intro:
       'urbanseoul. brings KRNB to Under the K Bridge Park in Brooklyn, turning a raw, industrial setting into a lifestyle hub where fans experience intimate live performances while celebrating sneaker and streetwear culture — built on New Balance’s heritage of authenticity and performance, paired with KRNB’s sleek, late-night mood.',
-    introImage: {
-      src: usIntroCrowd,
-      alt: 'A packed crowd at urbanseoul. under the Under the K Bridge Park overpass',
-      width: 1535,
-      height: 1024,
-    },
     chapters: [
       {
         layout: 'full-width',
@@ -1151,9 +1149,9 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         images: [
           {
             src: usIdeationPhoto,
-            alt: 'A campaign photo of a KRNB artist wearing an urbanseoul. tank top',
-            width: 2000,
-            height: 1389,
+            alt: 'The crowd at Under the K Bridge Park, lit for a live set',
+            width: 1200,
+            height: 800,
           },
         ],
       },
@@ -1202,19 +1200,19 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       },
       {
         label: 'Social & Signage',
-        layout: 'two-up',
+        layout: 'row-match-height',
         images: [
           {
             src: usSocialStories,
             alt: 'urbanseoul. Instagram Stories: a New Balance 574 drop and a ticket announcement',
             width: 1800,
-            height: 1201,
+            height: 1059,
           },
           {
             src: usSocialFeedPaid,
             alt: 'The urbanseoul. Instagram profile grid next to a paid New Balance feed ad',
             width: 1800,
-            height: 1201,
+            height: 1059,
           },
         ],
         moreImages: [
@@ -1261,29 +1259,26 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           'The urbanseoul. merch merges 1990s athletic heritage with Y2K cyber-grunge, turning the festival’s poster graphics into wearable streetwear in off-white, charcoal, forest teal, deep navy, slate blue, and metallic silver. The lookbook features the festival’s headliners wearing the pieces: DPR Live in the teal hoodie and embroidered cap, IU in the navy and white color-blocked windbreaker, and BIBI in the white tank with chrome embossed lettering. Seeing the performers in the designs builds cultural credibility and invites fans to style the same looks. The vintage-inspired line adds a cream track jacket with asymmetrical paneling, a black hoodie stamped with a chrome star, and an off-white graphic tee.',
           'The accessories carry the posters’ mixed-media textures into everyday festival keepsakes. A crisp white tote features a glossy liquid-chrome “COMING TO YOU LIVE,” while a grey tote pairs a distressed blue halftone logo with a sketchy star. Three faux-leather strap keychains bring the print graphics into hardware: a black strap with halftone gradients and blurred “SEOUL” type, a slate-blue strap with clean white branding, and a distressed off-white strap with the “COMING TO YOU LIVE” badge and ink smudges from the calendar poster.',
         ],
-        layout: 'cluster',
+        layout: 'trio',
         imagesOnCard: false,
         images: [
           {
             src: usMerchModelDprlive,
             alt: 'DPR Live wearing the urbanseoul. teal hoodie and embroidered cap',
-            width: 1254,
+            width: 836,
             height: 1254,
-            size: 'lg',
           },
           {
             src: usMerchModelIu,
             alt: 'IU wearing the urbanseoul. navy and white color-blocked windbreaker',
             width: 1024,
             height: 1536,
-            size: 'md',
           },
           {
             src: usMerchModelBibi,
             alt: 'BIBI wearing the urbanseoul. white tank with chrome embossed lettering',
             width: 1024,
             height: 1536,
-            size: 'md',
           },
         ],
         moreImages: [
@@ -1299,7 +1294,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             ],
           },
           {
-            layout: 'two-up',
+            layout: 'row-match-height',
             images: [
               {
                 src: usMerchToteWhiteCutout,

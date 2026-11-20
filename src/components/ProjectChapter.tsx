@@ -199,22 +199,22 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
       )}
       {chapter.figmaEmbed && (
         <div data-reveal className="mt-10 flex justify-center px-6 md:px-10">
-          <div className="w-[300px] shrink-0">
-            <div
-              className="relative overflow-hidden rounded-[2.75rem] border-[4px] border-cream/20 bg-ink shadow-xl shadow-black/40"
-              style={{ aspectRatio: '9 / 19.5' }}
-            >
-              <iframe
-                src={chapter.figmaEmbed.url}
-                title={chapter.figmaEmbed.title}
-                loading="lazy"
-                allowFullScreen
-                className="h-full w-full border-0"
-              />
-              <div className="pointer-events-none absolute inset-x-0 top-[10px] flex justify-center">
-                <div className="h-[9px] w-[72px] rounded-full bg-ink" />
-              </div>
-            </div>
+          {/* A plain bordered frame, not the PhoneMockup treatment --
+              the Figma prototype itself already renders as a phone
+              (its own device chrome is part of the design), so wrapping
+              it in a second phone-shaped frame read as a phone nested
+              inside a phone. */}
+          <div
+            className="w-full max-w-[420px] overflow-hidden rounded-xl border border-cream/20 bg-ink shadow-xl shadow-black/40"
+            style={{ aspectRatio: '9 / 17' }}
+          >
+            <iframe
+              src={chapter.figmaEmbed.url}
+              title={chapter.figmaEmbed.title}
+              loading="lazy"
+              allowFullScreen
+              className="h-full w-full border-0"
+            />
           </div>
         </div>
       )}
