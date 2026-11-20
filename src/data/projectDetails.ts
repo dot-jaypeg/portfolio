@@ -203,11 +203,6 @@ export interface ProjectImageBlock {
   // `full-page` only -- use a taller-than-viewport box, for a square
   // or portrait source a plain viewport-height crop cuts too hard.
   tall?: boolean
-  // `full-page-two-up` only -- a real gutter (plus its own margin and
-  // a max-width) between the two columns, instead of the default
-  // flush, edge-to-edge treatment, for a pair that should read as
-  // visibly separate rather than one image split in two.
-  rowGap?: boolean
   // Pill link buttons (same style as ProjectHero's "Visit Site")
   // right below THIS block specifically -- the chapter's own primary
   // block or any one `moreImages` entry can carry its own, so a link
@@ -1746,8 +1741,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             ],
           },
           {
-            layout: 'full-page-two-up',
-            rowGap: true,
+            // `two-up` sizes each box to its own declared aspect
+            // ratio (here, the videos' real 960x960 square) instead of
+            // `full-page-two-up`'s viewport-height box, which cropped
+            // into both to fill a taller-than-square column.
+            layout: 'two-up',
             blockCaption: 'Click to unmute',
             images: [
               {

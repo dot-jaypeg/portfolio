@@ -71,6 +71,7 @@ function AutoplayInViewVideo({
       poster={image.poster}
       controls
       muted
+      loop
       preload="metadata"
       aria-label={image.alt}
       // Clicking the video itself unmutes (or re-mutes) it -- quicker
@@ -240,7 +241,7 @@ function AspectRatioParallaxMedia({ image }: { image: ProjectImage }) {
 // have) -- was only ever visible as a stray light-grey bar once a
 // `fit: 'contain'` image left empty space to show it through, and
 // looked like an accident rather than an intentional card backdrop.
-function FullPageMediaRow({ images, tall, gap }: { images: ProjectImage[]; tall: boolean; gap?: boolean }) {
+function FullPageMediaRow({ images, tall }: { images: ProjectImage[]; tall: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRefA = useRef<HTMLDivElement>(null)
   const wrapperRefB = useRef<HTMLDivElement>(null)
@@ -258,24 +259,12 @@ function FullPageMediaRow({ images, tall, gap }: { images: ProjectImage[]; tall:
     { wrapperRef: wrapperRefB, boxRef: boxRefB },
   ]
 
-  // `gap` opts out of the default flush, edge-to-edge treatment -- a
-  // real gutter between the two columns, plus its own top/bottom
-  // margin and a max-width (the same as `two-up`'s) instead of true
-  // full-bleed, for a pair that wants visible separation rather than
-  // reading as one continuous image split in two.
   return (
-    <div
-      ref={containerRef}
-      className={
-        gap
-          ? `mx-auto flex w-full max-w-6xl gap-6 px-6 mt-10 mb-10 md:gap-10 md:px-10 ${tall ? 'h-[150vh]' : 'h-[92vh]'}`
-          : `flex w-full ${tall ? 'h-[150vh]' : 'h-[92vh]'}`
-      }
-    >
+    <div ref={containerRef} className={`flex w-full ${tall ? 'h-[150vh]' : 'h-[92vh]'}`}>
       {images.map((image, i) => {
         const { wrapperRef, boxRef } = slots[i]
         return (
-          <div key={i} ref={boxRef} className={`relative h-full overflow-hidden ${gap ? 'flex-1' : 'w-1/2'}`}>
+          <div key={i} ref={boxRef} className="relative h-full w-1/2 overflow-hidden">
             <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
               <Media
                 image={image}
@@ -554,7 +543,6 @@ export function ImageGrid({
   images,
   card = true,
   tall = false,
-  rowGap = false,
   inlineLinks,
   accent,
 }: {
@@ -565,8 +553,6 @@ export function ImageGrid({
   card?: boolean
   // `full-page` only -- see the note above.
   tall?: boolean
-  // `full-page-two-up` only -- see `FullPageMediaRow`'s own note.
-  rowGap?: boolean
   // `phone-row` only -- see ProjectImageBlock's `linksInline` note.
   inlineLinks?: { label: string; href: string }[]
   accent?: string
@@ -765,7 +751,7 @@ export function ImageGrid({
   if (layout === 'full-page-two-up') {
     return (
       <div className="w-full">
-        <FullPageMediaRow images={images.slice(0, 2)} tall={tall} gap={rowGap} />
+        <FullPageMediaRow images={images.slice(0, 2)} tall={tall} />
       </div>
     )
   }
