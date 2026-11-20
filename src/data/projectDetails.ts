@@ -444,7 +444,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         // a still.
         layout: 'full-page-two-up',
         tall: true,
-        blockCaption: 'Click to unmute',
         images: [
           {
             src: tshirtMockup,
@@ -455,6 +454,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             poster: chapmanStickerPoster,
             videoMode: 'autoplay',
             alt: 'Presenting the Contra sticker pack for a Chapman University class critique',
+            // Tied to this column specifically (not the whole two-up
+            // row's blockCaption) -- only the video needs unmuting, and
+            // a caption spanning both images read like a stray divider
+            // between this row and the sticker-pack photo below it.
+            caption: 'Click to unmute',
           },
         ],
         moreImages: [

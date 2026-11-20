@@ -315,6 +315,11 @@ function FullPageMediaRow({ images, tall }: { images: ProjectImage[]; tall: bool
                 observeRef={boxRef}
               />
             </div>
+            {image.caption && (
+              <p className="font-body absolute inset-x-0 top-3 z-10 text-center text-xs tracking-[0.08em] text-cream/70 uppercase">
+                {image.caption}
+              </p>
+            )}
           </div>
         )
       })}
