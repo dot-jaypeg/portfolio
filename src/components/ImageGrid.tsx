@@ -20,6 +20,7 @@ export type ImageGridLayout =
   | 'full-width-parallax'
   | 'row-match-height'
   | 'logo-lockup'
+  | 'overlay-collage'
 
 // Plays once its container scrolls into view, pauses once it scrolls
 // back out -- starts muted (autoplay triggered by scroll, not a real
@@ -92,7 +93,12 @@ function AutoplayInViewVideo({
       onClick={(e) => {
         e.preventDefault()
         const el = ref.current
-        if (el) el.muted = !el.muted
+        if (!el) return
+        if (image.clickAction === 'fullscreen') {
+          el.requestFullscreen?.().catch(() => {})
+        } else {
+          el.muted = !el.muted
+        }
       }}
       // In-page sizing can be `object-cover`/`object-contain` cropped
       // or letterboxed to fit whatever box it's sitting in, but the
@@ -201,7 +207,7 @@ function FullPageMedia({ image, tall }: { image: ProjectImage; tall: boolean }) 
         </div>
       </div>
       {image.caption && (
-        <figcaption className="font-body mx-auto mt-4 max-w-xl px-6 text-center text-xs tracking-[0.08em] text-cream/40 md:px-0">
+        <figcaption className="font-body mx-auto mt-4 max-w-xl px-6 text-center text-xs tracking-[0.08em] text-cream/40 uppercase md:px-0">
           {image.caption}
         </figcaption>
       )}
@@ -400,7 +406,7 @@ function Figure({
         <Media image={image} className="h-full w-full object-cover" />
       </div>
       {image.caption && (
-        <figcaption className="font-body mx-auto mt-4 max-w-xl px-6 text-center text-xs tracking-[0.08em] text-cream/40 md:px-0">
+        <figcaption className="font-body mx-auto mt-4 max-w-xl px-6 text-center text-xs tracking-[0.08em] text-cream/40 uppercase md:px-0">
           {image.caption}
         </figcaption>
       )}
@@ -439,7 +445,7 @@ function PhoneMockup({ image }: { image: ProjectImage }) {
         {image.storyOverlay && <InstagramStoryChrome username={image.storyOverlay} />}
       </div>
       {image.caption && (
-        <p className="font-body mt-3 text-center text-xs tracking-[0.08em] text-cream/40">{image.caption}</p>
+        <p className="font-body mt-3 text-center text-xs tracking-[0.08em] text-cream/40 uppercase">{image.caption}</p>
       )}
     </div>
   )
@@ -503,7 +509,7 @@ function MacbookMockup({ image }: { image: ProjectImage }) {
       <div className="h-3 bg-gradient-to-b from-cream/20 to-cream/5" />
       <div className="mx-auto h-1.5 w-32 rounded-b-xl bg-cream/15" />
       {image.caption && (
-        <p className="font-body mt-4 text-center text-xs tracking-[0.08em] text-cream/40">{image.caption}</p>
+        <p className="font-body mt-4 text-center text-xs tracking-[0.08em] text-cream/40 uppercase">{image.caption}</p>
       )}
     </div>
   )
@@ -640,6 +646,37 @@ export function ImageGrid({
             <Media image={image} className="h-[8rem] max-h-[11vh] w-auto md:h-[10rem]" />
           </div>
         ))}
+      </div>
+    )
+  }
+
+  if (layout === 'overlay-collage') {
+    // Two images, layered rather than side by side: `images[0]` (real
+    // photography) fills the frame, `images[1]` (a transparent cutout)
+    // sits smaller in the bottom corner, overlapping its edge like a
+    // sticker on a page -- for a clip-art render that read as too
+    // big/formal sitting in its own equal-width column next to a
+    // photo.
+    const [main, overlay] = images
+    return (
+      <div className="relative mx-auto mt-6 mb-16 max-w-3xl px-6 md:px-10">
+        <div
+          className="overflow-hidden bg-cream/5"
+          style={{ aspectRatio: `${main.width} / ${main.height}` }}
+        >
+          <Media
+            image={main}
+            className={`h-full w-full ${main.fit === 'contain' ? 'object-contain' : 'object-cover'}`}
+          />
+        </div>
+        {overlay && (
+          <div
+            className="absolute right-[4%] bottom-[-14%] w-[38%] drop-shadow-2xl"
+            style={{ aspectRatio: `${overlay.width} / ${overlay.height}` }}
+          >
+            <Media image={overlay} className="h-full w-full object-contain" />
+          </div>
+        )}
       </div>
     )
   }

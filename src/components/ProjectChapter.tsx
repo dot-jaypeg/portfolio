@@ -191,7 +191,9 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           embed. */}
       {!chapter.linksInline && !chapter.figmaEmbed && <BlockLinks links={chapter.links} accent={accent} />}
       {chapter.blockCaption && (
-        <p className="font-body mt-4 text-center text-xs tracking-[0.08em] text-cream/40">{chapter.blockCaption}</p>
+        <p className="font-body mt-4 text-center text-xs tracking-[0.08em] text-cream/40 uppercase">
+          {chapter.blockCaption}
+        </p>
       )}
       {chapter.moreImages?.map((block, i) => (
         <div data-reveal key={i} className={SELF_SPACED_LAYOUTS.has(block.layout) ? '' : 'mt-10'}>
@@ -205,7 +207,7 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           />
           {!block.linksInline && <BlockLinks links={block.links} accent={accent} />}
           {block.blockCaption && (
-            <p className="font-body mt-4 text-center text-xs tracking-[0.08em] text-cream/40">
+            <p className="font-body mt-4 text-center text-xs tracking-[0.08em] text-cream/40 uppercase">
               {block.blockCaption}
             </p>
           )}

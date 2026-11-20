@@ -139,11 +139,9 @@ import protocolAlleyRain from '../assets/images/projects/detail/protocol-of-betr
 import protocolLowAngleWatch from '../assets/images/projects/detail/protocol-of-betrayal/low-angle-watch.jpg'
 import protocolTieFighterModel from '../assets/images/projects/detail/protocol-of-betrayal/tie-fighter-model.png'
 import protocolStormtrooperModels from '../assets/images/projects/detail/protocol-of-betrayal/stormtrooper-models.png'
-import protocolStormtrooperWireframePose from '../assets/images/projects/detail/protocol-of-betrayal/stormtrooper-wireframe-pose.jpg'
 import protocolRiggingViewport from '../assets/images/projects/detail/protocol-of-betrayal/rigging-viewport.jpg'
 import protocolTieFighterInEngine from '../assets/images/projects/detail/protocol-of-betrayal/tie-fighter-in-engine.jpg'
 import protocolCameraRig from '../assets/images/projects/detail/protocol-of-betrayal/camera-rig.jpg'
-import protocolSequencerStormtroopers from '../assets/images/projects/detail/protocol-of-betrayal/sequencer-stormtroopers.jpg'
 import protocolFullShortVideo from '../assets/images/projects/detail/protocol-of-betrayal/full-short.mp4'
 import protocolFullShortPoster from '../assets/images/projects/detail/protocol-of-betrayal/full-short-poster.jpg'
 
@@ -162,6 +160,14 @@ export interface ProjectImage {
   // user-initiated player with `poster` as its thumbnail.
   video?: string
   videoMode?: 'controls' | 'loop' | 'autoplay'
+  // `videoMode: 'autoplay'` only -- what a click on the video itself
+  // does, besides whatever its native `controls` bar already handles
+  // on its own. Defaults to 'unmute' (the click toggles mute in
+  // place). 'fullscreen' opens the browser's native fullscreen player
+  // instead, for a video substantial enough (a full short, not a
+  // quick ad loop) to want its own real play/pause/volume/scrub bar
+  // rather than inline, below-the-fold controls.
+  clickAction?: 'unmute' | 'fullscreen'
   poster?: string
   alt: string
   width?: number
@@ -1810,26 +1816,29 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             // own real dimensions) -- `trio`'s columns size to each
             // Figure's own declared ratio, so giving all three the
             // SAME declared ratio crops each into one uniform card
-            // size instead of three different heights.
+            // size instead of three different heights. 4:3, not the
+            // source files' own 2.565 ultra-wide ratio -- at three
+            // equal columns inside `trio`'s own max-width, that ultra-
+            // wide ratio rendered each as a thin, barely-visible strip.
             layout: 'trio',
             images: [
               {
                 src: protocolAlleyRain,
                 alt: "An elevated view of Nar Vayal's rain-slicked, neon-signed skyline",
-                width: 1457,
-                height: 568,
+                width: 1200,
+                height: 900,
               },
               {
                 src: protocolLowAngleWatch,
                 alt: 'A low-angle shot of a stormtrooper standing watch, framed for intimidation',
-                width: 1457,
-                height: 568,
+                width: 1200,
+                height: 900,
               },
               {
                 src: protocolTieFighterInEngine,
                 alt: 'The TIE fighter model flying past a nebula in Unreal Engine',
-                width: 1457,
-                height: 568,
+                width: 1200,
+                height: 900,
               },
             ],
           },
@@ -1840,8 +1849,18 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         collapsible: true,
         text: 'Nar Vayal is an original planet, built from the ground up with Coruscant, Naboo, and Cloud City as reference points. Animating the TIE fighter and droid models convincingly, with limited resources, took just as much iteration.',
         imagesOnCard: false,
-        layout: 'two-up',
+        // `overlay-collage` instead of a plain grid -- the clip-art
+        // render sits smaller, layered over the photo's own corner
+        // like a sticker, instead of taking up a whole equal-width
+        // column at full size next to it.
+        layout: 'overlay-collage',
         images: [
+          {
+            src: protocolRiggingViewport,
+            alt: 'A stormtrooper model and camera rig inside the animation viewport',
+            width: 1457,
+            height: 568,
+          },
           {
             src: protocolTieFighterModel,
             alt: 'A finished 3D TIE fighter model on a transparent background',
@@ -1849,29 +1868,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             height: 1080,
             fit: 'contain',
           },
-          {
-            // A shared declared ratio (1300x1000, 1.3) across all four
-            // "regular imagery" shots here -- not each one's own real
-            // dimensions -- so `two-up`'s per-image aspect ratio crops
-            // every one into the same uniform card size instead of
-            // four different shapes. The two clip-art renders keep
-            // their own real ratio (with `fit: 'contain'`) since
-            // they're exempt from this.
-            src: protocolRiggingViewport,
-            alt: 'A stormtrooper model and camera rig inside the animation viewport',
-            width: 1300,
-            height: 1000,
-          },
         ],
         moreImages: [
           {
-            layout: 'two-up',
+            layout: 'overlay-collage',
             images: [
               {
                 src: protocolCameraRig,
                 alt: 'A stormtrooper model framed inside the camera rig viewport',
-                width: 1300,
-                height: 1000,
+                width: 1457,
+                height: 568,
               },
               {
                 src: protocolStormtrooperModels,
@@ -1879,23 +1885,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
                 width: 500,
                 height: 500,
                 fit: 'contain',
-              },
-            ],
-          },
-          {
-            layout: 'two-up',
-            images: [
-              {
-                src: protocolSequencerStormtroopers,
-                alt: "Unreal Engine's Sequencer showing the stormtrooper animation tracks",
-                width: 1300,
-                height: 1000,
-              },
-              {
-                src: protocolStormtrooperWireframePose,
-                alt: 'A stormtrooper model in a T-pose inside the 3D viewport',
-                width: 1300,
-                height: 1000,
               },
             ],
           },
@@ -1912,6 +1901,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             video: protocolFullShortVideo,
             poster: protocolFullShortPoster,
             videoMode: 'autoplay',
+            clickAction: 'fullscreen',
             alt: 'The complete Protocol of Betrayal animated short',
             width: 854,
             height: 480,
