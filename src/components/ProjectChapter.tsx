@@ -201,6 +201,11 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
             accent={accent}
           />
           {!block.linksInline && <BlockLinks links={block.links} accent={accent} />}
+          {block.blockCaption && (
+            <p className="font-body mt-4 text-center text-xs tracking-[0.08em] text-cream/40">
+              {block.blockCaption}
+            </p>
+          )}
         </div>
       ))}
       {chapter.brandGuide && (

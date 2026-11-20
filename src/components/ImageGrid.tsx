@@ -17,6 +17,7 @@ export type ImageGridLayout =
   | 'phone-row'
   | 'macbook-row'
   | 'full-width'
+  | 'full-width-parallax'
   | 'row-match-height'
 
 // Plays once its container scrolls into view, pauses once it scrolls
@@ -203,6 +204,30 @@ function FullPageMedia({ image, tall }: { image: ProjectImage; tall: boolean }) 
         </figcaption>
       )}
     </figure>
+  )
+}
+
+// Same parallax mechanic as `FullPageMedia`, but the box is sized to
+// the image's own declared aspect ratio instead of a viewport-height
+// slice -- for a photo pre-cropped to a specific ratio (a 16:9 crop
+// chosen to keep particular subjects in frame) where `full-page`'s
+// vh-driven box would re-crop it again to whatever shape the
+// viewport happens to be, undoing that choice.
+function AspectRatioParallaxMedia({ image }: { image: ProjectImage }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  useScrollParallax(containerRef, wrapperRef, 10)
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full overflow-hidden"
+      style={{ aspectRatio: `${image.width} / ${image.height}` }}
+    >
+      <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
+        <Media image={image} className="h-full w-full object-cover" observeRef={containerRef} />
+      </div>
+    </div>
   )
 }
 
@@ -561,6 +586,14 @@ export function ImageGrid({
     return (
       <div className="mt-6 w-full px-6 md:px-10">
         <Figure image={images[0]} card={card} />
+      </div>
+    )
+  }
+
+  if (layout === 'full-width-parallax') {
+    return (
+      <div className="mt-6 w-full px-6 md:px-10">
+        <AspectRatioParallaxMedia image={images[0]} />
       </div>
     )
   }

@@ -119,13 +119,15 @@ import bagguPatternAnomaly from '../assets/images/projects/detail/baggu/pattern-
 
 import chichaDisplay from '../assets/images/projects/detail/chi-cha/display-ad.jpg'
 import chichaStatic from '../assets/images/projects/detail/chi-cha/static-ad.jpg'
-import chichaIgStories from '../assets/images/projects/detail/chi-cha/ig-stories.jpg'
-import chichaSocialPosts from '../assets/images/projects/detail/chi-cha/social-posts.jpg'
+import chichaIgStoryCutout from '../assets/images/projects/detail/chi-cha/ig-story-cutout.png'
+import chichaIgFeedCutout from '../assets/images/projects/detail/chi-cha/ig-feed-cutout.png'
 import chichaMailer from '../assets/images/projects/detail/chi-cha/direct-mailer.jpg'
 import chichaPackagingMockup from '../assets/images/projects/detail/chi-cha/packaging-mockup.jpg'
-import chichaLifestylePhoto from '../assets/images/projects/detail/chi-cha/lifestyle-photo.jpg'
-import chichaSiteHero from '../assets/images/projects/detail/chi-cha/site-hero.jpg'
-import chichaSiteShop from '../assets/images/projects/detail/chi-cha/site-shop.jpg'
+import chichaLogo from '../assets/images/projects/detail/chi-cha/chicha-logo.png'
+import chichaProductMockup from '../assets/images/projects/detail/chi-cha/product-mockup-lavender.png'
+import chichaBrandNameBoxes from '../assets/images/projects/detail/chi-cha/brandname-boxes.jpg'
+import chichaSiteTour from '../assets/images/projects/detail/chi-cha/site-tour.mp4'
+import chichaSiteTourPoster from '../assets/images/projects/detail/chi-cha/site-tour-poster.jpg'
 import chichaVideoAd1 from '../assets/images/projects/detail/chi-cha/video-ad-1.mp4'
 import chichaVideoAd1Poster from '../assets/images/projects/detail/chi-cha/video-ad-1-poster.jpg'
 import chichaVideoAd2 from '../assets/images/projects/detail/chi-cha/video-ad-2.mp4'
@@ -209,6 +211,11 @@ export interface ProjectImageBlock {
   // that otherwise leaves the rest of the row empty, balancing it
   // against a column of buttons instead.
   linksInline?: boolean
+  // A single small note centered below this whole block, not any one
+  // image in it -- e.g. "Click to unmute" under a pair of autoplay
+  // videos, where the note is about the pair as a unit rather than
+  // each video individually.
+  blockCaption?: string
 }
 
 export interface ProjectChapter extends ProjectImageBlock {
@@ -1610,26 +1617,59 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     tags: ['Branding', 'Digital Marketing', 'Campaign'],
     intro:
       "Being a college student or professional in a fast-paced world is exhausting — chi-cha offers a quick, convenient, delicious caffeine boost in a portable, recyclable juice box. This project covers the brand's full marketing push, from the product itself to the campaign around it.",
-    introImage: {
-      src: chichaLifestylePhoto,
-      alt: 'chi-cha juice box in hand at the Getty Center',
-      width: 1333,
-      height: 2000,
-    },
     chapters: [
+      {
+        layout: 'contained-lg',
+        imagesOnCard: false,
+        images: [
+          {
+            src: chichaLogo,
+            alt: 'The chi-cha pixel-art wordmark',
+            width: 1011,
+            height: 192,
+          },
+        ],
+        moreImages: [
+          {
+            layout: 'contained',
+            images: [
+              {
+                src: chichaProductMockup,
+                alt: 'A pixel-art render of the chi-cha lavender matcha latte box',
+                width: 286,
+                height: 495,
+              },
+            ],
+          },
+        ],
+      },
       {
         label: 'Concepting',
         collapsible: true,
         text: "chi-cha's concept touches on matcha's culturally traditional roots, so the identity and advertising needed care and respect. The goal: a strong, recognizable presence in a competitive market, consistent across mailers, social, video ads, and the website — authentic storytelling that sets chi-cha apart while honoring matcha's heritage.",
         layout: 'contained',
-        images: [],
+        images: [
+          {
+            src: chichaPackagingMockup,
+            alt: 'chi-cha blueberry packaging mockup',
+            width: 2000,
+            height: 1466,
+          },
+        ],
       },
       {
         label: 'Brand Name',
         collapsible: true,
         text: 'The name blends "Chi" (energy, Chinese) and "Cha" (tea, Japanese) for a vibrant, flavorful boost — with a playful double meaning, since "Chi" can also mean "to consume," so the name reads as "consume matcha." The hyphen nods to Japanese honorifics, guiding pronunciation and building a personal connection with the brand.',
-        layout: 'contained',
-        images: [],
+        layout: 'full-width-parallax',
+        images: [
+          {
+            src: chichaBrandNameBoxes,
+            alt: 'Two chi-cha peach tea juice boxes, straws popped, resting in hand',
+            width: 1800,
+            height: 1012,
+          },
+        ],
       },
       {
         label: 'Campaign',
@@ -1638,17 +1678,20 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           'The pixelated design draws from Japanese video games like Super Mario Bros. and Pokémon — playful and energizing, while staying connected to matcha drinkers. Retro type sets the tone, echoing konbini juice-box packaging, with a green palette accented by pastels for a vibrant finish.',
           'That identity carries across the whole campaign — the small, portable box, mailers, Instagram and TikTok content, video ads, display and popup placements, and the website all pull from the same pixel-inspired world.',
         ],
-        layout: 'full-page-two-up',
+        imagesOnCard: false,
+        layout: 'two-up',
         images: [
           {
             src: chichaDisplay,
-            alt: 'Chi-Cha display ad',
+            alt: 'chi-cha display ad',
+            caption: 'Display Ad',
             width: 2000,
             height: 1500,
           },
           {
             src: chichaStatic,
-            alt: 'Chi-Cha static ad',
+            alt: 'chi-cha static ad',
+            caption: 'Static Ad',
             width: 2000,
             height: 1291,
           },
@@ -1658,27 +1701,30 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             layout: 'two-up',
             images: [
               {
-                src: chichaIgStories,
-                alt: 'Chi-Cha Instagram stories design',
-                width: 2000,
-                height: 1334,
+                src: chichaIgFeedCutout,
+                alt: 'chi-cha Instagram feed post, phone mockup',
+                caption: 'IG Feed Post',
+                width: 1800,
+                height: 1629,
               },
               {
-                src: chichaSocialPosts,
-                alt: 'Chi-Cha social media post designs',
-                width: 2000,
-                height: 1334,
+                src: chichaIgStoryCutout,
+                alt: 'chi-cha Instagram story post, phone mockup',
+                caption: 'IG Story Post',
+                width: 1800,
+                height: 1630,
               },
             ],
           },
           {
             layout: 'full-page-two-up',
+            blockCaption: 'Click to unmute',
             images: [
               {
                 video: chichaVideoAd1,
                 poster: chichaVideoAd1Poster,
                 videoMode: 'autoplay',
-                alt: 'Chi-Cha video ad, museum and gallery lifestyle spot',
+                alt: 'chi-cha video ad, museum and gallery lifestyle spot',
                 width: 960,
                 height: 960,
               },
@@ -1686,7 +1732,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
                 video: chichaVideoAd2,
                 poster: chichaVideoAd2Poster,
                 videoMode: 'autoplay',
-                alt: 'Chi-Cha video ad, on-the-go lifestyle spot',
+                alt: 'chi-cha video ad, on-the-go lifestyle spot',
                 width: 960,
                 height: 960,
               },
@@ -1696,31 +1742,23 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             layout: 'macbook-row',
             images: [
               {
-                src: chichaSiteHero,
-                alt: 'chi-cha e-commerce site, pixel-art landing hero',
-                width: 2000,
-                height: 1292,
-              },
-              {
-                src: chichaSiteShop,
-                alt: 'chi-cha e-commerce site, product shop grid',
-                width: 2000,
-                height: 1292,
+                video: chichaSiteTour,
+                poster: chichaSiteTourPoster,
+                videoMode: 'controls',
+                alt: 'chi-cha official website tour',
+                caption: 'Official Website Tour',
+                width: 1600,
+                height: 1034,
               },
             ],
           },
           {
-            layout: 'two-up',
+            layout: 'contained',
             images: [
               {
                 src: chichaMailer,
-                alt: 'Chi-Cha direct mailer design',
-                width: 2000,
-                height: 1466,
-              },
-              {
-                src: chichaPackagingMockup,
-                alt: 'Chi-Cha blueberry packaging mockup',
+                alt: 'chi-cha direct mailer design',
+                caption: 'Direct Mailer',
                 width: 2000,
                 height: 1466,
               },

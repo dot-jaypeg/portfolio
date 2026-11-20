@@ -230,7 +230,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: 'chi-cha',
-    title: 'Chi-Cha Beverage Campaign',
+    title: 'chi-cha Matcha Campaign',
     category: 'Branding & Digital Marketing',
     client: 'Chi-Cha',
     image: chichaImg,
