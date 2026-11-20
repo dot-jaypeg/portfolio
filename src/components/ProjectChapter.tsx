@@ -124,6 +124,16 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
         scrollTrigger: {
           trigger: el,
           start: 'top 82%',
+          // Explicit, not the default -- with no `end`, ScrollTrigger
+          // computes one as `start + trigger's own height`, which for
+          // a chapter shorter than one viewport (Brand Guide: just a
+          // label/text line plus the page-flip box) lands well before
+          // the section has actually scrolled past, firing `onLeave`
+          // (reverse) while most of it is still on screen. `bottom
+          // top` ties leaving to the section's bottom actually
+          // clearing the viewport's top, regardless of the section's
+          // own height.
+          end: 'bottom top',
           // Symmetric in both directions -- replays the reveal every
           // time the section re-enters view, scrolling down OR back up
           // (not just a one-time play that silently stays revealed
@@ -173,7 +183,12 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           accent={accent}
         />
       </div>
-      {!chapter.linksInline && <BlockLinks links={chapter.links} accent={accent} />}
+      {/* When there's a figmaEmbed, its own links render below IT
+          instead (see below) -- the "View Full Prototype" button
+          reads as "I clicked through what's embedded, give me the
+          real thing" rather than a button sitting above the actual
+          embed. */}
+      {!chapter.linksInline && !chapter.figmaEmbed && <BlockLinks links={chapter.links} accent={accent} />}
       {chapter.moreImages?.map((block, i) => (
         <div data-reveal key={i} className={SELF_SPACED_LAYOUTS.has(block.layout) ? '' : 'mt-10'}>
           <ImageGrid
@@ -218,6 +233,7 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           </div>
         </div>
       )}
+      {!chapter.linksInline && chapter.figmaEmbed && <BlockLinks links={chapter.links} accent={accent} />}
     </section>
   )
 }

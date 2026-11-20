@@ -1349,6 +1349,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           {
             src: usMobilePrototype,
             alt: 'The urbanseoul. mobile website prototype: tickets, store, product detail, and artist pages',
+            width: 2000,
+            height: 1389,
           },
         ],
         links: [{ label: 'View Full Prototype', href: URBAN_SEOUL_FIGMA_PROTOTYPE_URL }],
