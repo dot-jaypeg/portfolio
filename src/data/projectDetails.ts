@@ -106,15 +106,16 @@ import jadeResearchRender03 from '../assets/images/projects/detail/jade-sword/re
 import jadeResearchRender04 from '../assets/images/projects/detail/jade-sword/research-render-04.png'
 import jadeFinalRender from '../assets/images/projects/detail/jade-sword/final-render.jpg'
 
-import bagguToneGraffiti from '../assets/images/projects/detail/baggu/tone-graffiti.jpg'
+import bagguToneSpiderverseSet from '../assets/images/projects/detail/baggu/tone-spiderverse-set.mp4'
+import bagguToneSpiderverseSetPoster from '../assets/images/projects/detail/baggu/tone-spiderverse-set-poster.jpg'
 import bagguMockup01 from '../assets/images/projects/detail/baggu/product-mockup-01.mp4'
 import bagguMockup01Poster from '../assets/images/projects/detail/baggu/product-mockup-01-poster.jpg'
 import bagguMockup02 from '../assets/images/projects/detail/baggu/product-mockup-02.mp4'
 import bagguMockup02Poster from '../assets/images/projects/detail/baggu/product-mockup-02-poster.jpg'
-import bagguPatternAnomaly from '../assets/images/projects/detail/baggu/pattern-anomaly.jpg'
 import bagguPatternWebcomic from '../assets/images/projects/detail/baggu/pattern-webcomic.jpg'
 import bagguPatternEarth1610 from '../assets/images/projects/detail/baggu/pattern-earth-1610.jpg'
-import bagguPatternNeonSpider from '../assets/images/projects/detail/baggu/pattern-neon-spider.jpg'
+import bagguPatternSunflower from '../assets/images/projects/detail/baggu/pattern-sunflower.jpg'
+import bagguPatternAnomaly from '../assets/images/projects/detail/baggu/pattern-anomaly.jpg'
 
 import chichaDisplay from '../assets/images/projects/detail/chi-cha/display-ad.jpg'
 import chichaStatic from '../assets/images/projects/detail/chi-cha/static-ad.jpg'
@@ -1519,8 +1520,10 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         layout: 'full-width',
         images: [
           {
-            src: bagguToneGraffiti,
-            alt: 'Hand-drawn Spider-Man graffiti tag study',
+            video: bagguToneSpiderverseSet,
+            poster: bagguToneSpiderverseSetPoster,
+            videoMode: 'loop',
+            alt: 'A looping reveal of the BAGGU x Spiderverse patterns tiled behind the wordmark',
             width: 1400,
             height: 1400,
           },
@@ -1533,50 +1536,43 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           'The collection features four patterns: Sunflower, Anomaly, Earth-1610, and Webcomic, inspired by Marvel’s Across the Spider-Verse through graffiti art, Spider-Man motifs, and comic panel onomatopoeia. The patterns aim at kids, teens, and young adults who want fun, electric designs that still reach the inner child.',
           'Colors are pulled straight from the film, with neon purple, teal, and red running through every design for cohesiveness. Each pattern is different, but the shared palette and Spider-Man theme bring the set together as one collection.',
         ],
-        // All four static pattern pieces together as one even 2x2
-        // set (Sunflower has no standalone file -- it only appears in
-        // the product mockups below) instead of a trio plus one
-        // image left stranded on its own afterward.
-        layout: 'two-up',
+        // All four patterns side by side in one row, each with a
+        // parallax drift and its own name underneath, instead of a
+        // static 2x2 grid.
+        layout: 'full-page-quad',
         images: [
-          {
-            src: bagguPatternAnomaly,
-            alt: 'Anomaly pattern, comic-burst zigzags in teal, red, and purple',
-            width: 1400,
-            height: 1400,
-          },
           {
             src: bagguPatternWebcomic,
             alt: 'Webcomic pattern, comic panel onomatopoeia in purple and blue',
-            width: 1400,
-            height: 1400,
+            caption: 'Webcomic',
+            width: 900,
+            height: 900,
           },
-        ],
-        moreImages: [
           {
-            layout: 'two-up',
-            images: [
-              {
-                src: bagguPatternEarth1610,
-                alt: 'Earth-1610 pattern, glitched neon cityscape',
-                width: 1400,
-                height: 1400,
-              },
-              {
-                src: bagguPatternNeonSpider,
-                alt: 'Additional pattern exploration, neon spider motif',
-                caption: 'Additional pattern exploration',
-                width: 1400,
-                height: 1400,
-              },
-            ],
+            src: bagguPatternEarth1610,
+            alt: 'Earth-1610 pattern, Spider-Man graffiti tag study',
+            caption: 'Earth-1610',
+            width: 900,
+            height: 900,
+          },
+          {
+            src: bagguPatternSunflower,
+            alt: 'Sunflower pattern, headphones and spider icons',
+            caption: 'Sunflower',
+            width: 900,
+            height: 900,
+          },
+          {
+            src: bagguPatternAnomaly,
+            alt: 'Anomaly pattern, neon spider motif',
+            caption: 'Anomaly',
+            width: 900,
+            height: 900,
           },
         ],
       },
       {
         label: 'In Use',
-        collapsible: true,
-        text: 'Applied to BAGGU’s own bags and pouches, the patterns carry from flat artwork into something you’d actually sling over a shoulder.',
         layout: 'full-page-two-up',
         images: [
           {
@@ -1584,16 +1580,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             poster: bagguMockup01Poster,
             videoMode: 'loop',
             alt: 'BAGGU x Spiderverse bag mockup cycling through all four patterns',
-            width: 1600,
-            height: 1112,
+            width: 658,
+            height: 826,
           },
           {
             video: bagguMockup02,
             poster: bagguMockup02Poster,
             videoMode: 'loop',
             alt: 'BAGGU x Spiderverse pouch mockup, pattern close-ups',
-            width: 1600,
-            height: 1112,
+            width: 826,
+            height: 824,
           },
         ],
       },

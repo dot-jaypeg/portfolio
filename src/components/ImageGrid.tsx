@@ -6,6 +6,7 @@ export type ImageGridLayout =
   | 'full-bleed'
   | 'full-page'
   | 'full-page-two-up'
+  | 'full-page-quad'
   | 'full-page-trio'
   | 'two-up'
   | 'trio'
@@ -243,6 +244,61 @@ function FullPageMediaRow({ images, tall }: { images: ProjectImage[]; tall: bool
                 observeRef={boxRef}
               />
             </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// Same idea as `FullPageMediaRow`, widened to 4 even columns instead
+// of 2 -- for a set of pattern swatches shown side by side with a
+// parallax drift. Each column also gets its own caption underneath
+// (name-labeled patterns, not just anonymous imagery), rendered
+// outside the overflow-hidden parallax box so the drift never clips
+// the label.
+function FullPageMediaQuadRow({ images, tall }: { images: ProjectImage[]; tall: boolean }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const wrapperRefA = useRef<HTMLDivElement>(null)
+  const wrapperRefB = useRef<HTMLDivElement>(null)
+  const wrapperRefC = useRef<HTMLDivElement>(null)
+  const wrapperRefD = useRef<HTMLDivElement>(null)
+  const boxRefA = useRef<HTMLDivElement>(null)
+  const boxRefB = useRef<HTMLDivElement>(null)
+  const boxRefC = useRef<HTMLDivElement>(null)
+  const boxRefD = useRef<HTMLDivElement>(null)
+  useScrollParallax(containerRef, wrapperRefA, 10)
+  useScrollParallax(containerRef, wrapperRefB, 10)
+  useScrollParallax(containerRef, wrapperRefC, 10)
+  useScrollParallax(containerRef, wrapperRefD, 10)
+
+  const slots = [
+    { wrapperRef: wrapperRefA, boxRef: boxRefA },
+    { wrapperRef: wrapperRefB, boxRef: boxRefB },
+    { wrapperRef: wrapperRefC, boxRef: boxRefC },
+    { wrapperRef: wrapperRefD, boxRef: boxRefD },
+  ]
+
+  return (
+    <div ref={containerRef} className="flex w-full">
+      {images.slice(0, 4).map((image, i) => {
+        const { wrapperRef, boxRef } = slots[i]
+        return (
+          <div key={i} className="w-1/4">
+            <div ref={boxRef} className={`relative w-full overflow-hidden ${tall ? 'h-[150vh]' : 'h-[92vh]'}`}>
+              <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
+                <Media
+                  image={image}
+                  className={`h-full w-full ${image.fit === 'contain' ? 'object-contain' : 'object-cover'}`}
+                  observeRef={boxRef}
+                />
+              </div>
+            </div>
+            {image.caption && (
+              <p className="font-geist mt-4 text-center text-xs font-medium tracking-[0.18em] text-cream/50 uppercase">
+                {image.caption}
+              </p>
+            )}
           </div>
         )
       })}
@@ -624,6 +680,14 @@ export function ImageGrid({
     return (
       <div className="w-full">
         <FullPageMediaRow images={images.slice(0, 2)} tall={tall} />
+      </div>
+    )
+  }
+
+  if (layout === 'full-page-quad') {
+    return (
+      <div className="w-full">
+        <FullPageMediaQuadRow images={images} tall={tall} />
       </div>
     )
   }

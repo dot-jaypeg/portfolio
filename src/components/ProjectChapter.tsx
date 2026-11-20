@@ -12,6 +12,7 @@ import { BrandGuideViewer } from './BrandGuideViewer'
 const SELF_SPACED_LAYOUTS = new Set<ImageGridLayout>([
   'full-page',
   'full-page-two-up',
+  'full-page-quad',
   'phone-row',
   'macbook-row',
   'row-match-height',
@@ -233,7 +234,7 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
           </div>
         </div>
       )}
-      {!chapter.linksInline && chapter.figmaEmbed && <BlockLinks links={chapter.links} accent={accent} />}
+      {!chapter.linksInline && chapter.figmaEmbed && <BlockLinks links={chapter.links} accent={accent} center />}
     </section>
   )
 }
@@ -242,10 +243,22 @@ export function ProjectChapter({ chapter, accent }: { chapter: ProjectChapterDat
 // below whichever block they're attached to -- a chapter's primary
 // block or any one `moreImages` entry, so a link can sit next to the
 // particular image/mockup it's actually about.
-function BlockLinks({ links, accent }: { links?: { label: string; href: string }[]; accent: string }) {
+function BlockLinks({
+  links,
+  accent,
+  center,
+}: {
+  links?: { label: string; href: string }[]
+  accent: string
+  // Centers the row instead of the default left alignment -- for a
+  // link that's about a single centered element above it (the Figma
+  // embed's own phone-width frame) rather than a left-edge-aligned
+  // image/grid.
+  center?: boolean
+}) {
   if (!links || links.length === 0) return null
   return (
-    <div data-reveal className="mt-10 flex flex-wrap gap-4 px-6 md:px-10">
+    <div data-reveal className={`mt-10 flex flex-wrap gap-4 px-6 md:px-10 ${center ? 'justify-center' : ''}`}>
       {links.map((link) => (
         <a
           key={link.href}
