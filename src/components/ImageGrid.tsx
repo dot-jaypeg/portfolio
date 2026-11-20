@@ -95,7 +95,12 @@ function AutoplayInViewVideo({
         const el = ref.current
         if (!el) return
         if (image.clickAction === 'fullscreen') {
+          // The click requesting fullscreen IS also the real user
+          // gesture browsers require before letting a video un-mute
+          // itself -- no need to wait for a second click once inside
+          // the fullscreen player.
           el.requestFullscreen?.().catch(() => {})
+          el.muted = false
         } else {
           el.muted = !el.muted
         }
