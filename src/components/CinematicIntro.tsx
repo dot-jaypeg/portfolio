@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { gsap, SplitText } from '../lib/gsap'
 import introPhoto from '../assets/images/intro/IMG_8143.jpg'
 import jaydenCutVideo from '../assets/images/intro/jayden-ramirez-cut.mp4'
-import chichaShuffleClip from '../assets/images/projects/detail/chi-cha/site-tour.mp4'
+import chichaShuffleClip from '../assets/images/intro/shuffle/chicha-bg-loop.mp4'
 import bagguShuffleClip from '../assets/images/projects/detail/baggu/tone-spiderverse-set.mp4'
 import urbanSeoulShuffleClip from '../assets/images/projects/detail/urban-seoul/keychain-loop.mp4'
 import contraShuffleClip from '../assets/images/projects/detail/contra-coffee-sticker-pack/contra-stickersheet.mp4'
@@ -25,6 +25,31 @@ const MOTION_SHUFFLE_CLIPS = [afiShuffleClip, resonanceShuffleClip, protocolShuf
 // is ever visible at a time, cross-fading into the next on an
 // interval. Keeping every video mounted and just toggling opacity
 // (rather than swapping `src`) avoids a reload stutter at each swap.
+// Starts muted (autoplay triggered by scroll/mount, not a real user
+// gesture, so browsers won't allow it unmuted) -- click toggles it,
+// same imperative ref-based pattern ImageGrid's AutoplayInViewVideo
+// already uses elsewhere on the site, rather than a second React
+// state value just to flip one DOM property.
+function JaydenReelVideo() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  return (
+    <video
+      ref={videoRef}
+      src={jaydenCutVideo}
+      autoPlay
+      muted
+      loop
+      playsInline
+      data-parallax-amount="6"
+      onClick={() => {
+        const el = videoRef.current
+        if (el) el.muted = !el.muted
+      }}
+      className="scene-media mix-blend-overlay absolute inset-[-6%] h-[112%] w-[112%] max-w-none cursor-pointer object-cover"
+    />
+  )
+}
+
 function VideoShuffleBackground({ sources }: { sources: string[] }) {
   const [active, setActive] = useState(0)
 
@@ -330,15 +355,10 @@ export function CinematicIntro() {
                 className="absolute -inset-8 overflow-hidden md:-inset-16"
                 style={{ backgroundColor: scene.bg }}
               >
-                <video
-                  src={jaydenCutVideo}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  data-parallax-amount="6"
-                  className="scene-media mix-blend-overlay pointer-events-none absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover"
-                />
+                <JaydenReelVideo />
+                <p className="font-body pointer-events-none absolute top-8 right-8 text-xs tracking-[0.08em] text-cream/60 uppercase md:top-16 md:right-16">
+                  Click to unmute
+                </p>
               </div>
             ) : (
               <div className="absolute -inset-8 overflow-hidden opacity-25 md:-inset-16">

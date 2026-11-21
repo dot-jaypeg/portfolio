@@ -83,6 +83,22 @@ html {
      source now, so this is just a defensive backstop, not load-bearing
      for that bug anymore. */
   overflow-x: hidden;
+  /* Journey/CinematicIntro both translate their own track horizontally
+     in response to ordinary vertical wheel/trackpad input -- a real,
+     reported bug: any trackpad gesture with even a slight diagonal
+     component (completely normal on a two-finger scroll) reads to
+     Chrome/Safari's OWN back/forward-swipe heuristic as "the page is
+     being swiped left," which fires the browser's native swipe-to-
+     go-back navigation mid-scroll, confirmed directly as the source of
+     both "scrolling left takes me back a page" and the smooth scroll
+     intermittently feeling buggy (scroll position visibly jerks
+     sideways for a frame when the gesture is partially, not fully,
+     recognized). This is a browser/OS-level gesture, not something
+     Lenis or ScrollTrigger themselves can prevent -- disabling the
+     browser's own overscroll-triggered navigation for the horizontal
+     axis is the standard fix, and doesn't touch vertical rubber-band
+     scrolling at all. */
+  overscroll-behavior-x: none;
 }
 
 body {

@@ -64,6 +64,29 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
         const blurPx = fontSizePx * 0.04
         blurEl.style.filter = `blur(${blurPx}px)`
 
+        // `leading-none` (line-height: 1) gives this italic bold face's
+        // own <p> a box that's tighter than the glyphs it actually
+        // renders -- confirmed directly: the lowercase "g"'s descender
+        // loop extends past that box's bottom edge even with NO mask
+        // active at all, it just isn't visibly clipped normally because
+        // ink is free to paint past an element's own box as long as no
+        // ancestor crops it. The moment `applySweep` puts a mask-image
+        // on sharpEl below, though, that stops being true -- a mask
+        // clips an element's ink to its OWN box regardless of any
+        // ancestor's overflow (same real behavior the blur layer above
+        // already has to work around with its own inset/padding pair),
+        // so for almost this entire animation (every frame until
+        // `edge` clears safeRevealThreshold, right near the very end)
+        // the descender was flat-cut at that tight bottom edge. Vertical
+        // padding only (no horizontal) gives the mask's clip box real
+        // room above/below without touching the left-anchored edge math
+        // the sweep itself depends on -- symmetric top+bottom keeps the
+        // word's optical center exactly where it already was, so nothing
+        // else about the layout shifts.
+        const vPad = fontSizePx * 0.18
+        sharpEl.style.paddingTop = `${vPad}px`
+        sharpEl.style.paddingBottom = `${vPad}px`
+
         // Applying a mask to an element clips that element's own ink
         // overflow to its tight layout box -- including a blur filter's
         // spread, which otherwise paints past the box freely. Without
