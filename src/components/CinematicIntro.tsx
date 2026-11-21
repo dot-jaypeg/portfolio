@@ -20,32 +20,25 @@ import { SCENES } from '../data/scenes'
 const BRANDING_SHUFFLE_CLIPS = [chichaShuffleClip, bagguShuffleClip, urbanSeoulShuffleClip, contraShuffleClip]
 const MOTION_SHUFFLE_CLIPS = [afiShuffleClip, resonanceShuffleClip, protocolShuffleClip, nsuShuffleClip]
 
-// Low-opacity, looping background sampler -- every clip autoplays
-// (muted, so the browser allows it) and loops independently; only one
-// is ever visible at a time, cross-fading into the next on an
-// interval. Keeping every video mounted and just toggling opacity
-// (rather than swapping `src`) avoids a reload stutter at each swap.
 // Starts muted (autoplay triggered by scroll/mount, not a real user
-// gesture, so browsers won't allow it unmuted) -- click toggles it,
-// same imperative ref-based pattern ImageGrid's AutoplayInViewVideo
-// already uses elsewhere on the site, rather than a second React
-// state value just to flip one DOM property.
+// gesture, so browsers won't allow it unmuted) -- the main scroll
+// timeline below (see the `jaydenVideo` volume ramp in onUpdate) is
+// what actually drives its volume/muted state as this scene scrolls
+// into and back out of view, not a click. No ref/handler needed here
+// at all -- the timeline finds this element itself the same way it
+// already finds every other `.scene-media`/`.chapter-media` target
+// elsewhere in this file, via a plain DOM query, rather than this
+// component forwarding a ref up for just one more caller to hold.
 function JaydenReelVideo() {
-  const videoRef = useRef<HTMLVideoElement>(null)
   return (
     <video
-      ref={videoRef}
       src={jaydenCutVideo}
       autoPlay
       muted
       loop
       playsInline
       data-parallax-amount="6"
-      onClick={() => {
-        const el = videoRef.current
-        if (el) el.muted = !el.muted
-      }}
-      className="scene-media mix-blend-overlay absolute inset-[-6%] h-[112%] w-[112%] max-w-none cursor-pointer object-cover"
+      className="scene-media mix-blend-overlay absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover"
     />
   )
 }
@@ -124,6 +117,29 @@ export function CinematicIntro() {
       // the color settled by the time the new scene's headline arrives.
       const crossDuration = unit * 0.25
       let lastColorKey = ''
+
+      // Jayden's own reel (scene 3, the last one) is the only scene with
+      // real audio -- it should only actually be heard while that scene
+      // is the one on screen, fading in as you scroll into its window
+      // and back out as you scroll past it, not left playing audibly
+      // underneath every other scene. `jaydenWinStart` mirrors the exact
+      // same window math the per-scene entry/exit tweens below use for
+      // scene `n - 1` (`center - unit * 0.5`, with the window always
+      // running to the very end since it's the last scene) -- computed
+      // once here rather than threading a value out of that loop.
+      const jaydenVideo = panels[n - 1]?.querySelector('video')
+      const jaydenWinStart = (n - 1) * unit - unit * 0.5
+      // Fade in across the window's first quarter, hold at full volume
+      // through the middle, fade out across 65%-90% -- the same
+      // entry/hold/exit proportions the headline's own word-reveal and
+      // exit tweens already use (see the `entryBudget`/`exitBudget` math
+      // below), so the audio settles in and starts leaving right around
+      // when the headline itself is fully readable and starts exiting.
+      const volumeEnvelope = (t: number) => {
+        if (t < 0.25) return gsap.utils.clamp(0, 1, t / 0.25)
+        if (t > 0.65) return gsap.utils.clamp(0, 1, 1 - (t - 0.65) / 0.25)
+        return 1
+      }
       const colorAtProgress = (progress: number) => {
         const i = Math.round(progress * (n - 1))
         if (i === 0) return SCENES[0]
@@ -156,6 +172,21 @@ export function CinematicIntro() {
             // quickTo pattern already used for the cursor elsewhere.
             if (progressRef.current) {
               progressRef.current.style.transform = `scaleX(${self.progress})`
+            }
+
+            if (jaydenVideo) {
+              const t = gsap.utils.clamp(
+                0,
+                1,
+                (self.progress - jaydenWinStart) / (1 - jaydenWinStart),
+              )
+              const volume = volumeEnvelope(t)
+              jaydenVideo.volume = volume
+              // Below ~2% is inaudible anyway -- actually marking it
+              // muted once there (rather than just leaving volume at a
+              // tiny positive number) keeps it consistent with every
+              // other autoplaying video's `muted` state at rest.
+              jaydenVideo.muted = volume < 0.02
             }
 
             // `scrub: 1` eases self.progress toward a big instant scroll
@@ -356,9 +387,6 @@ export function CinematicIntro() {
                 style={{ backgroundColor: scene.bg }}
               >
                 <JaydenReelVideo />
-                <p className="font-body pointer-events-none absolute top-8 right-8 text-xs tracking-[0.08em] text-cream/60 uppercase md:top-16 md:right-16">
-                  Click to unmute
-                </p>
               </div>
             ) : (
               <div className="absolute -inset-8 overflow-hidden opacity-25 md:-inset-16">
