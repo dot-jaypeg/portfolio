@@ -43,9 +43,12 @@ export interface CaseStudy {
   // frame); otherwise `workCoverImage ?? image` renders as a plain
   // <img>. Read by the /work wall's tile (ProjectCoverMedia) AND the
   // project's own page hero (ProjectHero), so both agree on which
-  // asset is "the" cover. WorkPanel and MoreProjects still read
-  // `image` directly (their boxes crop into a fixed ratio these
-  // work-only assets weren't sized for).
+  // asset is "the" cover. The homepage's own WorkPanel now plays
+  // `workCoverVideo` too, for the same reason -- per direct request,
+  // its featured cards should show the same cover the /work wall does,
+  // not a plainer still. `workCoverImage` stays wall/hero-only though
+  // (MoreProjects and WorkPanel still read `image` for the still-image
+  // case): its box crops into a fixed ratio that asset wasn't sized for.
   workCoverVideo?: string
   workCoverPoster?: string
   workCoverImage?: string

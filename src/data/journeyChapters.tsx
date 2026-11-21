@@ -82,8 +82,33 @@ function WorkPanel({
       // actual root cause instead, so that revert can stick).
       className={`chapter-panel relative flex min-h-screen w-screen shrink-0 flex-col items-start gap-8 px-8 md:flex-row md:px-20 ${flipped ? 'md:flex-row-reverse' : ''}`}
     >
-      <div className="relative w-[38vw] max-w-xl shrink-0 self-stretch overflow-hidden">
-        {cs.image ? (
+      <Link
+        to={`/work/${cs.slug}`}
+        data-cursor={cs.title}
+        className="relative block w-[38vw] max-w-xl shrink-0 self-stretch overflow-hidden"
+      >
+        {cs.workCoverVideo ? (
+          // Same /work-only cover video the wall itself plays (see
+          // ProjectCoverMedia) -- a project whose work-page tile has a
+          // video cover (e.g. the Incubus clip, NSU's recap) shouldn't
+          // show a different, plainer still image here.
+          <video
+            src={cs.workCoverVideo}
+            poster={cs.workCoverPoster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            data-parallax-amount={cs.imageParallax ?? 8}
+            className="chapter-media absolute max-w-none object-cover"
+            style={{
+              inset: `-${cs.imageParallax ?? 8}%`,
+              width: `${100 + (cs.imageParallax ?? 8) * 2}%`,
+              height: `${100 + (cs.imageParallax ?? 8) * 2}%`,
+              objectPosition: cs.imagePosition ?? 'center',
+            }}
+          />
+        ) : cs.image ? (
           <img
             src={cs.image}
             alt={cs.title}
@@ -120,7 +145,7 @@ function WorkPanel({
         >
           {cs.client}
         </span>
-      </div>
+      </Link>
       <div className="chapter-copy flex max-w-3xl flex-1 flex-col justify-between self-stretch py-16 md:py-24">
         <div>
           <h2 className="chapter-headline font-display text-[10vw] leading-[0.78] font-bold tracking-[-0.05em] text-cream uppercase md:text-[6.5vw]">
@@ -265,7 +290,7 @@ function AboutCredentialsPanel() {
                 a real, direct download (not just a link to view it)
                 since the file is served straight from /public. */}
             <a
-              href="/resume/RamirezJayden_2026Resume.pdf"
+              href="/resume/RamirezJayden_2026CreativeResume.pdf"
               download
               className="font-body mt-8 inline-block rounded-full border border-cream/20 px-6 py-3 text-sm tracking-wider text-cream/70 uppercase transition-colors duration-300 hover:border-cream hover:bg-cream hover:text-ink"
             >

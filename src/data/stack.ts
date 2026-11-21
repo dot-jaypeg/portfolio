@@ -9,5 +9,5 @@ export const STACK = [
   'Premiere Pro',
   'CapCut',
   'Canva',
-  'Visual Studio Code',
+  'GitHub',
 ]

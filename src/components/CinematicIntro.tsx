@@ -1,7 +1,58 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap, SplitText } from '../lib/gsap'
 import introPhoto from '../assets/images/intro/IMG_8143.jpg'
+import jaydenCutVideo from '../assets/images/intro/jayden-ramirez-cut.mp4'
+import chichaShuffleClip from '../assets/images/projects/detail/chi-cha/site-tour.mp4'
+import bagguShuffleClip from '../assets/images/projects/detail/baggu/tone-spiderverse-set.mp4'
+import urbanSeoulShuffleClip from '../assets/images/projects/detail/urban-seoul/keychain-loop.mp4'
+import contraShuffleClip from '../assets/images/projects/detail/contra-coffee-sticker-pack/contra-stickersheet.mp4'
+import afiShuffleClip from '../assets/images/projects/detail/afi-marketing-campaign/incubus-vinyl-clip.mp4'
+import resonanceShuffleClip from '../assets/images/projects/detail/ui-design-for-resonance/match-end-loop.mp4'
+import protocolShuffleClip from '../assets/images/intro/shuffle/protocol-bg-loop.mp4'
+import nsuShuffleClip from '../assets/images/projects/detail/nikkei-student-union/nsu-recap.mp4'
 import { SCENES } from '../data/scenes'
+
+// Scene 1 ("Branding & Identity") and scene 2 ("Digital & Motion") each
+// cycle through a handful of real project clips instead of one single
+// video -- a loose visual sampler of "different branding/motion
+// projects" rather than any one case study standing in for the whole
+// category.
+const BRANDING_SHUFFLE_CLIPS = [chichaShuffleClip, bagguShuffleClip, urbanSeoulShuffleClip, contraShuffleClip]
+const MOTION_SHUFFLE_CLIPS = [afiShuffleClip, resonanceShuffleClip, protocolShuffleClip, nsuShuffleClip]
+
+// Low-opacity, looping background sampler -- every clip autoplays
+// (muted, so the browser allows it) and loops independently; only one
+// is ever visible at a time, cross-fading into the next on an
+// interval. Keeping every video mounted and just toggling opacity
+// (rather than swapping `src`) avoids a reload stutter at each swap.
+function VideoShuffleBackground({ sources }: { sources: string[] }) {
+  const [active, setActive] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActive((i) => (i + 1) % sources.length)
+    }, 5000)
+    return () => clearInterval(id)
+  }, [sources.length])
+
+  return (
+    <>
+      {sources.map((src, i) => (
+        <video
+          key={src}
+          src={src}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="scene-media pointer-events-none absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover transition-opacity duration-1000 ease-in-out"
+          style={{ opacity: i === active ? 1 : 0 }}
+          data-parallax-amount="6"
+        />
+      ))}
+    </>
+  )
+}
 
 export function CinematicIntro() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -149,8 +200,12 @@ export function CinematicIntro() {
         // scaled to whatever this element's own CSS oversize can safely
         // hide (see the `data-parallax-amount` comment in JourneyDesktop
         // for why that amount isn't just a flat default for every image).
-        const media = panels[i].querySelector('.scene-media')
-        if (media) {
+        // querySelectorAll, not querySelector -- the shuffle scenes stack
+        // several videos on top of each other (see VideoShuffleBackground),
+        // all needing the same swing so there's no visible seam between
+        // a parallaxing clip and a static one when they cross-fade.
+        const mediaEls = panels[i].querySelectorAll('.scene-media')
+        mediaEls.forEach((media) => {
           const amount = Number(media.getAttribute('data-parallax-amount')) || 6
           tl.fromTo(
             media,
@@ -158,7 +213,7 @@ export function CinematicIntro() {
             { xPercent: -amount, ease: 'none', duration: winWidth },
             winStart,
           )
-        }
+        })
 
         // Scene 0 is visible at rest (scroll position 0) -- only scenes
         // reached by scrolling need an entrance fade-in.
@@ -266,10 +321,31 @@ export function CinematicIntro() {
                     problem (nav contrast against the page-wide red bg). */}
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
               </div>
+            ) : i === 3 ? (
+              // Jayden's own reel, blended into the scene's red backdrop
+              // (set here via inline style -- every other panel just
+              // shows the section's own bg-ink straight through) rather
+              // than playing as a flat, full-opacity clip.
+              <div
+                className="absolute -inset-8 overflow-hidden md:-inset-16"
+                style={{ backgroundColor: scene.bg }}
+              >
+                <video
+                  src={jaydenCutVideo}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  data-parallax-amount="6"
+                  className="scene-media mix-blend-overlay pointer-events-none absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover"
+                />
+              </div>
             ) : (
-              <span className="font-body pointer-events-none absolute inset-8 flex items-center justify-center border border-dashed border-cream/15 text-xs tracking-[0.22em] text-cream/25 uppercase md:inset-16">
-                [ placeholder video ]
-              </span>
+              <div className="absolute -inset-8 overflow-hidden opacity-25 md:-inset-16">
+                <VideoShuffleBackground
+                  sources={i === 1 ? BRANDING_SHUFFLE_CLIPS : MOTION_SHUFFLE_CLIPS}
+                />
+              </div>
             )}
             {/* Only "Hello." keeps its eyebrow -- the other three scenes'
                 subheads ("02 -- Expertise" etc.) were removed as
