@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { gsap, SplitText } from '../lib/gsap'
+import { gsap, ScrollTrigger, SplitText } from '../lib/gsap'
 import introPhoto from '../assets/images/intro/IMG_8143.jpg'
 import jaydenCutVideo from '../assets/images/intro/jayden-ramirez-cut.mp4'
 import chichaShuffleClip from '../assets/images/intro/shuffle/chicha-bg-loop.mp4'
@@ -24,14 +24,28 @@ const MOTION_SHUFFLE_CLIPS = [afiShuffleClip, resonanceShuffleClip, protocolShuf
 // gesture, so browsers won't allow it unmuted) -- the main scroll
 // timeline below (see the `jaydenVideo` volume ramp in onUpdate) is
 // what actually drives its volume/muted state as this scene scrolls
-// into and back out of view, not a click. No ref/handler needed here
-// at all -- the timeline finds this element itself the same way it
-// already finds every other `.scene-media`/`.chapter-media` target
-// elsewhere in this file, via a plain DOM query, rather than this
-// component forwarding a ref up for just one more caller to hold.
+// into and back out of view, not a click.
+//
+// The bare `autoPlay` attribute alone turned out NOT to be enough
+// here -- confirmed directly: every scene in this track is mounted
+// simultaneously (just translated via GSAP, not actually scrolled to
+// in the normal sense), and Chrome silently never started playback for
+// whichever scenes sat geometrically furthest from the viewport at
+// mount (scene 3 here, and scene 2's own shuffle clips below -- scene
+// 1's happened to start fine, apparently close enough to "count").
+// Explicitly calling `.play()` once mounted, the same way
+// AutoplayInViewVideo does elsewhere on the site instead of relying on
+// the attribute, isn't subject to that same distance heuristic.
 function JaydenReelVideo() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    videoRef.current?.play().catch(() => {})
+  }, [])
+
   return (
     <video
+      ref={videoRef}
       src={jaydenCutVideo}
       autoPlay
       muted
@@ -45,6 +59,7 @@ function JaydenReelVideo() {
 
 function VideoShuffleBackground({ sources }: { sources: string[] }) {
   const [active, setActive] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -53,8 +68,18 @@ function VideoShuffleBackground({ sources }: { sources: string[] }) {
     return () => clearInterval(id)
   }, [sources.length])
 
+  // Same explicit-play fix as JaydenReelVideo above, for every stacked
+  // clip at once -- `autoPlay` alone silently never started scene 2's
+  // clips (this component is reused for both scene 1 and scene 2, and
+  // only scene 1's happened to autoplay on its own).
+  useEffect(() => {
+    containerRef.current
+      ?.querySelectorAll('video')
+      .forEach((video) => video.play().catch(() => {}))
+  }, [])
+
   return (
-    <>
+    <div ref={containerRef} className="contents">
       {sources.map((src, i) => (
         <video
           key={src}
@@ -68,7 +93,7 @@ function VideoShuffleBackground({ sources }: { sources: string[] }) {
           data-parallax-amount="6"
         />
       ))}
-    </>
+    </div>
   )
 }
 
@@ -121,23 +146,29 @@ export function CinematicIntro() {
       // Jayden's own reel (scene 3, the last one) is the only scene with
       // real audio -- it should only actually be heard while that scene
       // is the one on screen, fading in as you scroll into its window
-      // and back out as you scroll past it, not left playing audibly
-      // underneath every other scene. `jaydenWinStart` mirrors the exact
-      // same window math the per-scene entry/exit tweens below use for
-      // scene `n - 1` (`center - unit * 0.5`, with the window always
-      // running to the very end since it's the last scene) -- computed
-      // once here rather than threading a value out of that loop.
+      // and back out only once you've genuinely left it for the next
+      // section, not left playing audibly underneath every other scene.
+      // `jaydenWinStart` mirrors the exact same window math the per-
+      // scene entry/exit tweens below use for scene `n - 1` (`center -
+      // unit * 0.5`, with the window always running to the very end
+      // since it's the last scene) -- computed once here rather than
+      // threading a value out of that loop.
       const jaydenVideo = panels[n - 1]?.querySelector('video')
       const jaydenWinStart = (n - 1) * unit - unit * 0.5
-      // Fade in across the window's first quarter, hold at full volume
-      // through the middle, fade out across 65%-90% -- the same
-      // entry/hold/exit proportions the headline's own word-reveal and
-      // exit tweens already use (see the `entryBudget`/`exitBudget` math
-      // below), so the audio settles in and starts leaving right around
-      // when the headline itself is fully readable and starts exiting.
+      // Fade in across the window's first quarter, same proportion the
+      // headline's own word-reveal uses, then HOLD at full volume for
+      // the rest of this scene's own time on screen -- there's no exit
+      // fade here at all. A real bug this used to have: fading out
+      // starting partway through this same window (mirroring the
+      // headline's own exit tween) meant the audio had already gone
+      // silent while Jayden's scene was still the one actually visible,
+      // well before the visitor had scrolled anywhere near the next
+      // section. The real fade-out instead lives in the dedicated
+      // ScrollTrigger below, keyed to the gap between this scene ending
+      // and Journey's own pin taking over -- the only point the visitor
+      // is actually leaving this scene for the next one.
       const volumeEnvelope = (t: number) => {
         if (t < 0.25) return gsap.utils.clamp(0, 1, t / 0.25)
-        if (t > 0.65) return gsap.utils.clamp(0, 1, 1 - (t - 0.65) / 0.25)
         return 1
       }
       const colorAtProgress = (progress: number) => {
@@ -174,21 +205,6 @@ export function CinematicIntro() {
               progressRef.current.style.transform = `scaleX(${self.progress})`
             }
 
-            if (jaydenVideo) {
-              const t = gsap.utils.clamp(
-                0,
-                1,
-                (self.progress - jaydenWinStart) / (1 - jaydenWinStart),
-              )
-              const volume = volumeEnvelope(t)
-              jaydenVideo.volume = volume
-              // Below ~2% is inaudible anyway -- actually marking it
-              // muted once there (rather than just leaving volume at a
-              // tiny positive number) keeps it consistent with every
-              // other autoplaying video's `muted` state at rest.
-              jaydenVideo.muted = volume < 0.02
-            }
-
             // `scrub: 1` eases self.progress toward a big instant scroll
             // jump over about a second instead of snapping to it -- a nav
             // click straight to Work jumps the real scroll past this
@@ -208,7 +224,29 @@ export function CinematicIntro() {
             // useSectionColors, since this trigger's onUpdate never fires
             // there at all: self.progress is pinned at exactly 1 for that
             // whole stretch, so GSAP has no reason to call it.)
+            //
+            // The Jayden video's volume fade-IN below shares this same
+            // guard, for the same reason: without it, a nav-jump landing
+            // past this trigger's end would have this catch-up still
+            // writing an intermediate (not-yet-1) volume for about a
+            // second AT THE SAME TIME the dedicated gap/Journey fade-out
+            // ScrollTrigger below is already writing its own OWN volume
+            // for that same jumped-to position, visibly fighting over it.
             if (self.scroll() > self.end) return
+            if (jaydenVideo) {
+              const t = gsap.utils.clamp(
+                0,
+                1,
+                (self.progress - jaydenWinStart) / (1 - jaydenWinStart),
+              )
+              const volume = volumeEnvelope(t)
+              jaydenVideo.volume = volume
+              // Below ~2% is inaudible anyway -- actually marking it
+              // muted once there (rather than just leaving volume at a
+              // tiny positive number) keeps it consistent with every
+              // other autoplaying video's `muted` state at rest.
+              jaydenVideo.muted = volume < 0.02
+            }
             const { bg, fg } = colorAtProgress(self.progress)
             // Fixed red ONLY over scene 0's own window ("Hello.", the one
             // scene with a busy photo behind it) -- NOT the whole
@@ -231,6 +269,50 @@ export function CinematicIntro() {
           },
         },
       })
+
+      // The actual fade-OUT -- a separate, non-pinned ScrollTrigger
+      // tracking exactly the gap between this component's own pin
+      // releasing and Journey's pin taking over (same trigger/start/end
+      // useSectionColors.ts uses to patch its own identical gap: "top
+      // bottom" of #journey is exactly where this component's progress
+      // hits 1, "top top" is exactly where Journey's pin engages). The
+      // main timeline above holds Jayden's volume at full for its ENTIRE
+      // time on screen, including that whole frozen stretch (its own
+      // onUpdate simply stops firing there, since self.progress isn't
+      // changing) -- this is the only thing that ever brings it back
+      // down, and only once the visitor is genuinely scrolling past this
+      // scene into the next section, not partway through still looking
+      // at it.
+      if (jaydenVideo) {
+        const journeySection = document.getElementById('journey')
+        if (journeySection) {
+          ScrollTrigger.create({
+            trigger: journeySection,
+            start: 'top bottom',
+            end: 'top top',
+            onUpdate: (self) => {
+              // Deliberately NOT gated on `self.isActive` -- that flips
+              // false right at (and past) this trigger's own end, which
+              // is exactly the one tick that needs to land the volume on
+              // its true final value (0). A real bug this had: guarding
+              // on it meant the LAST write before the visitor scrolled
+              // past that boundary stuck permanently (confirmed
+              // directly: a single fast scroll straight through the gap
+              // left the video stuck audible at whatever volume the last
+              // active tick happened to land on, e.g. ~0.84, instead of
+              // reaching silence). onUpdate here never fires at all
+              // before scroll genuinely nears `self.start` in the first
+              // place (confirmed directly -- no spurious call at mount),
+              // so there's no risk of this prematurely stomping the main
+              // timeline's own fade-in with a stray progress:0 -> volume:1
+              // write either.
+              const volume = gsap.utils.clamp(0, 1, 1 - self.progress)
+              jaydenVideo.volume = volume
+              jaydenVideo.muted = volume < 0.02
+            },
+          })
+        }
+      }
 
       // Duration is 1 to match the [0, 1] fractional scale used for every
       // per-scene offset below -- GSAP's default tween duration (0.5) would
