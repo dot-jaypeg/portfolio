@@ -143,6 +143,39 @@ export function CinematicIntro() {
       const crossDuration = unit * 0.25
       let lastColorKey = ''
 
+      // Every scene's video(s) autoplay from mount regardless of which
+      // scene is actually on screen -- fine on its own, but a real bug
+      // reported directly: on Safari specifically, the Jayden reel (the
+      // LAST scene) would sometimes freeze on its first frame rather
+      // than ever actually playing, and only once the site's own
+      // background-music YouTube embed (SoundToggle) was also playing.
+      // Safari/WebKit has a real, comparatively low ceiling on
+      // simultaneous hardware-decoded video streams -- with every one of
+      // scenes 1 and 2's four shuffle clips plus Jayden's own reel all
+      // decoding at once (nine streams total across this one component),
+      // adding the YouTube embed's own decoded video (it still decodes a
+      // real frame even hidden at 1x1px, this isn't audio-only) was
+      // apparently enough to tip Safari over whatever that ceiling is,
+      // and something has to lose its decoder slot. Chrome has enough
+      // headroom this never showed up there. Only the CURRENTLY ACTIVE
+      // scene's video(s) actually need to be decoding at any moment --
+      // every other scene's clip is sitting off-screen either way, so
+      // explicitly pausing everything outside the active scene (and
+      // resuming it on arrival) keeps the real simultaneous count low
+      // regardless of how many scenes end up with their own video
+      // backgrounds later.
+      let lastActiveScene = -1
+      const updateSceneVideoPlayback = (activeIndex: number) => {
+        if (activeIndex === lastActiveScene) return
+        lastActiveScene = activeIndex
+        panels.forEach((panel, i) => {
+          panel.querySelectorAll('video').forEach((video) => {
+            if (i === activeIndex) video.play().catch(() => {})
+            else video.pause()
+          })
+        })
+      }
+
       // Jayden's own reel (scene 3, the last one) is the only scene with
       // real audio -- it should only actually be heard while that scene
       // is the one on screen, fading in as you scroll into its window
@@ -204,6 +237,8 @@ export function CinematicIntro() {
             if (progressRef.current) {
               progressRef.current.style.transform = `scaleX(${self.progress})`
             }
+
+            updateSceneVideoPlayback(Math.round(self.progress * (n - 1)))
 
             // `scrub: 1` eases self.progress toward a big instant scroll
             // jump over about a second instead of snapping to it -- a nav
