@@ -1954,11 +1954,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         text: "Editing meant sequencing the full short and weaving in the classic Star Wars intro crawl, set to John Williams' score. From there it was rigging, lighting, and camera work — polish pass after polish pass — to make it feel authentic to the franchise.",
         // Same fix chi-cha's video ads got: 'full-page' sized this into
         // a viewport-height box that cropped into the real 854x480
-        // frame rather than showing it uncut. 'full-width-parallax'
-        // sizes the box to the video's own declared (and, confirmed via
-        // ffprobe, actual) ratio instead, keeping the same parallax
-        // drift with nothing cropped off.
-        layout: 'full-width-parallax',
+        // frame rather than showing it uncut. Plain 'full-width' (not
+        // 'full-width-parallax') -- the video's own intro title card
+        // ("TITLE: PROTOCOL OF BETRAYAL") sits with its own text
+        // already touching the native frame's right edge (confirmed
+        // directly via ffprobe), so even the parallax wrapper's own
+        // minimum oversize-for-scroll-slack zoom cropped into it.
+        // 'full-width' sizes the box to the video's exact native ratio
+        // with no oversize/zoom at all -- no parallax drift, but
+        // nothing gets cropped either.
+        layout: 'full-width',
         blockCaption: 'Click to unmute',
         images: [
           {
