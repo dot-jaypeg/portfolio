@@ -712,8 +712,18 @@ export function ImageGrid({
           />
         </div>
         {overlay && (
+          // Smaller on mobile than `md:w-[38%]` -- that percentage is
+          // of the container's WIDTH, but for a main photo this wide
+          // (e.g. 1457x568) the box's own HEIGHT shrinks right along
+          // with the narrower mobile container, while the sticker's
+          // SIZE doesn't shrink any faster than that -- confirmed
+          // directly: at 38% on a 390px screen the sticker came out
+          // nearly as tall as the entire photo it's supposed to be a
+          // small corner accent on, reading as overwhelming rather than
+          // "overlapping like a sticker" the way it does with more
+          // surrounding breathing room on desktop.
           <div
-            className="absolute right-[4%] bottom-[-14%] w-[38%] drop-shadow-2xl"
+            className="absolute right-[4%] bottom-[-10%] w-[24%] drop-shadow-2xl md:bottom-[-14%] md:w-[38%]"
             style={{ aspectRatio: `${overlay.width} / ${overlay.height}` }}
           >
             <Media image={overlay} className="h-full w-full object-contain" />
