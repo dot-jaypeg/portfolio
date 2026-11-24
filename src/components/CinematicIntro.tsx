@@ -573,7 +573,20 @@ export function CinematicIntro() {
                 <JaydenReelVideo />
               </div>
             ) : (
-              <div className="absolute -inset-8 overflow-hidden opacity-25 md:-inset-16">
+              // `inset-0` on mobile, not `-inset-8` -- this wrapper is the
+              // real containing block VideoShuffleBackground's own mobile
+              // `inset-0 h-full w-full` box resolves against, so sizing IT
+              // to exactly the panel's edges (rather than 32px past them,
+              // the way i===0/i===3's object-cover wrappers want) is what
+              // that inner fix actually depends on. Confirmed directly via
+              // a DOM measurement after the first fix still shipped with
+              // this wrapper unconditionally oversized: the video element
+              // measured 457px wide in a 393px viewport, 32px overhanging
+              // each edge -- clipped by the panel's own `overflow-hidden`
+              // exactly like before, just one layer further out. `md:` still
+              // gets the old `-inset-16` overscan, since desktop's `cover`
+              // genuinely needs that headroom for the parallax pan.
+              <div className="absolute inset-0 overflow-hidden opacity-25 md:-inset-16">
                 <VideoShuffleBackground
                   sources={i === 1 ? BRANDING_SHUFFLE_CLIPS : MOTION_SHUFFLE_CLIPS}
                 />
