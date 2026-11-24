@@ -52,7 +52,18 @@ function JaydenReelVideo() {
       loop
       playsInline
       data-parallax-amount="6"
-      className="scene-media mix-blend-overlay absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover"
+      // No `mix-blend-mode` -- a real, reported bug: video played
+      // through a blend mode forces Chrome into per-frame software
+      // compositing (it has to re-blend every decoded frame against
+      // the backdrop, not just composite a static layer), which is
+      // measurably more expensive than a plain video -- confirmed
+      // directly via `getVideoPlaybackQuality()`: dropped frames over
+      // an identical window with the blend mode on vs. off, on the
+      // same machine. Combined with the continuous parallax transform
+      // already running on this element, that was enough to visibly
+      // stutter on real hardware even though it stayed smooth in this
+      // environment's own (faster) test machine.
+      className="scene-media absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover"
     />
   )
 }
@@ -495,10 +506,14 @@ export function CinematicIntro() {
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
               </div>
             ) : i === 3 ? (
-              // Jayden's own reel, blended into the scene's red backdrop
-              // (set here via inline style -- every other panel just
-              // shows the section's own bg-ink straight through) rather
-              // than playing as a flat, full-opacity clip.
+              // Jayden's own reel. The red backdrop (set here via inline
+              // style -- every other panel just shows the section's own
+              // bg-ink straight through) is mostly hidden behind the
+              // now-opaque video itself -- it used to show through a
+              // mix-blend-mode on the video, dropped for a real
+              // performance bug (see JaydenReelVideo's own comment).
+              // Left in place as a safe fallback for the sliver the
+              // parallax swing can still reveal at the very edges.
               <div
                 className="absolute -inset-8 overflow-hidden md:-inset-16"
                 style={{ backgroundColor: scene.bg }}
