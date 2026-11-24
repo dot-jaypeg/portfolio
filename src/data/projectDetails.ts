@@ -845,6 +845,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
           {
             src: splash1,
             alt: 'Resonance splash screen, first variant',
+            // Same reasoning as the HUD shot above -- the "RESONANCE"
+            // wordmark runs edge to edge in the source, so `cover`'s
+            // crop was cutting into the lettering itself (confirmed
+            // directly on BOTH desktop and mobile, not just mobile's
+            // narrower box this time -- the leading "R" was already
+            // clipped at 1400px wide).
+            fit: 'contain',
           },
         ],
         moreImages: [
@@ -854,6 +861,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
               {
                 src: splash2,
                 alt: 'Resonance splash screen, second variant',
+                fit: 'contain',
               },
             ],
           },
