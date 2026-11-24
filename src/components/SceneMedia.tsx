@@ -41,7 +41,41 @@ export function JaydenReelVideo() {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    videoRef.current?.play().catch(() => {})
+    const video = videoRef.current
+    video?.play().catch(() => {})
+    if (!video) return
+    // A real, reported bug: this video can visually freeze on a single
+    // frame on real hardware -- not paused, no error, `readyState` still
+    // reports plenty of buffered data -- the browser's own decoder just
+    // stalls without ever firing a definitive failure event to react to.
+    // Confirmed this doesn't reproduce in automated/headless testing at
+    // all (decoder stalls like this are tied to real hardware/driver
+    // behavior), so this is a watchdog rather than a fix for a specific
+    // root cause: every 2s, if currentTime hasn't moved since the last
+    // check while the video thinks it's still playing, call `.play()`
+    // again -- a no-op on an already-advancing video, but reliably
+    // kicks a stalled decoder back into producing frames.
+    let lastTime = video.currentTime
+    const id = window.setInterval(() => {
+      if (video.paused || video.ended) return
+      if (video.currentTime === lastTime) {
+        video.play().catch(() => {})
+      }
+      lastTime = video.currentTime
+    }, 2000)
+    // Backgrounding the tab throttles a video's decode loop -- coming
+    // back to the tab is the single most likely moment to find it
+    // "playing" but stuck on a stale frame, so this re-asserts play()
+    // the instant the tab is foregrounded again rather than waiting up
+    // to 2s for the watchdog's own next tick.
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') video.play().catch(() => {})
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      window.clearInterval(id)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
   }, [])
 
   return (
