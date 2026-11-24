@@ -4,6 +4,7 @@ import { CASE_STUDIES, type CaseStudy } from './caseStudies'
 import { STACK } from './stack'
 import { CREDENTIALS } from './credentials'
 import { ExpertisePills } from '../components/ExpertisePills'
+import { useMaskNavigate } from '../hooks/useMaskNavigate'
 import meGif from '../assets/images/about/me.gif'
 
 const pad = (num: number) => String(num).padStart(2, '0')
@@ -304,6 +305,16 @@ function AboutCredentialsPanel() {
 }
 
 function ViewAllPanel() {
+  // Routes through the same curtain-wipe transition every other
+  // cross-page jump on the site already uses (ProjectCard's own tiles,
+  // Nav's links) instead of React Router's default instant swap -- a
+  // plain `<Link>` here was the one cross-page jump left behind.
+  const maskNavigate = useMaskNavigate()
+  const goToWork = (e: { preventDefault: () => void }) => {
+    e.preventDefault()
+    maskNavigate('/work')
+  }
+
   // Full-bleed solid teal, not a narrower cover-photo-sized column --
   // matches how the Le Mans Classic reference's own chapter panels are
   // full-width solid color blocks, and fixes a real complaint: a
@@ -346,6 +357,7 @@ function ViewAllPanel() {
         </h2>
         <Link
           to="/work"
+          onClick={goToWork}
           data-cursor="View All"
           className="chapter-copy group block max-w-lg font-display text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:mt-[1.4em] md:text-[7.5vw]"
         >
