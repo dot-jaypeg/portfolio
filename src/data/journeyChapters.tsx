@@ -86,7 +86,21 @@ function WorkPanel({
       <Link
         to={`/work/${cs.slug}`}
         data-cursor={cs.title}
-        className="relative block w-[38vw] max-w-xl shrink-0 self-stretch overflow-hidden"
+        // `aspect-[4/5] md:aspect-auto` -- a real, confirmed bug on
+        // mobile: `self-stretch` only gives this box a HEIGHT when the
+        // panel is a row (cross axis = vertical there), matching
+        // whatever height the copy column's own content establishes.
+        // In the mobile flex-col layout above, the cross axis is
+        // WIDTH, not height -- nothing here ever set an explicit
+        // height, and the actual <img>/<video> inside is absolutely
+        // positioned (contributes zero intrinsic height of its own),
+        // so this box collapsed to 0px tall on every viewport narrow
+        // enough to hit the `flex-col` branch. Every one of the five
+        // featured case studies' own cover photo/video was completely
+        // invisible on mobile as a result. `w-full`, not `w-[38vw]`,
+        // too -- stacked above the text instead of beside it, the
+        // narrow 38% column read as a cramped postage stamp.
+        className="relative block aspect-[4/5] w-full shrink-0 self-stretch overflow-hidden md:aspect-auto md:w-[38vw] md:max-w-xl"
       >
         {cs.workCoverVideo ? (
           // Same /work-only cover video the wall itself plays (see

@@ -17,7 +17,16 @@ function TaglineReveal() {
         ease: 'power3.out',
         scrollTrigger: {
           trigger: el,
-          start: 'top 85%',
+          // Not 'top 85%' -- same class of bug Reveal.tsx's own
+          // comment covers for the email/social block right below this:
+          // this headline sits near the TOP of Contact's `min-h-screen`
+          // footer (the very last section on the page), so it happens
+          // to have enough scroll room to reach 85% down the viewport
+          // before hitting the document's max scroll on most screens --
+          // but that's not guaranteed on every viewport height, and
+          // 'top bottom' costs nothing here (fires just as reliably,
+          // just a touch earlier) while removing that risk entirely.
+          start: 'top bottom',
           toggleActions: 'play none none reverse',
         },
       })

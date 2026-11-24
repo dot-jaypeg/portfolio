@@ -1,6 +1,6 @@
-import type { MouseEvent } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { ScrollTrigger } from '../lib/gsap'
+import { gsap, ScrollTrigger } from '../lib/gsap'
 import { getChapterScrollOffset } from '../lib/journeyScroll'
 import { WORK_COUNT } from '../data/journeyChapters'
 import { useMaskNavigate } from '../hooks/useMaskNavigate'
@@ -37,6 +37,22 @@ const CHAPTER_INDEX: Record<string, number> = {
 const NAV_LINK_CLASS =
   "font-body relative text-xs tracking-[0.14em] text-[var(--nav-fg)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-teal after:transition-transform after:duration-300 after:content-[''] hover:text-teal hover:after:scale-x-100"
 
+// Two bars that cross into an X when open -- a plain CSS rotate/
+// translate on each bar rather than a separate icon swap, so the
+// morph itself animates instead of popping between two static glyphs.
+function MenuIcon({ open }: { open: boolean }) {
+  return (
+    <span className="relative flex h-4 w-6 flex-col justify-between md:hidden" aria-hidden="true">
+      <span
+        className={`h-px w-full bg-[var(--nav-fg)] transition-transform duration-300 ease-out ${open ? 'translate-y-[7px] rotate-45' : ''}`}
+      />
+      <span
+        className={`h-px w-full bg-[var(--nav-fg)] transition-transform duration-300 ease-out ${open ? '-translate-y-[7px] -rotate-45' : ''}`}
+      />
+    </span>
+  )
+}
+
 // True once Home's own sections actually exist and are safe to jump
 // to -- `#top`/Journey's chapters are GSAP-pinned, so their offsets
 // only resolve correctly once JourneyDesktop's ScrollTrigger has set
@@ -48,6 +64,40 @@ const isSectionReady = (href: string) =>
 export function Nav() {
   const maskNavigate = useMaskNavigate()
   const { pathname } = useLocation()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const overlayLinksRef = useRef<HTMLDivElement>(null)
+
+  // Locks background scroll while the menu is open (the standard
+  // mobile-menu convention) and animates the overlay itself -- a plain
+  // fade/scale on the backdrop plus a staggered rise on the links,
+  // matching the word-reveal stagger CinematicIntro/Journey already use
+  // elsewhere on the site rather than a generic instant show/hide.
+  useEffect(() => {
+    const overlay = overlayRef.current
+    const links = overlayLinksRef.current
+    if (!overlay || !links) return
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    const ctx = gsap.context(() => {
+      if (menuOpen) {
+        gsap.set(overlay, { display: 'flex' })
+        gsap.fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: 'power2.out' })
+        gsap.fromTo(
+          links.children,
+          { opacity: 0, y: 24 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, delay: 0.1, ease: 'power3.out' },
+        )
+      } else {
+        gsap.to(overlay, {
+          autoAlpha: 0,
+          duration: 0.25,
+          ease: 'power2.in',
+          onComplete: () => gsap.set(overlay, { display: 'none' }),
+        })
+      }
+    })
+    return () => ctx.revert()
+  }, [menuOpen])
 
   const scrollToSection = (href: string) => {
     // #top is GSAP-pinned for its scroll-jacked scene sequence, so once
@@ -132,58 +182,146 @@ export function Nav() {
       }
     }
 
+  // Every mobile-menu link needs to close the overlay on the way out --
+  // `setMenuOpen(false)` alone isn't enough: that only SCHEDULES the
+  // closing effect, which resets `document.body.style.overflow`
+  // asynchronously, but `handleClick`'s own `pathname !== '/'` branch
+  // polls that SAME property (via the preloader check above) to decide
+  // whether the homepage has finished loading yet. Clearing it
+  // synchronously here, before that polling can ever start, is what
+  // keeps the two from racing.
+  const closeMenu = () => {
+    setMenuOpen(false)
+    document.body.style.overflow = ''
+  }
+
   return (
-    <header className="fixed top-0 z-50 flex w-full items-center justify-between px-6 py-6 md:px-10">
-      <a
-        href="#top"
-        onClick={handleClick('#top')}
-        data-cursor="Home"
-        className="font-display text-2xl font-bold tracking-[-0.06em] text-cream italic md:text-3xl"
-      >
-        .jaypeg
-      </a>
-      <nav>
-        <ul className="flex items-center gap-6 md:gap-8">
-          <li>
-            <Link
-              to="/work"
-              onClick={(e) => {
-                e.preventDefault()
-                maskNavigate('/work')
-              }}
-              className={NAV_LINK_CLASS}
-            >
-              Work
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/gallery"
-              onClick={(e) => {
-                e.preventDefault()
-                maskNavigate('/gallery')
-              }}
-              className={NAV_LINK_CLASS}
-            >
-              Gallery
-            </Link>
-          </li>
-          {SECTION_LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                onClick={handleClick(link.href)}
+    <>
+      <header className="fixed top-0 z-50 flex w-full items-center justify-between px-6 py-6 md:px-10">
+        <a
+          href="#top"
+          onClick={handleClick('#top')}
+          data-cursor="Home"
+          className="font-display text-2xl font-bold tracking-[-0.06em] text-cream italic md:text-3xl"
+        >
+          .jaypeg
+        </a>
+        {/* Desktop nav -- the full inline list, unchanged. Collapses
+            into MenuIcon's hamburger toggle below `md`: this exact row
+            of five items (four links plus the sound toggle) had no
+            mobile layout at all before, forced into one line regardless
+            of viewport width -- confirmed directly as a real bug: on a
+            390px-wide screen it ran straight off the right edge of the
+            screen, "Contact" clipped and partly overlapping the logo. */}
+        <nav className="hidden md:block">
+          <ul className="flex items-center gap-8">
+            <li>
+              <Link
+                to="/work"
+                onClick={(e) => {
+                  e.preventDefault()
+                  maskNavigate('/work')
+                }}
                 className={NAV_LINK_CLASS}
               >
-                {link.label}
-              </a>
+                Work
+              </Link>
             </li>
+            <li>
+              <Link
+                to="/gallery"
+                onClick={(e) => {
+                  e.preventDefault()
+                  maskNavigate('/gallery')
+                }}
+                className={NAV_LINK_CLASS}
+              >
+                Gallery
+              </Link>
+            </li>
+            {SECTION_LINKS.map((link) => (
+              <li key={link.href}>
+                <a href={link.href} onClick={handleClick(link.href)} className={NAV_LINK_CLASS}>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+            <li>
+              <SoundToggle />
+            </li>
+          </ul>
+        </nav>
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          className="relative z-[60] md:hidden"
+        >
+          <MenuIcon open={menuOpen} />
+        </button>
+      </header>
+
+      {/* Full-screen mobile menu -- hidden via `display:none` at rest
+          (set in the effect above, not a Tailwind class) so GSAP can
+          animate it in/out rather than it just popping. `invisible`
+          here is only the SSR/no-JS fallback starting point; the effect
+          takes over the instant it mounts. Large, stacked, bold links
+          instead of shrinking the desktop row down -- this is a real
+          tap target on a touch device, not a miniaturized version of
+          the hover-driven desktop nav. Fixed ink/cream, not `bg-ink`/
+          `text-cream` -- same reasoning as AboutStatementPanel/
+          ViewAllPanel's own fixed colors: those resolve through the
+          page's crossfading --bg/--fg vars, which can be ANYTHING
+          depending on which section the menu happens to get opened
+          from (About's inverted cream bg, Jayden's red, etc.) --
+          independent of whatever section is currently on screen is
+          exactly what a menu that overlays the whole page needs. */}
+      <div
+        ref={overlayRef}
+        className="invisible fixed inset-0 z-50 hidden flex-col justify-center bg-[#161616] px-8 md:hidden"
+      >
+        <div ref={overlayLinksRef} className="flex flex-col items-start gap-6">
+          <Link
+            to="/work"
+            onClick={(e) => {
+              e.preventDefault()
+              closeMenu()
+              maskNavigate('/work')
+            }}
+            className="font-display text-5xl font-bold tracking-[-0.04em] text-[#fffff0] uppercase"
+          >
+            Work
+          </Link>
+          <Link
+            to="/gallery"
+            onClick={(e) => {
+              e.preventDefault()
+              closeMenu()
+              maskNavigate('/gallery')
+            }}
+            className="font-display text-5xl font-bold tracking-[-0.04em] text-[#fffff0] uppercase"
+          >
+            Gallery
+          </Link>
+          {SECTION_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={(e) => {
+                closeMenu()
+                handleClick(link.href)(e)
+              }}
+              className="font-display text-5xl font-bold tracking-[-0.04em] text-[#fffff0] uppercase"
+            >
+              {link.label}
+            </a>
           ))}
-          <li>
+          <div className="mt-4">
             <SoundToggle />
-          </li>
-        </ul>
-      </nav>
-    </header>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
