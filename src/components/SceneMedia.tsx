@@ -55,6 +55,17 @@ export function JaydenReelVideo() {
     // check while the video thinks it's still playing, call `.play()`
     // again -- a no-op on an already-advancing video, but reliably
     // kicks a stalled decoder back into producing frames.
+    //
+    // Deliberately still gated on `!video.paused` -- this component is
+    // shared with CinematicIntroMobile, which intentionally PAUSES this
+    // same video via its own IntersectionObserver once its section
+    // scrolls out of view (a real, wanted behavior, not a bug). An
+    // unconditional watchdog would fight that and keep it playing
+    // off-screen on mobile. CinematicIntroDesktop no longer calls
+    // `.pause()` on this video at all (see its own
+    // updateSceneVideoPlayback, which now exempts Jayden's panel
+    // entirely) -- so on desktop, `.paused` should never legitimately
+    // be true in the first place, making this gate a no-op there.
     let lastTime = video.currentTime
     const id = window.setInterval(() => {
       if (video.paused || video.ended) return

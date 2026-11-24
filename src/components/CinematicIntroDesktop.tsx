@@ -71,18 +71,24 @@ export function CinematicIntroDesktop() {
       // real frame even hidden at 1x1px, this isn't audio-only) was
       // apparently enough to tip Safari over whatever that ceiling is,
       // and something has to lose its decoder slot. Chrome has enough
-      // headroom this never showed up there. Only the CURRENTLY ACTIVE
-      // scene's video(s) actually need to be decoding at any moment --
-      // every other scene's clip is sitting off-screen either way, so
-      // explicitly pausing everything outside the active scene (and
-      // resuming it on arrival) keeps the real simultaneous count low
-      // regardless of how many scenes end up with their own video
-      // backgrounds later.
+      // headroom this never showed up there -- only the shuffle clips
+      // (scenes 1/2) still get this pause/resume treatment. Jayden's
+      // own reel (the last panel) is deliberately EXEMPT now: a later,
+      // separately reported bug had it sometimes just never resuming on
+      // Chrome specifically once this had paused it (scrolling to it
+      // didn't reliably bring it back) -- this mechanism was only ever
+      // built for Safari's decoder ceiling in the first place, so Jayden
+      // skipping it entirely and just running continuously from mount,
+      // the same way every shuffle clip already keeps playing underneath
+      // its own opacity toggle regardless of which one is visible, is a
+      // strictly safer default on Chrome: it trades one extra always-on
+      // decoded stream for never depending on a resume call working.
       let lastActiveScene = -1
       const updateSceneVideoPlayback = (activeIndex: number) => {
         if (activeIndex === lastActiveScene) return
         lastActiveScene = activeIndex
         panels.forEach((panel, i) => {
+          if (i === n - 1) return
           panel.querySelectorAll('video').forEach((video) => {
             if (i === activeIndex) video.play().catch(() => {})
             else video.pause()
