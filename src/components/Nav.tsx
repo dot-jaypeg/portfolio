@@ -281,10 +281,18 @@ export function Nav() {
           depending on which section the menu happens to get opened
           from (About's inverted cream bg, Jayden's red, etc.) --
           independent of whatever section is currently on screen is
-          exactly what a menu that overlays the whole page needs. */}
+          exactly what a menu that overlays the whole page needs.
+          `z-40`, not `z-50` -- a real, confirmed bug: at equal z-index
+          with the header, this being LATER in the DOM painted it on
+          top of the header's own button, covering it entirely. There
+          was no way to close the menu once open -- the toggle button
+          was still there and still working, just invisible and
+          unclickable underneath this overlay. Staying below the
+          header's z-50 keeps the button (and its own z-[60] within
+          the header) reachable the whole time the menu is open. */}
       <div
         ref={overlayRef}
-        className="invisible fixed inset-0 z-50 hidden flex-col justify-center bg-[#161616] px-8 md:hidden"
+        className="invisible fixed inset-0 z-40 hidden flex-col justify-center bg-[#161616] px-8 md:hidden"
       >
         <div ref={overlayLinksRef} className="flex flex-col items-start gap-6">
           <Link
@@ -322,9 +330,6 @@ export function Nav() {
               {link.label}
             </a>
           ))}
-          <div className="mt-4">
-            <SoundToggle />
-          </div>
         </div>
       </div>
     </>

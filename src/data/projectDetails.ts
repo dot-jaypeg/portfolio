@@ -795,27 +795,46 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         ],
         moreImages: [
           {
-            // Reverted to its own full-bleed section (same treatment
-            // as before the Contra-style pass) -- full-bleed already
-            // sizes to the image's own aspect ratio, so this needs no
-            // `fit` override.
+            // 'full-bleed' has no dedicated layout branch of its own in
+            // ImageGrid -- it was silently falling through to the
+            // generic single-Figure fallback, which DOES size to the
+            // image's own aspect ratio (so nothing was getting cropped
+            // here), but the source itself has a lot of empty dark
+            // margin around the actual specimen text (confirmed via a
+            // bounding-box check: real content was under half the
+            // image's own height). At a narrow mobile width, that
+            // extra margin shrank the text down to an illegible size.
+            // Cropped the source file itself down to just the content
+            // (with a little breathing room), roughly doubling how
+            // large the lettering renders at any given container width.
             layout: 'full-bleed',
             images: [
               {
                 src: fontSpecimen,
                 alt: 'Azonix display typeface specimen, full alphabet and numerals',
-                width: 2000,
-                height: 1250,
+                width: 1369,
+                height: 590,
               },
             ],
           },
           {
-            layout: 'full-page',
-            tall: true,
+            // Not 'full-page' -- a real, confirmed bug: this composition
+            // runs diagonally corner to corner (the blade's own tip at
+            // one end, the "KATTO" wordmark and a silhouetted figure at
+            // the other), spanning nearly the full width of the frame.
+            // Forced into a 150vh-tall, narrow mobile box, object-cover
+            // had to crop out one end or the other -- no position kept
+            // both the blade tip and the sponsor wordmark in frame.
+            // 'full-width' sizes the box to the image's own native
+            // ratio instead, showing the whole diagonal uncropped (no
+            // more oversized vh drama, but nothing cut off either).
+            layout: 'full-width',
             images: [
               {
                 src: weaponSkinKatto,
                 alt: 'Katto sponsor weapon skin branding',
+                width: 2000,
+                height: 1333,
               },
             ],
           },
