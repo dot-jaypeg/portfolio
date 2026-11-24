@@ -1,9 +1,19 @@
-import { useEffect, useRef, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { gsap } from '../lib/gsap'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { useScrollParallax } from '../hooks/useScrollParallax'
 import type { CaseStudy } from '../data/caseStudies'
 import type { ProjectDetailData } from '../data/projectDetails'
+
+// Same computed-once-at-mount pattern Journey.tsx/MoodboardCanvas.tsx
+// already use for their own desktop/mobile branch -- doesn't react to
+// a live resize, but neither do they, and a data-driven CSS value like
+// `heroMobileImagePosition` can't be expressed as a Tailwind responsive
+// utility class the way a fixed one could (Tailwind can't generate CSS
+// for a class built from an arbitrary runtime string), so this is the
+// only way to actually vary it by breakpoint at all.
+const isDesktopViewport = () =>
+  typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
 
 // Media comes first, full-bleed, with no text overlaid on it -- the
 // nav is already `fixed`/transparent (see Nav.tsx), so it simply
@@ -26,6 +36,12 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
   // disagreed on which asset was "the" cover.
   const coverVideo = project.heroSkipCoverVideo ? undefined : project.workCoverVideo
   const coverImage = project.workCoverImage ?? project.image
+  const [isDesktop] = useState(isDesktopViewport)
+  const imagePosition =
+    (isDesktop ? undefined : detail.heroMobileImagePosition) ??
+    detail.heroImagePosition ??
+    project.imagePosition ??
+    'center'
 
   useEffect(() => {
     const el = imgRef.current ?? videoRef.current
@@ -71,7 +87,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
                 playsInline
                 preload="metadata"
                 aria-label={`${project.title} lead video`}
-                style={{ objectPosition: detail.heroImagePosition ?? project.imagePosition ?? 'center' }}
+                style={{ objectPosition: imagePosition }}
                 className={`h-full w-full ${detail.heroMobileFit === 'contain' ? 'object-contain md:object-cover' : 'object-cover'}`}
               />
             ) : (
@@ -79,7 +95,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
                 ref={imgRef}
                 src={coverImage}
                 alt={`${project.title} lead image`}
-                style={{ objectPosition: detail.heroImagePosition ?? project.imagePosition ?? 'center' }}
+                style={{ objectPosition: imagePosition }}
                 className={`h-full w-full ${detail.heroMobileFit === 'contain' ? 'object-contain md:object-cover' : 'object-cover'}`}
                 loading="eager"
                 decoding="async"

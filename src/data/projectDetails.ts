@@ -297,6 +297,14 @@ export interface ProjectDetailData {
   // close enough to the source's own ratio that `cover` barely crops
   // at all there.
   heroMobileFit?: 'cover' | 'contain'
+  // Overrides `heroImagePosition` specifically on mobile's narrower hero
+  // box -- for a wide source with its real focal content (a wordmark,
+  // a character) spread far enough apart that desktop's own position
+  // crops out whichever end isn't being kept in frame once the box
+  // itself goes from desktop's wide shape to mobile's narrow one.
+  // Falls back to `heroImagePosition ?? project.imagePosition` when
+  // unset, same as desktop.
+  heroMobileImagePosition?: string
   tags: string[]
   // A second paragraph is rare -- most projects' intro is one line.
   // NSU's is written as two: a short overview sentence, then a longer
@@ -688,11 +696,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     // "RESONANCE" wordmark out entirely. Left keeps the wordmark fully
     // in view here instead.
     heroImagePosition: 'left center',
-    // On mobile's narrow portrait hero box, though, 'left center' cuts
-    // off the wordmark's own trailing letters instead (confirmed
-    // directly) -- no position keeps the whole wide banner in frame
-    // there, so show the complete thing letterboxed instead of cropped.
-    heroMobileFit: 'contain',
+    // On mobile's narrow portrait hero box, 'left center' crops down to
+    // just the wordmark with no character at all -- per direct
+    // request, the character should be the one kept in frame there
+    // instead, same bias as the case study's own default `imagePosition`.
+    heroMobileImagePosition: 'right center',
     tags: ['Branding', 'UI/UX', 'HUD Design', 'Game Art'],
     intro:
       'Corporations run Resonance’s arenas, pitting fighters against each other to stress-test experimental weapons and augments in front of a live audience — weapons R&D disguised as spectator sport, broadcast for entertainment. Built by a small student team in about three months for a university capstone, then submitted to IEEE GameSIG 2026.',
@@ -1059,13 +1067,6 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     heroLead: 'A cohesive brand identity for',
     heroBold: 'fetch!',
     heroTagline: ', a specialty food truck dedicated entirely to dogs, serving pup-safe sandwiches and snacks as a dog-friendly deli.',
-    // The "fetch! DOGGY DELI" wordmark is baked into the photo itself,
-    // spanning almost its full width -- no `heroImagePosition` can keep
-    // it all in frame once the hero box becomes mobile's narrow
-    // portrait shape instead of desktop's wide one (confirmed directly:
-    // center-cropped, both the leading "f" and trailing "!" were cut
-    // off). Same fix as Resonance's hero.
-    heroMobileFit: 'contain',
     tags: ['Branding', 'Packaging', 'Advertising'],
     intro:
       'Inspired by a beloved Frenchie named Yuki, fetch! was built for dog-loving places like SoCal, where park time often gets cut short when a dog needs a snack or a meal. fetch! solves that with fresh food and treats made exclusively for dogs, using natural, local ingredients — fuel to keep playing, and a reason to stay at the park a little longer.',
