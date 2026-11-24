@@ -59,38 +59,48 @@ export function CinematicIntroDesktop() {
 
       // Every scene's video(s) autoplay from mount regardless of which
       // scene is actually on screen -- fine on its own, but a real bug
-      // reported directly: on Safari specifically, the Jayden reel (the
-      // LAST scene) would sometimes freeze on its first frame rather
-      // than ever actually playing, and only once the site's own
-      // background-music YouTube embed (SoundToggle) was also playing.
-      // Safari/WebKit has a real, comparatively low ceiling on
-      // simultaneous hardware-decoded video streams -- with every one of
-      // scenes 1 and 2's four shuffle clips plus Jayden's own reel all
-      // decoding at once (nine streams total across this one component),
-      // adding the YouTube embed's own decoded video (it still decodes a
-      // real frame even hidden at 1x1px, this isn't audio-only) was
-      // apparently enough to tip Safari over whatever that ceiling is,
-      // and something has to lose its decoder slot. Chrome has enough
-      // headroom this never showed up there -- only the shuffle clips
-      // (scenes 1/2) still get this pause/resume treatment. Jayden's
-      // own reel (the last panel) is deliberately EXEMPT now: a later,
-      // separately reported bug had it sometimes just never resuming on
-      // Chrome specifically once this had paused it (scrolling to it
-      // didn't reliably bring it back) -- this mechanism was only ever
-      // built for Safari's decoder ceiling in the first place, so Jayden
-      // skipping it entirely and just running continuously from mount,
-      // the same way every shuffle clip already keeps playing underneath
-      // its own opacity toggle regardless of which one is visible, is a
-      // strictly safer default on Chrome: it trades one extra always-on
-      // decoded stream for never depending on a resume call working.
+      // reported directly: the Jayden reel (the LAST scene) would freeze
+      // a few seconds in, unreliably, across every browser tested, not
+      // just one. Root-caused to real decoder contention, not a
+      // browser-specific ceiling: with every one of scenes 1 and 2's
+      // four shuffle clips plus Jayden's own reel all decoding at once
+      // (nine streams total across this one component), a decoder that
+      // falls behind under that load has nowhere to recover to until
+      // the video's own next keyframe -- confirmed directly that
+      // Jayden's own encode had irregular, scene-change-triggered
+      // keyframes up to 6 SECONDS apart (plus a High-profile/B-frame
+      // structure that's itself more expensive to decode), so a stall
+      // anywhere in that gap just sat frozen until the next one finally
+      // arrived, if it ever did. Fixed at the source by re-encoding with
+      // a fixed 1-second keyframe interval and a cheap-to-decode
+      // Baseline profile (no B-frames) -- see that file's own commit.
+      // This pause/resume mechanism stays in place for every scene,
+      // Jayden's included, as the other half of the fix: minimizing how
+      // many streams are ever decoding at once in the first place, not
+      // just making the one that freezes more recoverable.
       let lastActiveScene = -1
+      // A `.play()` call made right after (or right before) a `.pause()`
+      // on the SAME element can have its promise reject even when
+      // autoplay itself isn't being blocked -- the browser aborts it
+      // because a newer play/pause request superseded it, a timing
+      // race rather than a real refusal. Silently swallowing that
+      // (the old `.catch(() => {})`) left the scene becoming active with
+      // its video just never actually resuming, with nothing left to
+      // retry it until the NEXT scene change -- part of what read as
+      // "sometimes it just won't play at all." One retry a beat later
+      // resolves the ordinary race case without looping forever on a
+      // genuine, real refusal.
+      const playWithRetry = (video: HTMLVideoElement) => {
+        video.play().catch(() => {
+          setTimeout(() => video.play().catch(() => {}), 150)
+        })
+      }
       const updateSceneVideoPlayback = (activeIndex: number) => {
         if (activeIndex === lastActiveScene) return
         lastActiveScene = activeIndex
         panels.forEach((panel, i) => {
-          if (i === n - 1) return
           panel.querySelectorAll('video').forEach((video) => {
-            if (i === activeIndex) video.play().catch(() => {})
+            if (i === activeIndex) playWithRetry(video)
             else video.pause()
           })
         })
