@@ -375,11 +375,18 @@ function FullPageMediaQuadRow({ images }: { images: ProjectImage[] }) {
   ]
 
   return (
-    <div ref={containerRef} className="flex w-full">
+    // grid-cols-2 sm:grid-cols-4, not a bare 4-wide flex row -- a real,
+    // confirmed issue: 4 equal columns on a 390px screen squeezed each
+    // square swatch down to ~97px, reading as small/hard-to-make-out
+    // compared to how substantial this same row is on desktop. A 2x2
+    // grid on mobile keeps every swatch square (unlike full-page-trio's
+    // own bug, this already was square either way) but roughly doubles
+    // each one's size.
+    <div ref={containerRef} className="grid w-full grid-cols-2 sm:grid-cols-4">
       {images.slice(0, 4).map((image, i) => {
         const { wrapperRef, boxRef } = slots[i]
         return (
-          <div key={i} className="w-1/4">
+          <div key={i}>
             <div ref={boxRef} className="relative aspect-square w-full overflow-hidden">
               <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
                 <Media
