@@ -327,7 +327,14 @@ export function JourneyDesktop() {
     <section
       id="journey"
       ref={containerRef}
-      className="relative h-screen w-screen overflow-hidden bg-ink"
+      // `100svh`, not `100vh` -- same fix as CinematicIntro's own pinned
+      // section: mobile Safari's `100vh` is sized against the largest
+      // possible viewport (toolbar collapsed), disagreeing with the
+      // scrub math's own live `window.innerHeight` and reserving too
+      // much pin-spacer scroll distance. This component only mounts on
+      // desktop (see Journey.tsx's matchMedia gate), but fixing it here
+      // too keeps both pinned tracks on the same, correct basis.
+      className="relative h-[100svh] w-screen overflow-hidden bg-ink"
     >
       <div
         ref={trackRef}

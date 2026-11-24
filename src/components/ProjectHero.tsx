@@ -70,7 +70,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
   return (
     <header>
       {(coverVideo || coverImage) && (
-        <div ref={containerRef} className="relative h-screen w-full overflow-hidden bg-cream/5">
+        <div ref={containerRef} className="relative h-[100svh] w-full overflow-hidden bg-cream/5">
           <div
             ref={wrapperRef}
             className="absolute inset-x-0 w-full"

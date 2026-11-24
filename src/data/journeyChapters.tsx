@@ -81,7 +81,18 @@ function WorkPanel({
       // scroll-leak bug (the earlier "fix" for it, removing overflow-x
       // from html+body, broke position:sticky elsewhere; this is the
       // actual root cause instead, so that revert can stick).
-      className={`chapter-panel relative flex min-h-screen w-screen shrink-0 flex-col items-start gap-8 px-8 md:flex-row md:px-20 ${flipped ? 'md:flex-row-reverse' : ''}`}
+      //
+      // `min-h-[100svh]`, not `min-h-screen` -- every `chapter-panel` in
+      // this file shares this fix (4 occurrences total). On
+      // JourneyDesktop this is pinned (same mobile-Safari `100vh`
+      // mismatch as CinematicIntro's own pinned section); on
+      // JourneyMobile it's a plain `min-height`, where `100vh` could
+      // reserve more height than the toolbar-visible viewport actually
+      // has, pushing a chapter's own content below the fold until the
+      // next one scrolled into place -- `svh` can't exceed the real
+      // visible height either way, so min-height just does less work
+      // without ever under-sizing the panel.
+      className={`chapter-panel relative flex min-h-[100svh] w-screen shrink-0 flex-col items-start gap-8 px-8 md:flex-row md:px-20 ${flipped ? 'md:flex-row-reverse' : ''}`}
     >
       <Link
         to={`/work/${cs.slug}`}
@@ -202,7 +213,7 @@ function AboutStatementPanel({ id }: { id?: string }) {
       // `md` entirely instead (a real, confirmed gap: the photo was
       // missing from the whole mobile homepage) rather than actually
       // being laid out for a stacked mobile view.
-      className="chapter-panel relative flex min-h-screen w-screen shrink-0 flex-col items-center gap-12 px-8 py-24 md:flex-row md:px-20"
+      className="chapter-panel relative flex min-h-[100svh] w-screen shrink-0 flex-col items-center gap-12 px-8 py-24 md:flex-row md:px-20"
     >
       {/* Fixed cream, mirroring ViewAllPanel's own fixed ink layer right
           before this one -- see that comment for why the shared soft
@@ -275,7 +286,7 @@ function AboutStatementPanel({ id }: { id?: string }) {
 
 function AboutCredentialsPanel() {
   return (
-    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-16 px-8 py-24 md:px-20">
+    <div className="chapter-panel relative flex min-h-[100svh] w-screen shrink-0 items-center gap-16 px-8 py-24 md:px-20">
       <div className="chapter-copy max-w-4xl">
         <h2 className="chapter-headline font-display text-[6vw] leading-[0.9] font-bold tracking-[-0.06em] text-cream uppercase md:text-[4vw]">
           Expertise
@@ -347,7 +358,7 @@ function ViewAllPanel() {
   // whole panel its own fixed identity, the same way WorkPanel's accent
   // colors don't invert with the page.
   return (
-    <div className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center overflow-hidden bg-teal px-8 md:px-20">
+    <div className="chapter-panel relative flex min-h-[100svh] w-screen shrink-0 items-center overflow-hidden bg-teal px-8 md:px-20">
       {/* Two-COLUMN headline, side by side, after basicagency.com's own
           about-page hero. That reference doesn't just butt its second
           line up against the first with a fixed gap -- the second line

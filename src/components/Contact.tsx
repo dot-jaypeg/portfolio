@@ -56,7 +56,7 @@ export function Contact() {
       // own wrapper is bg-cream now, and Contact's text is hardcoded
       // cream, so without its own dark background here the footer was
       // rendering fully invisible -- cream text on a cream backdrop.
-      className="flex min-h-screen flex-col justify-between bg-ink px-6 pt-28 pb-12 md:px-10 md:pt-36 md:pb-16"
+      className="flex min-h-[100svh] flex-col justify-between bg-ink px-6 pt-28 pb-12 md:px-10 md:pt-36 md:pb-16"
     >
       <TaglineReveal />
 

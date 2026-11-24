@@ -32,11 +32,11 @@ export function ProjectDetail() {
 
   if (!project || !detail) {
     return (
-      <div className="min-h-screen bg-ink">
+      <div className="min-h-[100svh] bg-ink">
         <Cursor />
         <Grain />
         <Nav />
-        <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
+        <div className="flex min-h-[100svh] flex-col items-center justify-center gap-6 px-6 text-center">
           <p className="font-display text-3xl font-bold tracking-[-0.04em] text-cream uppercase">
             Project not found
           </p>
@@ -54,7 +54,7 @@ export function ProjectDetail() {
   const accent = project.accent ?? '#618c82'
 
   return (
-    <div className="min-h-screen bg-ink">
+    <div className="min-h-[100svh] bg-ink">
       <Cursor />
       <Grain />
       <Nav />

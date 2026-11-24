@@ -518,7 +518,20 @@ export function CinematicIntro() {
     <section
       id="top"
       ref={containerRef}
-      className="relative h-screen w-screen overflow-hidden bg-ink"
+      // `100svh`, not `100vh` -- a real, reported bug on mobile Safari:
+      // `100vh` sizes against the browser's LARGEST possible viewport
+      // (address bar collapsed), taller than what's actually visible
+      // whenever the bar is showing. This section is pinned (see the
+      // ScrollTrigger below), and its pin-spacer reserves space equal to
+      // its own rendered height -- so a too-tall `100vh` box reserved
+      // more scroll distance than the scrub math (driven by the live
+      // `window.innerHeight`) actually consumed, pushing every section
+      // after it down and effectively growing the whole page, while the
+      // panels themselves rendered taller than the real visible area,
+      // clipping their own headline text at the bottom. `svh` is pinned
+      // to the smallest the viewport ever gets (bar always showing), so
+      // it can't disagree with the live viewport height mid-scroll.
+      className="relative h-[100svh] w-screen overflow-hidden bg-ink"
     >
       <div
         ref={trackRef}

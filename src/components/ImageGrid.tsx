@@ -239,6 +239,14 @@ function Media({
 // <video> directly, so this stays agnostic to whichever media type
 // `Media` actually renders (including the ones that manage their own
 // ref internally, like AutoplayInViewVideo).
+// Every vh-driven box in this file uses `svh`, not `vh` -- a real,
+// reported bug on mobile Safari: plain `vh` sizes against the browser's
+// LARGEST possible viewport (address bar collapsed), taller than what's
+// actually visible whenever the bar is showing, which was overgrowing
+// these parallax tracks' own height past the real screen and pushing
+// page content down/out of view. `svh` is pinned to the smallest the
+// viewport ever gets, so it can't disagree with what's actually on
+// screen.
 function FullPageMedia({ image, tall }: { image: ProjectImage; tall: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -246,7 +254,7 @@ function FullPageMedia({ image, tall }: { image: ProjectImage; tall: boolean }) 
 
   return (
     <figure>
-      <div ref={containerRef} className={`relative ${tall ? 'h-[150vh]' : 'h-[92vh]'} w-full overflow-hidden`}>
+      <div ref={containerRef} className={`relative ${tall ? 'h-[150svh]' : 'h-[92svh]'} w-full overflow-hidden`}>
         <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
           <Media
             image={image}
@@ -326,7 +334,7 @@ function FullPageMediaRow({ images, tall }: { images: ProjectImage[]; tall: bool
     // side-by-side.
     <div
       ref={containerRef}
-      className={`flex w-full flex-col sm:flex-row ${tall ? 'sm:h-[150vh]' : 'sm:h-[92vh]'}`}
+      className={`flex w-full flex-col sm:flex-row ${tall ? 'sm:h-[150svh]' : 'sm:h-[92svh]'}`}
     >
       {images.map((image, i) => {
         const { wrapperRef, boxRef } = slots[i]
@@ -334,7 +342,7 @@ function FullPageMediaRow({ images, tall }: { images: ProjectImage[]; tall: bool
           <div
             key={i}
             ref={boxRef}
-            className={`relative w-full overflow-hidden sm:h-full sm:w-1/2 ${tall ? 'h-[75vh]' : 'h-[46vh]'}`}
+            className={`relative w-full overflow-hidden sm:h-full sm:w-1/2 ${tall ? 'h-[75svh]' : 'h-[46svh]'}`}
           >
             <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
               <Media
@@ -713,7 +721,7 @@ export function ImageGrid({
     return (
       <div className="mt-10 mb-10 flex flex-wrap items-end justify-center gap-10 px-6 md:px-10">
         {images.map((image, i) => (
-          <Media key={`${image.alt}-${i}`} image={image} className="h-[68vh] max-h-[820px] w-auto" />
+          <Media key={`${image.alt}-${i}`} image={image} className="h-[68svh] max-h-[820px] w-auto" />
         ))}
       </div>
     )
@@ -729,7 +737,7 @@ export function ImageGrid({
       <div className="mt-6 flex items-end justify-center gap-6 px-6 md:px-10">
         {images.map((image, i) => (
           <div key={`${image.alt}-${i}`} style={image.rotate ? { transform: `rotate(${image.rotate}deg)` } : undefined}>
-            <Media image={image} className="h-[8rem] max-h-[11vh] w-auto md:h-[10rem]" />
+            <Media image={image} className="h-[8rem] max-h-[11svh] w-auto md:h-[10rem]" />
           </div>
         ))}
       </div>

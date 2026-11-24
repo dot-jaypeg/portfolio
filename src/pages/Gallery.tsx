@@ -20,7 +20,7 @@ export function Gallery() {
   )
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-ink">
+    <div className="relative h-[100svh] w-screen overflow-hidden bg-ink">
       <Cursor />
       <Grain />
 

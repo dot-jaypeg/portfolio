@@ -335,7 +335,7 @@ export function MoodboardCanvas() {
         // browser's native text-selection highlight on the placeholder
         // labels, a distracting artifact confirmed directly while testing
         // drag input on the previous (column-based) version of this.
-        className="relative h-screen w-screen touch-none overflow-hidden bg-ink select-none"
+        className="relative h-[100svh] w-screen touch-none overflow-hidden bg-ink select-none"
       >
         <div ref={xWrapperRef} className="absolute inset-0">
           {rxList.map((rx, rxIndex) => (
@@ -390,7 +390,7 @@ export function MoodboardCanvas() {
               src={selected.src}
               alt={selected.alt}
               style={{ aspectRatio: `${selected.width} / ${selected.height}` }}
-              className="max-h-[75vh] max-w-[90vw] object-contain"
+              className="max-h-[75svh] max-w-[90vw] object-contain"
             />
             <p className="font-body text-xs tracking-[0.25em] text-cream/70 uppercase">
               {CATEGORY_LABEL[selected.category]}
