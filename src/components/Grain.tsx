@@ -31,7 +31,11 @@ export function Grain() {
     // already do under the same blend mode -- one mechanism, consistent
     // everywhere, instead of normal blending's light-specks-on-dark problem.
     <div
-      className="grain-layer pointer-events-none fixed inset-[-10%] z-[80] opacity-[0.5] mix-blend-multiply"
+      // Lighter on mobile -- per direct request, the full-strength
+      // 0.5 read as too heavy on a phone screen (smaller, closer
+      // viewing distance makes the same grain density feel denser).
+      // Desktop keeps the original intensity.
+      className="grain-layer pointer-events-none fixed inset-[-10%] z-[80] opacity-[0.3] mix-blend-multiply md:opacity-[0.5]"
       style={{
         backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(NOISE_SVG)}")`,
         backgroundSize: '70px 70px',

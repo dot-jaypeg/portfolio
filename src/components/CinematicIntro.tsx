@@ -104,7 +104,20 @@ function VideoShuffleBackground({ sources }: { sources: string[] }) {
           muted
           loop
           playsInline
-          className="scene-media pointer-events-none absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover transition-opacity duration-1000 ease-in-out"
+          // `object-contain` on mobile -- a real, reported bug: these
+          // clips are screen recordings of a real website touring
+          // through several pages (a wide product grid, multi-column
+          // text), cropped via `object-cover` into mobile's own much
+          // taller/narrower full-bleed box than any desktop viewport
+          // comes close to. Confirmed directly: chi-cha's own clip
+          // landed on its products grid page mid-loop and cropped
+          // "LAVENDER"/"STRAWBERRY" down to a sliver, showing only the
+          // center ~30% of the frame's width. Desktop's own box ratio
+          // is already close enough to these clips' own 1.5-ish ratio
+          // that `cover` barely crops at all there, so it keeps that
+          // treatment; mobile letterboxes instead, invisible anyway at
+          // this layer's 25% opacity.
+          className="scene-media pointer-events-none absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-contain transition-opacity duration-1000 ease-in-out md:object-cover"
           style={{ opacity: i === active ? 1 : 0 }}
           data-parallax-amount="6"
         />
