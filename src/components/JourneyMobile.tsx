@@ -68,6 +68,61 @@ export function JourneyMobile() {
     return () => ctx.revert()
   }, [])
 
+  // JourneyDesktop gives every `.chapter-media`/`.chapter-copy` element
+  // its own depth-cue drift, scrubbed off its shared pinned timeline --
+  // this never had an equivalent here at all, so on mobile every one of
+  // these case-study photos and the About polaroid sat completely
+  // static regardless of scroll, a real, confirmed gap (reported
+  // directly as "a lack of scroll animations in general"). `yPercent`,
+  // not desktop's `xPercent` -- a vertical drift reads as the familiar
+  // parallax cue for a vertically-scrolling page, where a horizontal
+  // one would look like an unrelated sideways jitter. Scrubbed by each
+  // chapter's own natural top-to-bottom scroll-through range instead of
+  // a shared timeline's fractional window, since there isn't one.
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      JOURNEY_CHAPTERS.forEach((_, i) => {
+        const section = sectionRefs.current[i]
+        if (!section) return
+        section.querySelectorAll<HTMLElement>('.chapter-media').forEach((media) => {
+          const amount = Number(media.getAttribute('data-parallax-amount')) || 8
+          gsap.fromTo(
+            media,
+            { yPercent: amount },
+            {
+              yPercent: -amount,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: section,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+              },
+            },
+          )
+        })
+        const copy = section.querySelector<HTMLElement>('.chapter-copy')
+        if (copy) {
+          gsap.fromTo(
+            copy,
+            { yPercent: -2 },
+            {
+              yPercent: 2,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: section,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+              },
+            },
+          )
+        }
+      })
+    })
+    return () => ctx.revert()
+  }, [])
+
   return (
     <div id="journey">
       {JOURNEY_CHAPTERS.map((chapter, i) => (

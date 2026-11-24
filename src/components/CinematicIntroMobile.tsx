@@ -1,21 +1,15 @@
 import { useEffect, useRef } from 'react'
-import { gsap } from '../lib/gsap'
+import { gsap, SplitText } from '../lib/gsap'
 import introPhoto from '../assets/images/intro/IMG_8143.jpg'
 import { BRANDING_SHUFFLE_CLIPS, MOTION_SHUFFLE_CLIPS, JaydenReelVideo, VideoShuffleBackground } from './SceneMedia'
 import { SCENES } from '../data/scenes'
-import { Reveal } from './Reveal'
 
 // Below the `md` breakpoint, CinematicIntroDesktop's pinned horizontal
 // scroll-jack doesn't run at all -- these same four scenes render as a
 // plain stacked vertical flow instead, same reasoning JourneyMobile
 // already applies to Journey's own pinned track (see that file's own
 // comment): horizontal scroll-jacking via touch is fragile enough that
-// skipping it entirely on mobile is the safer, standard choice. No
-// SplitText word-reveal, parallax swing, or progress bar here either --
-// all of that was built around having a single shared scrub timeline to
-// hang off of, which a plain stacked layout doesn't have. Each scene
-// gets the same Reveal fade+rise JourneyMobile's own chapters use
-// instead.
+// skipping it entirely on mobile is the safer, standard choice.
 export function CinematicIntroMobile() {
   const sectionRefs = useRef<(HTMLElement | null)[]>([])
 
@@ -94,6 +88,42 @@ export function CinematicIntroMobile() {
     return () => ctx.revert()
   }, [])
 
+  // Per-word entrance, same shape as CinematicIntroDesktop's own
+  // headline reveal (opacity 0, y 40, staggered, power2.out) -- that one
+  // budgets its stagger/duration against a shared scrub timeline's own
+  // window, which a plain stacked layout has no equivalent of; a single
+  // one-shot reveal triggered by the section's own scroll-into-view
+  // (same toggleActions convention Reveal.tsx already uses elsewhere)
+  // gets the same per-word feel without needing that math.
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const splits = sectionRefs.current
+        .map((section) => {
+          const headline = section?.querySelector('h2')
+          return section && headline ? { section, split: new SplitText(headline, { type: 'words' }) } : null
+        })
+        .filter((s): s is { section: HTMLElement; split: SplitText } => s !== null)
+
+      splits.forEach(({ section, split }) => {
+        gsap.from(split.words, {
+          opacity: 0,
+          y: 40,
+          stagger: 0.06,
+          duration: 0.7,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 75%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+      })
+
+      return () => splits.forEach(({ split }) => split.revert())
+    })
+    return () => ctx.revert()
+  }, [])
+
   // Jayden's own reel (scene 3, the last one) is the only scene with
   // real audio -- fades in as its section scrolls into view, holds while
   // it's the one on screen, fades back out while leaving it in either
@@ -106,6 +136,20 @@ export function CinematicIntroMobile() {
     const section = sectionRefs.current[SCENES.length - 1]
     const video = section?.querySelector('video')
     if (!section || !video) return
+    // Defensive re-assert, not just the IntersectionObserver's own
+    // play() call above -- a real, confirmed bug: toggling a playing
+    // video's `muted` flag off (below, once volume rises past the
+    // threshold) can make a browser that only allowed autoplay because
+    // the video STARTED muted decide to pause it right there, since
+    // unmuting didn't come from a fresh user gesture. Intermittent,
+    // since whether a given browser treats a prior touch/scroll as
+    // sufficient "activation" for that isn't fully predictable. Calling
+    // `.play()` again immediately after every `muted` write is a no-op
+    // if it's already playing, and recovers it if that's what paused it.
+    const reassertPlaying = () => {
+      video.muted = video.volume < 0.02
+      video.play().catch(() => {})
+    }
     const ctx = gsap.context(() => {
       gsap.fromTo(
         video,
@@ -119,19 +163,7 @@ export function CinematicIntroMobile() {
             start: 'top 85%',
             end: 'top 40%',
             scrub: true,
-            // Reads the tween's own just-applied `volume`, not a
-            // separately re-derived `self.progress` threshold -- a
-            // real, confirmed bug when it was: self.progress crosses
-            // near-zero in opposite senses depending on scroll
-            // direction (just entering this range going forward vs.
-            // about to leave it going backward), so a progress-based
-            // check left audio incorrectly stuck muted after scrolling
-            // back UP into this scene from below, even once volume had
-            // fully returned to 1. Deriving straight from `video.volume`
-            // is direction-agnostic by construction.
-            onUpdate: () => {
-              video.muted = video.volume < 0.02
-            },
+            onUpdate: reassertPlaying,
           },
         },
       )
@@ -147,9 +179,7 @@ export function CinematicIntroMobile() {
             start: 'bottom 60%',
             end: 'bottom 5%',
             scrub: true,
-            onUpdate: () => {
-              video.muted = video.volume < 0.02
-            },
+            onUpdate: reassertPlaying,
           },
         },
       )
@@ -185,14 +215,13 @@ export function CinematicIntroMobile() {
               <VideoShuffleBackground sources={i === 1 ? BRANDING_SHUFFLE_CLIPS : MOTION_SHUFFLE_CLIPS} />
             </div>
           )}
-          <Reveal className="relative">
-            {i === 0 && (
-              <p className="font-body mb-4 text-xs tracking-[0.22em] text-cream uppercase">{scene.eyebrow}</p>
-            )}
-            <h2 className="font-display text-[13vw] leading-[0.8] font-bold tracking-[-0.06em] text-cream uppercase">
-              {scene.headline}
-            </h2>
-          </Reveal>
+          {/* 17vw, not desktop's 13vw -- per direct request, these read
+              too small stacked full-width on mobile compared to how much
+              visual weight they carry on desktop's own wide horizontal
+              panels. */}
+          <h2 className="relative font-display text-[17vw] leading-[0.82] font-bold tracking-[-0.06em] text-cream uppercase">
+            {scene.headline}
+          </h2>
         </section>
       ))}
     </div>

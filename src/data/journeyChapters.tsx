@@ -172,7 +172,18 @@ function WorkPanel({
           {cs.client}
         </span>
       </Link>
-      <div className="chapter-copy flex max-w-3xl flex-1 flex-col justify-between self-stretch py-16 md:py-24">
+      {/* `flex-1 justify-between self-stretch` only on `md:` and up -- a
+          real, confirmed mobile bug: those three only make sense
+          because desktop forces this column to match the cover photo's
+          own fixed height (a `h-screen` pinned row), so justify-between
+          pins the title near the top and the description near the
+          bottom of that exact box. Stacked below the photo on mobile,
+          this column instead stretched to fill the WHOLE panel's own
+          min-h-[100svh] (nothing else was claiming that leftover
+          height), flinging the title and description far apart with a
+          huge dead gap between them. A plain flex-col with a fixed gap
+          lets the column size to its own content instead. */}
+      <div className="chapter-copy flex max-w-3xl flex-col gap-8 py-10 md:flex-1 md:justify-between md:gap-0 md:self-stretch md:py-24">
         <div>
           <h2 className="chapter-headline font-display text-[10vw] leading-[0.78] font-bold tracking-[-0.05em] text-cream uppercase md:text-[6.5vw]">
             {cs.title}
