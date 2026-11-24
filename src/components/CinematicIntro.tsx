@@ -62,8 +62,13 @@ function JaydenReelVideo() {
       // same machine. Combined with the continuous parallax transform
       // already running on this element, that was enough to visibly
       // stutter on real hardware even though it stayed smooth in this
-      // environment's own (faster) test machine.
-      className="scene-media absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover"
+      // environment's own (faster) test machine. `opacity-25` gets back
+      // the same dimmed, blended-into-the-backdrop mood the blend mode
+      // was there for (and matches the other two scenes' own shuffle
+      // clips, which already run at this same opacity) -- plain opacity
+      // is cheap, ordinary GPU compositing, not the per-frame blend
+      // formula that caused the stutter.
+      className="scene-media absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover opacity-25"
     />
   )
 }
