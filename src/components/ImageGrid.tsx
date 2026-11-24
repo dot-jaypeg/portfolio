@@ -315,11 +315,27 @@ function FullPageMediaRow({ images, tall }: { images: ProjectImage[]; tall: bool
   ]
 
   return (
-    <div ref={containerRef} className={`flex w-full ${tall ? 'h-[150vh]' : 'h-[92vh]'}`}>
+    // flex-col sm:flex-row, not a bare row -- a real, confirmed bug:
+    // forcing a 50/50 split regardless of viewport width squeezed each
+    // column down to ~195px wide on a 390px screen, cropping into
+    // actual design detail (a t-shirt graphic's own text, a face) that
+    // a half-width sliver of a 92-150vh-tall box has no room for.
+    // Stacked full-width below `sm`, each with its own real height
+    // (not inherited from the row's shared vh, which a `flex-col`
+    // child can't split in half on its own) instead of squeezed
+    // side-by-side.
+    <div
+      ref={containerRef}
+      className={`flex w-full flex-col sm:flex-row ${tall ? 'sm:h-[150vh]' : 'sm:h-[92vh]'}`}
+    >
       {images.map((image, i) => {
         const { wrapperRef, boxRef } = slots[i]
         return (
-          <div key={i} ref={boxRef} className="relative h-full w-1/2 overflow-hidden">
+          <div
+            key={i}
+            ref={boxRef}
+            className={`relative w-full overflow-hidden sm:h-full sm:w-1/2 ${tall ? 'h-[75vh]' : 'h-[46vh]'}`}
+          >
             <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
               <Media
                 image={image}
