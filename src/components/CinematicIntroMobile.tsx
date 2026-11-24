@@ -12,11 +12,19 @@ import { useScrollParallax } from '../hooks/useScrollParallax'
 function HelloPhotoParallax() {
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
-  useScrollParallax(containerRef, wrapperRef, 10)
+  // 25, not the usual 10 -- per direct follow-up feedback that the
+  // default amount read as barely-there here. This scene's own box is
+  // taller (min-h-[100svh]) than the typical project-page media box
+  // this hook is usually attached to, so the same swing covers
+  // proportionally less of the visible frame unless it's dialed up.
+  // Oversize bumped to match (-25%/150%, up from -15%/130%) -- the
+  // wrapper's own slack has to be at least as large as the swing itself
+  // or it reveals an empty edge.
+  useScrollParallax(containerRef, wrapperRef, 25)
 
   return (
     <div ref={containerRef} className="absolute inset-0 overflow-hidden">
-      <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
+      <div ref={wrapperRef} className="absolute inset-x-0 top-[-25%] h-[150%] w-full">
         <img src={introPhoto} alt="Jayden Ramirez" className="h-full w-full object-cover" />
       </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
@@ -125,6 +133,19 @@ export function CinematicIntroMobile() {
         .filter((s): s is { section: HTMLElement; split: SplitText } => s !== null)
 
       splits.forEach(({ section, split }) => {
+        // A real, confirmed bug this `break-words` on the h2 itself
+        // couldn't fix: SplitText wraps each word in its own
+        // `display: inline-block` div so it can animate it individually
+        // -- that makes the word an ATOMIC box, sized to fit its own
+        // content by default regardless of the parent's own wrapping
+        // rules, so "BRANDING"/"RAMIREZ" (the two headlines wider than
+        // the viewport at this font size) rendered past the screen edge
+        // instead of ever breaking. Capping each word's own box at the
+        // headline's full width, with its own overflow-wrap, lets a
+        // too-wide word wrap WITHIN itself -- confirmed directly, this
+        // is what actually stops the clipping; the parent's own
+        // break-words was never reaching these nested boxes at all.
+        gsap.set(split.words, { maxWidth: '100%', overflowWrap: 'break-word' })
         gsap.from(split.words, {
           opacity: 0,
           y: 40,
@@ -215,7 +236,11 @@ export function CinematicIntroMobile() {
           ref={(el) => {
             sectionRefs.current[i] = el
           }}
-          className="relative flex min-h-[100svh] w-full flex-col justify-end overflow-hidden bg-ink p-8"
+          // `pb-24`, not a uniform `p-8` -- per direct request, the
+          // headline (pinned to the bottom via justify-end) sat too
+          // close to the section's own bottom edge. Extra bottom padding
+          // pushes it up without touching the top/side margins.
+          className="relative flex min-h-[100svh] w-full flex-col justify-end overflow-hidden bg-ink px-8 pt-8 pb-24"
         >
           {i === 0 ? (
             <HelloPhotoParallax />
@@ -232,8 +257,17 @@ export function CinematicIntroMobile() {
               further per direct follow-up feedback that it still read
               too small) -- these carry much more visual weight on
               desktop's own wide horizontal panels than the same vw
-              value produces stacked full-width on a narrow phone. */}
-          <h2 className="relative font-display text-[22vw] leading-[0.82] font-bold tracking-[-0.06em] text-cream uppercase">
+              value produces stacked full-width on a narrow phone.
+              `break-words` -- a real, confirmed bug at this size: single
+              long words ("BRANDING", "RAMIREZ") measured wider than the
+              viewport itself at 22vw, overflowing past the screen edge
+              outright rather than just wrapping, since there's no space
+              within the word for the browser's default wrapping to break
+              on. This lets a browser break mid-word as a last resort
+              instead, which only ever kicks in for these two headlines
+              -- "Hello."/"Digital & Motion" already fit within the
+              viewport at this size and are unaffected. */}
+          <h2 className="relative font-display text-[22vw] leading-[0.82] font-bold tracking-[-0.06em] text-cream uppercase break-words">
             {scene.headline}
           </h2>
         </section>

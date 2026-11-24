@@ -201,10 +201,24 @@ function WorkPanel({
             {cs.category}
           </p>
         </div>
-        <p className="font-body max-w-lg text-lg leading-relaxed text-cream/70">
+        {/* `relative` + an absolutely-positioned quote mark, not an
+            inline one -- a real, confirmed bug: an inline `text-3xl`
+            glyph sitting inside a `text-lg leading-relaxed` paragraph
+            inflates the LINE BOX of just the line it sits on (the
+            first), since an inline element's own font size affects how
+            tall its line needs to be regardless of the paragraph's own
+            leading -- every other line used the uniform leading-relaxed
+            spacing, but the first-to-second line gap was visibly taller
+            than the rest, reading as uneven leading within one
+            paragraph. Taking the mark out of flow entirely removes it
+            from line-box calculations altogether; `pl-5` on the
+            paragraph keeps the text roughly where it sat before now
+            that the mark isn't pushing it over via `mr-1` anymore. */}
+        <p className="font-body relative max-w-lg pl-5 text-lg leading-relaxed text-cream/70">
           <span
+            aria-hidden="true"
             style={{ color: accent }}
-            className="font-display mr-1 align-top text-3xl"
+            className="font-display absolute top-0 left-0 text-3xl leading-none"
           >
             &ldquo;
           </span>
@@ -330,21 +344,27 @@ function AboutCredentialsPanel() {
                       confirmed spacing bug on the "Velvet Hammer Music &
                       Management Group" entry specifically: by far the
                       longest company name here, it wraps onto 2-3 lines
-                      on a narrow screen, and `items-center` then
-                      vertically centers the dot+dates against that
-                      WHOLE wrapped block -- they end up floating
-                      oddly in the middle of the company name instead of
-                      sitting on their own line below it. The other
-                      (shorter, single-line) entries never wrapped, so
-                      this never showed up on them. Stacking on mobile
-                      (dropping the dot there, which reads as a stray
-                      mark on its own line) and keeping the original
-                      single-row-with-dot layout at `md:` and up sidesteps
-                      it entirely. */}
+                      on a narrow screen, and the dot+dates used to share
+                      that SAME row, so `items-center` vertically centered
+                      them against the whole wrapped block -- they ended
+                      up floating oddly in the middle of the company name
+                      instead of sitting below it. The other (shorter,
+                      single-line) entries never wrapped, so this never
+                      showed up on them. The dot itself wasn't the
+                      problem -- pairing it with `dates` on their own
+                      second line (short, never wraps) instead of
+                      spanning the whole row keeps it (brings back a bit
+                      of color per direct feedback) without ever sharing
+                      a row with text that can wrap. `md:` and up is
+                      unchanged, back to the original single-row layout
+                      (every company name fits on one line at that
+                      width anyway). */}
                   <p className="font-body mt-1.5 flex flex-col gap-1 text-sm tracking-normal text-cream/50 uppercase md:flex-row md:items-center md:gap-2">
                     <span>{role.company}</span>
-                    <span className="hidden h-1.5 w-1.5 shrink-0 bg-red md:inline-block" />
-                    <span>{role.dates}</span>
+                    <span className="inline-flex items-center gap-2 md:contents">
+                      <span className="inline-block h-1.5 w-1.5 shrink-0 bg-red" />
+                      <span>{role.dates}</span>
+                    </span>
                   </p>
                 </li>
               ))}
