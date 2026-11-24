@@ -20,6 +20,19 @@ import { SCENES } from '../data/scenes'
 const BRANDING_SHUFFLE_CLIPS = [chichaShuffleClip, bagguShuffleClip, urbanSeoulShuffleClip, contraShuffleClip]
 const MOTION_SHUFFLE_CLIPS = [afiShuffleClip, resonanceShuffleClip, protocolShuffleClip, nsuShuffleClip]
 
+// Same computed-once-at-mount pattern ProjectHero.tsx/Journey.tsx/
+// MoodboardCanvas.tsx already use for their own desktop/mobile branch.
+// Needed here because the shuffle clips' `data-parallax-amount` (read
+// by the xPercent swing further down) assumes the element sits in a
+// box that's oversized beyond the viewport, with room to pan into --
+// true for the `md:`-and-up `object-cover` box, but no longer true for
+// mobile's own exact-viewport-size `object-contain` box (see that
+// className's own comment). Swinging an already-edge-to-edge box by
+// the same 6% still clips/gaps the real screen edges, just scroll-
+// position-dependent instead of constant -- so mobile gets 0 instead.
+const isDesktopViewport = () =>
+  typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
+
 // Starts muted (autoplay triggered by scroll/mount, not a real user
 // gesture, so browsers won't allow it unmuted) -- the main scroll
 // timeline below (see the `jaydenVideo` volume ramp in onUpdate) is
@@ -75,6 +88,7 @@ function JaydenReelVideo() {
 
 function VideoShuffleBackground({ sources }: { sources: string[] }) {
   const [active, setActive] = useState(0)
+  const [isDesktop] = useState(isDesktopViewport)
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -117,9 +131,23 @@ function VideoShuffleBackground({ sources }: { sources: string[] }) {
           // that `cover` barely crops at all there, so it keeps that
           // treatment; mobile letterboxes instead, invisible anyway at
           // this layer's 25% opacity.
-          className="scene-media pointer-events-none absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-contain transition-opacity duration-1000 ease-in-out md:object-cover"
+          //
+          // The box itself is oversized (`inset-[-6%] h-[112%] w-[112%]`)
+          // on desktop only now -- that headroom exists so the parallax
+          // pan never reveals a transparent edge under `cover`, which
+          // always scales to fully fill whatever box it's given. But
+          // `contain` fits inside that same box's bounding dimension,
+          // so on mobile the already-letterboxed video was ITSELF
+          // rendered 12% wider than the real screen -- a second,
+          // compounding bug confirmed directly from a screenshot:
+          // baggu's own baked-in wordmark clipped by roughly 6% on
+          // both the left and right edges, symmetric, exactly matching
+          // this box's own overscan amount. Mobile now gets a box
+          // that's the real viewport size, so `contain` has nothing
+          // left to overscan.
+          className="scene-media pointer-events-none absolute inset-0 h-full w-full max-w-none object-contain transition-opacity duration-1000 ease-in-out md:inset-[-6%] md:h-[112%] md:w-[112%] md:object-cover"
           style={{ opacity: i === active ? 1 : 0 }}
-          data-parallax-amount="6"
+          data-parallax-amount={isDesktop ? '6' : '0'}
         />
       ))}
     </div>
@@ -408,7 +436,13 @@ export function CinematicIntro() {
         // a parallaxing clip and a static one when they cross-fade.
         const mediaEls = panels[i].querySelectorAll('.scene-media')
         mediaEls.forEach((media) => {
-          const amount = Number(media.getAttribute('data-parallax-amount')) || 6
+          // `?? 6`, not `|| 6` -- VideoShuffleBackground now deliberately
+          // sets this to the literal string "0" on mobile (its box no
+          // longer has the oversize margin to safely pan into), and
+          // `Number("0") || 6` would silently coerce that falsy-but-valid
+          // 0 back to 6, undoing the fix.
+          const raw = media.getAttribute('data-parallax-amount')
+          const amount = raw === null ? 6 : Number(raw)
           tl.fromTo(
             media,
             { xPercent: amount },
