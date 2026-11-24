@@ -123,8 +123,15 @@ export function JourneyMobile() {
     return () => ctx.revert()
   }, [])
 
+  // `pt-24` -- per direct request, there was no gap at all between
+  // CinematicIntro's last scene (Jayden Ramirez) and this section's own
+  // first chapter; the Contra cover photo butted directly up against it
+  // with zero breathing room. Padding, not a margin -- keeps #journey's
+  // own top edge exactly where useSectionColors.ts's gap-crossfade
+  // (CinematicIntro -> this section) expects it, rather than shifting
+  // the boundary the two use.
   return (
-    <div id="journey">
+    <div id="journey" className="pt-24">
       {JOURNEY_CHAPTERS.map((chapter, i) => (
         <section
           key={chapter.key}

@@ -22,22 +22,6 @@ import nsuShuffleClip from '../assets/images/projects/detail/nikkei-student-unio
 export const BRANDING_SHUFFLE_CLIPS = [chichaShuffleClip, bagguShuffleClip, urbanSeoulShuffleClip, contraShuffleClip]
 export const MOTION_SHUFFLE_CLIPS = [afiShuffleClip, resonanceShuffleClip, protocolShuffleClip, nsuShuffleClip]
 
-// Same computed-once-at-mount pattern ProjectHero.tsx/Journey.tsx/
-// MoodboardCanvas.tsx already use for their own desktop/mobile branch.
-// Needed here because the shuffle clips' `data-parallax-amount` (read
-// by CinematicIntroDesktop's own xPercent swing) assumes the element
-// sits in a box that's oversized beyond the viewport, with room to pan
-// into -- true for the `md:`-and-up `object-cover` box, but no longer
-// true for mobile's own exact-viewport-size `object-contain` box (see
-// that className's own comment). Swinging an already-edge-to-edge box
-// by the same 6% still clips/gaps the real screen edges, just scroll-
-// position-dependent instead of constant -- so mobile gets 0 instead.
-// (CinematicIntroMobile never actually runs that swing tween at all,
-// but this component is shared, so the attribute still needs to be
-// correct for the desktop case that does.)
-const isDesktopViewport = () =>
-  typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
-
 // Starts muted (autoplay triggered by scroll/mount, not a real user
 // gesture, so browsers won't allow it unmuted) -- the caller is what
 // actually drives its volume/muted state as this scene scrolls into
@@ -92,7 +76,6 @@ export function JaydenReelVideo() {
 
 export function VideoShuffleBackground({ sources }: { sources: string[] }) {
   const [active, setActive] = useState(0)
-  const [isDesktop] = useState(isDesktopViewport)
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -122,36 +105,17 @@ export function VideoShuffleBackground({ sources }: { sources: string[] }) {
           muted
           loop
           playsInline
-          // `object-contain` on mobile -- a real, reported bug: these
-          // clips are screen recordings of a real website touring
-          // through several pages (a wide product grid, multi-column
-          // text), cropped via `object-cover` into mobile's own much
-          // taller/narrower full-bleed box than any desktop viewport
-          // comes close to. Confirmed directly: chi-cha's own clip
-          // landed on its products grid page mid-loop and cropped
-          // "LAVENDER"/"STRAWBERRY" down to a sliver, showing only the
-          // center ~30% of the frame's width. Desktop's own box ratio
-          // is already close enough to these clips' own 1.5-ish ratio
-          // that `cover` barely crops at all there, so it keeps that
-          // treatment; mobile letterboxes instead, invisible anyway at
-          // this layer's 25% opacity.
-          //
-          // The box itself is oversized (`inset-[-6%] h-[112%] w-[112%]`)
-          // on desktop only now -- that headroom exists so the parallax
-          // pan never reveals a transparent edge under `cover`, which
-          // always scales to fully fill whatever box it's given. But
-          // `contain` fits inside that same box's bounding dimension,
-          // so on mobile the already-letterboxed video was ITSELF
-          // rendered 12% wider than the real screen -- a second,
-          // compounding bug confirmed directly from a screenshot:
-          // baggu's own baked-in wordmark clipped by roughly 6% on
-          // both the left and right edges, symmetric, exactly matching
-          // this box's own overscan amount. Mobile now gets a box
-          // that's the real viewport size, so `contain` has nothing
-          // left to overscan.
-          className="scene-media pointer-events-none absolute inset-0 h-full w-full max-w-none object-contain transition-opacity duration-1000 ease-in-out md:inset-[-6%] md:h-[112%] md:w-[112%] md:object-cover"
+          // Full-bleed `object-cover` on every viewport, same treatment
+          // as Jayden's own reel -- per direct request, reverting an
+          // earlier mobile-only `object-contain` fix (that one stopped
+          // these screen-recorded clips from cropping their own
+          // in-video text on some loops, e.g. "LAVENDER"/"STRAWBERRY" at
+          // a certain timestamp) back to matching Jayden's full-screen
+          // look consistently across all three scenes, accepting that
+          // occasional crop as the traded-off cost.
+          className="scene-media pointer-events-none absolute inset-[-6%] h-[112%] w-[112%] max-w-none object-cover transition-opacity duration-1000 ease-in-out"
           style={{ opacity: i === active ? 1 : 0 }}
-          data-parallax-amount={isDesktop ? '6' : '0'}
+          data-parallax-amount="6"
         />
       ))}
     </div>

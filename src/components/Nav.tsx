@@ -58,8 +58,25 @@ function MenuIcon({ open }: { open: boolean }) {
 // only resolve correctly once JourneyDesktop's ScrollTrigger has set
 // up (getChapterScrollOffset returns null until then); Contact is a
 // plain, never-pinned section, so it just needs to exist in the DOM.
+//
+// A real, confirmed mobile bug: `'#about' in CHAPTER_INDEX` is true
+// unconditionally, so this used to report About "not ready" FOREVER on
+// mobile, since JourneyDesktop (the only thing that ever sets a chapter
+// offset) never mounts there at all -- `getChapterScrollOffset` returns
+// null permanently, not just during a brief startup window. Clicking
+// About from any other page polled this in an endless
+// requestAnimationFrame loop that never once passed, so `scrollToSection`
+// never got called and the visitor was just left sitting at the
+// homepage's top. Falling back to the plain element lookup once a
+// chapter offset turns out to be unavailable -- the exact same fallback
+// `scrollToSection` itself already uses -- fixes this for mobile while
+// staying correct for desktop's own brief real startup window too
+// (whichever way this resolves, `scrollToSection` re-derives the same
+// answer at call time, so the two can never disagree).
 const isSectionReady = (href: string) =>
-  href in CHAPTER_INDEX ? getChapterScrollOffset(CHAPTER_INDEX[href]) != null : !!document.querySelector(href)
+  href in CHAPTER_INDEX
+    ? getChapterScrollOffset(CHAPTER_INDEX[href]) != null || !!document.querySelector(href)
+    : !!document.querySelector(href)
 
 export function Nav() {
   const maskNavigate = useMaskNavigate()
@@ -161,6 +178,16 @@ export function Nav() {
             const preloaderDone = document.body.style.overflow !== 'hidden'
             if (preloaderDone && isSectionReady(href)) {
               scrollToSection(href)
+              // A real, confirmed bug landing close but not exactly on
+              // target: the very first frame a target "looks ready" can
+              // still be before images/video posters finish loading in
+              // and settling the page's real layout height, so this
+              // jump's own offset (computed against that not-yet-final
+              // layout) ends up stale once more content loads in below
+              // it. Re-issuing the same jump a moment later, once things
+              // have had a chance to settle, self-corrects without
+              // needing to actually detect "layout is now stable."
+              setTimeout(() => scrollToSection(href), 300)
             } else {
               requestAnimationFrame(tryScroll)
             }

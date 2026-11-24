@@ -3,6 +3,26 @@ import { gsap, SplitText } from '../lib/gsap'
 import introPhoto from '../assets/images/intro/IMG_8143.jpg'
 import { BRANDING_SHUFFLE_CLIPS, MOTION_SHUFFLE_CLIPS, JaydenReelVideo, VideoShuffleBackground } from './SceneMedia'
 import { SCENES } from '../data/scenes'
+import { useScrollParallax } from '../hooks/useScrollParallax'
+
+// Same containerRef/wrapperRef parallax mechanic every project-page
+// media uses (see ImageGrid's FullPageMedia) -- per direct request,
+// the "Hello." scene's own photo had no scroll motion at all before,
+// unlike every other project photo on the site.
+function HelloPhotoParallax() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  useScrollParallax(containerRef, wrapperRef, 10)
+
+  return (
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden">
+      <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
+        <img src={introPhoto} alt="Jayden Ramirez" className="h-full w-full object-cover" />
+      </div>
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+    </div>
+  )
+}
 
 // Below the `md` breakpoint, CinematicIntroDesktop's pinned horizontal
 // scroll-jack doesn't run at all -- these same four scenes render as a
@@ -198,14 +218,7 @@ export function CinematicIntroMobile() {
           className="relative flex min-h-[100svh] w-full flex-col justify-end overflow-hidden bg-ink p-8"
         >
           {i === 0 ? (
-            <div className="absolute inset-0 overflow-hidden">
-              <img
-                src={introPhoto}
-                alt="Jayden Ramirez"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
-            </div>
+            <HelloPhotoParallax />
           ) : i === SCENES.length - 1 ? (
             <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: scene.bg }}>
               <JaydenReelVideo />
@@ -215,11 +228,12 @@ export function CinematicIntroMobile() {
               <VideoShuffleBackground sources={i === 1 ? BRANDING_SHUFFLE_CLIPS : MOTION_SHUFFLE_CLIPS} />
             </div>
           )}
-          {/* 17vw, not desktop's 13vw -- per direct request, these read
-              too small stacked full-width on mobile compared to how much
-              visual weight they carry on desktop's own wide horizontal
-              panels. */}
-          <h2 className="relative font-display text-[17vw] leading-[0.82] font-bold tracking-[-0.06em] text-cream uppercase">
+          {/* 22vw, not desktop's 13vw (first bumped to 17vw, then
+              further per direct follow-up feedback that it still read
+              too small) -- these carry much more visual weight on
+              desktop's own wide horizontal panels than the same vw
+              value produces stacked full-width on a narrow phone. */}
+          <h2 className="relative font-display text-[22vw] leading-[0.82] font-bold tracking-[-0.06em] text-cream uppercase">
             {scene.headline}
           </h2>
         </section>

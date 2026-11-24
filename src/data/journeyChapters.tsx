@@ -82,17 +82,20 @@ function WorkPanel({
       // from html+body, broke position:sticky elsewhere; this is the
       // actual root cause instead, so that revert can stick).
       //
-      // `min-h-[100svh]`, not `min-h-screen` -- every `chapter-panel` in
-      // this file shares this fix (4 occurrences total). On
-      // JourneyDesktop this is pinned (same mobile-Safari `100vh`
-      // mismatch as CinematicIntro's own pinned section); on
-      // JourneyMobile it's a plain `min-height`, where `100vh` could
-      // reserve more height than the toolbar-visible viewport actually
-      // has, pushing a chapter's own content below the fold until the
-      // next one scrolled into place -- `svh` can't exceed the real
-      // visible height either way, so min-height just does less work
-      // without ever under-sizing the panel.
-      className={`chapter-panel relative flex min-h-[100svh] w-screen shrink-0 flex-col items-start gap-8 px-8 md:flex-row md:px-20 ${flipped ? 'md:flex-row-reverse' : ''}`}
+      // `md:min-h-[100svh]`, not a bare `min-h-[100svh]` -- a real,
+      // confirmed mobile bug: this chapter's own actual content (a
+      // 4:5 cover photo plus a modest title/category/description block)
+      // is almost always much shorter than a full screen, and forcing
+      // the panel to a full `min-h-[100svh]` anyway left a large, dead,
+      // unexplained gap of empty background between this chapter's own
+      // content and the next chapter's cover photo -- confirmed directly
+      // via screenshots, visible between every single featured case
+      // study. On JourneyDesktop this is still needed (pinned inside a
+      // shared-height flex row, where every panel must match the
+      // track's own exact height) -- `pb-20` replaces it on mobile
+      // instead, a fixed, modest gap between chapters sized to the
+      // content itself rather than an arbitrary full viewport.
+      className={`chapter-panel relative flex w-screen shrink-0 flex-col items-start gap-8 px-8 pb-20 md:min-h-[100svh] md:flex-row md:px-20 md:pb-0 ${flipped ? 'md:flex-row-reverse' : ''}`}
     >
       <Link
         to={`/work/${cs.slug}`}
@@ -323,9 +326,24 @@ function AboutCredentialsPanel() {
                   <p className="font-display text-sm font-bold tracking-normal text-cream uppercase">
                     {role.title}
                   </p>
-                  <p className="font-body mt-1.5 flex items-center gap-2 text-sm tracking-normal text-cream/50 uppercase">
+                  {/* flex-col on mobile, not a bare flex row -- a real,
+                      confirmed spacing bug on the "Velvet Hammer Music &
+                      Management Group" entry specifically: by far the
+                      longest company name here, it wraps onto 2-3 lines
+                      on a narrow screen, and `items-center` then
+                      vertically centers the dot+dates against that
+                      WHOLE wrapped block -- they end up floating
+                      oddly in the middle of the company name instead of
+                      sitting on their own line below it. The other
+                      (shorter, single-line) entries never wrapped, so
+                      this never showed up on them. Stacking on mobile
+                      (dropping the dot there, which reads as a stray
+                      mark on its own line) and keeping the original
+                      single-row-with-dot layout at `md:` and up sidesteps
+                      it entirely. */}
+                  <p className="font-body mt-1.5 flex flex-col gap-1 text-sm tracking-normal text-cream/50 uppercase md:flex-row md:items-center md:gap-2">
                     <span>{role.company}</span>
-                    <span className="inline-block h-1.5 w-1.5 shrink-0 bg-red" />
+                    <span className="hidden h-1.5 w-1.5 shrink-0 bg-red md:inline-block" />
                     <span>{role.dates}</span>
                   </p>
                 </li>
@@ -403,7 +421,11 @@ function ViewAllPanel() {
           to="/work"
           onClick={goToWork}
           data-cursor="View All"
-          className="chapter-copy group block max-w-lg font-display text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-[#161616] uppercase transition-colors duration-300 hover:text-red md:mt-[1.4em] md:text-[7.5vw]"
+          // `text-red` (the site's reddish-orange accent), not ink, on
+          // mobile specifically -- per direct request. `md:text-[#161616]
+          // md:hover:text-red` restores the original ink-with-red-hover
+          // treatment at `md:` and up, unchanged.
+          className="chapter-copy group block max-w-lg font-display text-[12vw] leading-[0.92] font-bold tracking-[-0.04em] text-red uppercase transition-colors duration-300 md:mt-[1.4em] md:text-[7.5vw] md:text-[#161616] md:hover:text-red"
         >
           <span
             aria-hidden="true"
