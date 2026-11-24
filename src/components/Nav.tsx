@@ -256,7 +256,12 @@ export function Nav() {
           onClick={() => setMenuOpen((open) => !open)}
           aria-expanded={menuOpen}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          className="relative z-[60] md:hidden"
+          // The icon itself is small (h-4 w-6) by design -- padding
+          // grows the actual TAP target to a real touch-friendly size
+          // (confirmed directly: without it, this measured 24x16px,
+          // well under the ~44x44px baseline every mobile design
+          // guideline recommends) without changing how the icon looks.
+          className="relative z-[60] -m-3 p-3 md:hidden"
         >
           <MenuIcon open={menuOpen} />
         </button>
