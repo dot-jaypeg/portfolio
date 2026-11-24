@@ -194,7 +194,15 @@ function AboutStatementPanel({ id }: { id?: string }) {
   return (
     <div
       id={id}
-      className="chapter-panel relative flex min-h-screen w-screen shrink-0 items-center gap-12 px-8 py-24 md:px-20"
+      // flex-col md:flex-row, not a bare `flex` -- same fix WorkPanel
+      // already needed for the identical reason: an unconditional row
+      // squeezed the polaroid's own column into the same width-starved
+      // situation beside the full text column on a narrow screen. This
+      // is also why the polaroid itself used to just be hidden below
+      // `md` entirely instead (a real, confirmed gap: the photo was
+      // missing from the whole mobile homepage) rather than actually
+      // being laid out for a stacked mobile view.
+      className="chapter-panel relative flex min-h-screen w-screen shrink-0 flex-col items-center gap-12 px-8 py-24 md:flex-row md:px-20"
     >
       {/* Fixed cream, mirroring ViewAllPanel's own fixed ink layer right
           before this one -- see that comment for why the shared soft
@@ -222,7 +230,7 @@ function AboutStatementPanel({ id }: { id?: string }) {
           <ExpertisePills />
         </div>
       </div>
-      <div className="group relative ml-auto hidden w-[26vw] max-w-sm shrink-0 md:block">
+      <div className="group relative w-48 max-w-sm shrink-0 sm:w-56 md:ml-auto md:w-[26vw]">
         {/* A real polaroid card, not just a photo box -- fixed off-white
             paper color (not `bg-cream`, which resolves to the
             crossfading --fg and would go BLACK on this panel, since

@@ -22,6 +22,18 @@ export type ImageGridLayout =
   | 'logo-lockup'
   | 'overlay-collage'
 
+// Resolves `fit`/`mobileFit` into a literal, static class string --
+// deliberately NOT built as a single dynamic template string, since
+// Tailwind can only generate CSS for class names it can find as
+// complete literal text somewhere in the source; these four full
+// strings cover every combination the two fields can actually produce.
+function fitClasses(image: Pick<ProjectImage, 'fit' | 'mobileFit'>) {
+  const fit = image.fit ?? 'cover'
+  const mobileFit = image.mobileFit ?? fit
+  if (mobileFit === fit) return fit === 'contain' ? 'object-contain' : 'object-cover'
+  return mobileFit === 'contain' ? 'object-contain md:object-cover' : 'object-cover md:object-contain'
+}
+
 // Plays once its container scrolls into view, pauses once it scrolls
 // back out -- starts muted (autoplay triggered by scroll, not a real
 // user gesture, so browsers won't allow it unmuted), but keeps native
@@ -238,7 +250,7 @@ function FullPageMedia({ image, tall }: { image: ProjectImage; tall: boolean }) 
         <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
           <Media
             image={image}
-            className={`h-full w-full ${image.fit === 'contain' ? 'object-contain' : 'object-cover'}`}
+            className={`h-full w-full ${fitClasses(image)}`}
             observeRef={containerRef}
           />
         </div>
@@ -311,7 +323,7 @@ function FullPageMediaRow({ images, tall }: { images: ProjectImage[]; tall: bool
             <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
               <Media
                 image={image}
-                className={`h-full w-full ${image.fit === 'contain' ? 'object-contain' : 'object-cover'}`}
+                className={`h-full w-full ${fitClasses(image)}`}
                 observeRef={boxRef}
               />
             </div>
@@ -372,7 +384,7 @@ function FullPageMediaQuadRow({ images }: { images: ProjectImage[] }) {
               <div ref={wrapperRef} className="absolute inset-x-0 top-[-15%] h-[130%] w-full">
                 <Media
                   image={image}
-                  className={`h-full w-full ${image.fit === 'contain' ? 'object-contain' : 'object-cover'}`}
+                  className={`h-full w-full ${fitClasses(image)}`}
                   observeRef={boxRef}
                 />
               </div>
@@ -398,13 +410,22 @@ function FullPageMediaQuadRow({ images }: { images: ProjectImage[] }) {
 // column empty). No parallax here either, since there's no tall photo
 // to drift -- the whole point is the box already matches the content.
 function FlushMediaRow({ images }: { images: ProjectImage[] }) {
-  const widthClass = images.length >= 3 ? 'w-1/3' : 'w-1/2'
+  // `sm:w-1/3`, not a bare `w-1/3` -- a real, confirmed bug: forcing 3
+  // (or 2) equal columns regardless of viewport width squeezed each
+  // one down to a ~130px-wide sliver on a 390px mobile screen, which
+  // at these images' own ~1.5 aspect ratio came out barely 85px tall --
+  // legible in theory, but reading as a tiny, easy-to-miss strip
+  // compared to how prominent this same row is on desktop. Full width,
+  // stacked, below `sm` matches the plain `trio` layout's own existing
+  // `grid-cols-1 sm:grid-cols-3` -- this was the one multi-column row
+  // that never got that same treatment.
+  const widthClass = images.length >= 3 ? 'sm:w-1/3' : 'sm:w-1/2'
   return (
-    <div className="flex w-full">
+    <div className="flex w-full flex-col sm:flex-row">
       {images.map((image, i) => (
         <div
           key={i}
-          className={`relative ${widthClass} overflow-hidden`}
+          className={`relative w-full overflow-hidden ${widthClass}`}
           style={{ aspectRatio: `${image.width ?? 3} / ${image.height ?? 2}` }}
         >
           <Media image={image} className="h-full w-full object-cover" />
@@ -480,7 +501,7 @@ function PhoneMockup({ image }: { image: ProjectImage }) {
         className="relative overflow-hidden rounded-[2.75rem] border-[4px] border-cream/20 bg-ink shadow-xl shadow-black/40"
         style={{ aspectRatio: '9 / 19.5' }}
       >
-        <Media image={image} className={`h-full w-full ${image.fit === 'contain' ? 'object-contain' : 'object-cover'}`} />
+        <Media image={image} className={`h-full w-full ${fitClasses(image)}`} />
         <div className="absolute inset-x-0 top-[10px] flex justify-center">
           <div className="h-[9px] w-[72px] rounded-full bg-ink" />
         </div>
@@ -708,7 +729,7 @@ export function ImageGrid({
         >
           <Media
             image={main}
-            className={`h-full w-full ${main.fit === 'contain' ? 'object-contain' : 'object-cover'}`}
+            className={`h-full w-full ${fitClasses(main)}`}
           />
         </div>
         {overlay && (

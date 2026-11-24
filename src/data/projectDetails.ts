@@ -186,6 +186,12 @@ export interface ProjectImage {
   // a `full-page-two-up` pair's tall column) for 'cover' to show the
   // whole thing without cropping into the actual subject.
   fit?: 'cover' | 'contain'
+  // Overrides `fit` specifically on mobile -- for a video/image that's
+  // fine cropped on desktop's wider box but whose own real content
+  // (e.g. a full-frame warning/title card at the very start of a
+  // video) gets cut into once that same box goes to mobile's much
+  // narrower width. Falls back to `fit` when unset, same as desktop.
+  mobileFit?: 'cover' | 'contain'
   // `phone-row` only -- the account name to show in a drawn-on-top
   // Instagram Story UI (progress segment, account row, a reply bar
   // with heart/send icons), for a flat graphic that was never
@@ -717,6 +723,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             videoMode: 'autoplay',
             poster: resonanceTrailerPoster,
             alt: 'Resonance gameplay trailer, submitted to IEEE GameSIG 2026',
+            // The trailer opens on a full-frame "WARNING" content card --
+            // fine cropped on desktop's wider box (confirmed directly,
+            // nothing cut off there), but mobile's narrower box crops
+            // into the warning text itself.
+            mobileFit: 'contain',
           },
         ],
       },
