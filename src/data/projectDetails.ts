@@ -285,6 +285,18 @@ export interface ProjectDetailData {
   // (a wordmark, a face) sitting in that exact top sliver needs this
   // brought down to stay in frame.
   heroParallaxSlack?: number
+  // Switches the mobile hero from `object-cover` to `object-contain`
+  // (letterboxed against the page's own ink background instead of
+  // cropped) -- for a wide landscape source with real content spread
+  // across its FULL width (e.g. a wordmark on one side, a character on
+  // the other), no single `heroImagePosition` value can keep both in
+  // frame once the hero box itself becomes mobile's narrow portrait
+  // shape rather than desktop's wide one: confirmed directly on
+  // Resonance, every position tried either cut off the wordmark's own
+  // leading or trailing letters. Desktop is unaffected -- its box is
+  // close enough to the source's own ratio that `cover` barely crops
+  // at all there.
+  heroMobileFit?: 'cover' | 'contain'
   tags: string[]
   // A second paragraph is rare -- most projects' intro is one line.
   // NSU's is written as two: a short overview sentence, then a longer
@@ -676,6 +688,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     // "RESONANCE" wordmark out entirely. Left keeps the wordmark fully
     // in view here instead.
     heroImagePosition: 'left center',
+    // On mobile's narrow portrait hero box, though, 'left center' cuts
+    // off the wordmark's own trailing letters instead (confirmed
+    // directly) -- no position keeps the whole wide banner in frame
+    // there, so show the complete thing letterboxed instead of cropped.
+    heroMobileFit: 'contain',
     tags: ['Branding', 'UI/UX', 'HUD Design', 'Game Art'],
     intro:
       'Corporations run Resonance’s arenas, pitting fighters against each other to stress-test experimental weapons and augments in front of a live audience — weapons R&D disguised as spectator sport, broadcast for entertainment. Built by a small student team in about three months for a university capstone, then submitted to IEEE GameSIG 2026.',
@@ -1034,6 +1051,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     heroLead: 'A cohesive brand identity for',
     heroBold: 'fetch!',
     heroTagline: ', a specialty food truck dedicated entirely to dogs, serving pup-safe sandwiches and snacks as a dog-friendly deli.',
+    // The "fetch! DOGGY DELI" wordmark is baked into the photo itself,
+    // spanning almost its full width -- no `heroImagePosition` can keep
+    // it all in frame once the hero box becomes mobile's narrow
+    // portrait shape instead of desktop's wide one (confirmed directly:
+    // center-cropped, both the leading "f" and trailing "!" were cut
+    // off). Same fix as Resonance's hero.
+    heroMobileFit: 'contain',
     tags: ['Branding', 'Packaging', 'Advertising'],
     intro:
       'Inspired by a beloved Frenchie named Yuki, fetch! was built for dog-loving places like SoCal, where park time often gets cut short when a dog needs a snack or a meal. fetch! solves that with fresh food and treats made exclusively for dogs, using natural, local ingredients — fuel to keep playing, and a reason to stay at the park a little longer.',
@@ -1159,6 +1183,14 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     // down too is what actually gets the wordmark on screen.
     heroImagePosition: 'top',
     heroParallaxSlack: 2,
+    // `heroImagePosition: 'top'` only ever controlled the VERTICAL crop
+    // -- this portrait source (1165x1800) is wider, proportionally,
+    // than mobile's own even-narrower hero box, so object-cover scales
+    // it to fill the box's height and crops the overflow off the
+    // SIDES instead, centered by default: confirmed directly, both the
+    // leading "u" and trailing "." of "urbanseoul." were cut off. Same
+    // fix as Resonance/fetch!'s hero.
+    heroMobileFit: 'contain',
     tags: ['Branding', 'Campaign', 'Signage', 'Merchandise'],
     intro:
       'urbanseoul. brings KRNB to Under the K Bridge Park in Brooklyn, turning a raw, industrial setting into a lifestyle hub where fans experience intimate live performances while celebrating sneaker and streetwear culture — built on New Balance’s heritage of authenticity and performance, paired with KRNB’s sleek, late-night mood.',

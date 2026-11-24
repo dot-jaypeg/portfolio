@@ -72,7 +72,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
                 preload="metadata"
                 aria-label={`${project.title} lead video`}
                 style={{ objectPosition: detail.heroImagePosition ?? project.imagePosition ?? 'center' }}
-                className="h-full w-full object-cover"
+                className={`h-full w-full ${detail.heroMobileFit === 'contain' ? 'object-contain md:object-cover' : 'object-cover'}`}
               />
             ) : (
               <img
@@ -80,7 +80,7 @@ export function ProjectHero({ project, detail }: { project: CaseStudy; detail: P
                 src={coverImage}
                 alt={`${project.title} lead image`}
                 style={{ objectPosition: detail.heroImagePosition ?? project.imagePosition ?? 'center' }}
-                className="h-full w-full object-cover"
+                className={`h-full w-full ${detail.heroMobileFit === 'contain' ? 'object-contain md:object-cover' : 'object-cover'}`}
                 loading="eager"
                 decoding="async"
               />
