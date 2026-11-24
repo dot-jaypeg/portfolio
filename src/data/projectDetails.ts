@@ -1900,7 +1900,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Editing & Rendering',
         collapsible: true,
         text: "Editing meant sequencing the full short and weaving in the classic Star Wars intro crawl, set to John Williams' score. From there it was rigging, lighting, and camera work — polish pass after polish pass — to make it feel authentic to the franchise.",
-        layout: 'full-page',
+        // Same fix chi-cha's video ads got: 'full-page' sized this into
+        // a viewport-height box that cropped into the real 854x480
+        // frame rather than showing it uncut. 'full-width-parallax'
+        // sizes the box to the video's own declared (and, confirmed via
+        // ffprobe, actual) ratio instead, keeping the same parallax
+        // drift with nothing cropped off.
+        layout: 'full-width-parallax',
         blockCaption: 'Click to unmute',
         images: [
           {
