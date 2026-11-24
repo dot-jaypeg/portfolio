@@ -715,7 +715,16 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         label: 'Gameplay Trailer',
         collapsible: true,
         text: 'Every match comes down to the Overdrive — a high-stakes ability that can turn a fight around, best saved for when it counts. Stay in the lead too long, though, and a spotlight turns you into the target: the whole lobby’s bounty.',
-        layout: 'full-page',
+        // Same treatment as Protocol of Betrayal's full-short video --
+        // 'full-page' forced this into a viewport-height box regardless
+        // of the video's own 1280x720 ratio, cropping into its own
+        // full-frame "WARNING" content card on mobile (patched before
+        // with a mobile-only `contain`, but that was a workaround, not
+        // a fix). 'full-width' sizes the box to the video's exact
+        // native ratio instead -- no oversize/zoom on any device, so
+        // nothing ever gets cropped and the per-image `mobileFit`
+        // patch is no longer needed.
+        layout: 'full-width',
         blockCaption: 'Click to unmute',
         images: [
           {
@@ -723,11 +732,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
             videoMode: 'autoplay',
             poster: resonanceTrailerPoster,
             alt: 'Resonance gameplay trailer, submitted to IEEE GameSIG 2026',
-            // The trailer opens on a full-frame "WARNING" content card --
-            // fine cropped on desktop's wider box (confirmed directly,
-            // nothing cut off there), but mobile's narrower box crops
-            // into the warning text itself.
-            mobileFit: 'contain',
+            width: 1280,
+            height: 720,
           },
         ],
       },
